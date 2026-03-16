@@ -1,0 +1,221 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "2.625rem",
+      "fontWeight": 300,
+      "lineHeight": 1.19
+    },
+    "subheading": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "1.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.29
+    },
+    "body": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43,
+      "letterSpacing": "0.01em"
+    },
+    "caption": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": "0.02em"
+    },
+    "button": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.29,
+      "letterSpacing": "0.01em",
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.33,
+      "letterSpacing": "0.02em"
+    },
+    "input": {
+      "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43
+    },
+    "code": {
+      "fontFamily": ["IBM Plex Mono", "ui-monospace", "monospace"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.54
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#161616" },
+        "secondary": { "value": "#525252" },
+        "muted": { "value": "#8d8d8d" },
+        "accent": { "value": "{color.light.interactive.default.value}" },
+        "inverse": { "value": "#ffffff" }
+      },
+      "background": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#f4f4f4" },
+        "accent": { "value": "#d0e2ff" },
+        "muted": { "value": "#e0e0e0" }
+      },
+      "border": {
+        "default": { "value": "#c6c6c6" },
+        "muted": { "value": "#e0e0e0" },
+        "accent": { "value": "#0f62fe" }
+      },
+      "interactive": {
+        "default": { "value": "#0f62fe" },
+        "hover": { "value": "#0043ce" },
+        "active": { "value": "#002d9c" },
+        "focus": { "value": "#0f62fe" },
+        "disabled": { "value": "#c6c6c6" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#f4f4f4" },
+        "secondary": { "value": "#c6c6c6" },
+        "muted": { "value": "#6f6f6f" },
+        "accent": { "value": "{color.dark.interactive.default.value}" },
+        "inverse": { "value": "#161616" }
+      },
+      "background": {
+        "primary": { "value": "#262626" },
+        "secondary": { "value": "#161616" },
+        "accent": { "value": "#002d9c" },
+        "muted": { "value": "#393939" }
+      },
+      "border": {
+        "default": { "value": "#525252" },
+        "muted": { "value": "#393939" },
+        "accent": { "value": "#4589ff" }
+      },
+      "interactive": {
+        "default": { "value": "#4589ff" },
+        "hover": { "value": "#78a9ff" },
+        "active": { "value": "#a6c8ff" },
+        "focus": { "value": "#4589ff" },
+        "disabled": { "value": "#525252" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.125rem",
+    "scale": {
+      "xs": "0.125rem",
+      "sm": "0.25rem",
+      "md": "0.5rem",
+      "lg": "1rem",
+      "xl": "1.5rem",
+      "2xl": "2rem",
+      "3xl": "3rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "68ch",
+      "content": "66rem",
+      "wide": "99rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "20rem",
+      "md": "42rem",
+      "lg": "66rem",
+      "xl": "82rem"
+    },
+    "grid": {
+      "columns": 16,
+      "gap": "1rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "perfect-fourth",
+    "baseSize": "0.875rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "3.375rem",
+        "fontWeight": 300,
+        "lineHeight": 1.07
+      },
+      "h2": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "2.625rem",
+        "fontWeight": 300,
+        "lineHeight": 1.19
+      },
+      "h3": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "2rem",
+        "fontWeight": 400,
+        "lineHeight": 1.25
+      },
+      "h4": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "1.75rem",
+        "fontWeight": 400,
+        "lineHeight": 1.29
+      },
+      "h5": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "1.25rem",
+        "fontWeight": 400,
+        "lineHeight": 1.4
+      },
+      "h6": {
+        "fontFamily": ["IBM Plex Sans", "Helvetica Neue", "Arial", "sans-serif"],
+        "fontSize": "1rem",
+        "fontWeight": 600,
+        "lineHeight": 1.5
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 600 },
+      "subtle": { "opacity": 0.7, "fontSize": "0.8125rem" }
+    }
+  },
+  "modes": {
+    "display": {
+      "name": "display",
+      "description": "Carbon expressive display typography",
+      "tokens": {
+        "typography.heading.fontSize": "3.375rem",
+        "typography.heading.fontWeight": 300,
+        "typography.heading.lineHeight": 1.07
+      }
+    },
+    "interface": {
+      "name": "interface",
+      "description": "Carbon productive compact typography",
+      "tokens": {
+        "typography.body.fontSize": "0.875rem",
+        "typography.body.lineHeight": 1.29,
+        "spacing.scale.xl": "1rem"
+      }
+    }
+  },
+  "themes": [
+    {
+      "name": "carbon-g100",
+      "colorScheme": "brand",
+      "tokens": {
+        "color.dark.background.primary.value": "#161616",
+        "color.dark.background.secondary.value": "#262626",
+        "color.dark.text.primary.value": "#f4f4f4",
+        "color.dark.border.default.value": "#6f6f6f"
+      }
+    }
+  ]
+}

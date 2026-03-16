@@ -1,0 +1,222 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "2.5rem",
+      "fontWeight": 700,
+      "lineHeight": 1.15,
+      "letterSpacing": "-0.02em"
+    },
+    "subheading": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "1.5rem",
+      "fontWeight": 600,
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.01em"
+    },
+    "body": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43
+    },
+    "caption": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.33
+    },
+    "button": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 600,
+      "lineHeight": 1.43,
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 500,
+      "lineHeight": 1.43
+    },
+    "input": {
+      "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43
+    },
+    "code": {
+      "fontFamily": ["Cascadia Code", "Consolas", "ui-monospace", "monospace"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.54
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#242424" },
+        "secondary": { "value": "#616161" },
+        "muted": { "value": "#a1a1a1" },
+        "accent": { "value": "{color.light.interactive.default.value}" },
+        "inverse": { "value": "#ffffff" }
+      },
+      "background": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#fafafa" },
+        "accent": { "value": "#ebf3fc" },
+        "muted": { "value": "#f0f0f0" }
+      },
+      "border": {
+        "default": { "value": "#d1d1d1" },
+        "muted": { "value": "#e0e0e0" },
+        "accent": { "value": "#0f6cbd" }
+      },
+      "interactive": {
+        "default": { "value": "#0f6cbd" },
+        "hover": { "value": "#115ea3" },
+        "active": { "value": "#0c3b5e" },
+        "focus": { "value": "#0f6cbd" },
+        "disabled": { "value": "#bdbdbd" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#d6d6d6" },
+        "muted": { "value": "#8a8a8a" },
+        "accent": { "value": "{color.dark.interactive.default.value}" },
+        "inverse": { "value": "#242424" }
+      },
+      "background": {
+        "primary": { "value": "#292929" },
+        "secondary": { "value": "#1f1f1f" },
+        "accent": { "value": "#0c3b5e" },
+        "muted": { "value": "#383838" }
+      },
+      "border": {
+        "default": { "value": "#474747" },
+        "muted": { "value": "#383838" },
+        "accent": { "value": "#479ef5" }
+      },
+      "interactive": {
+        "default": { "value": "#479ef5" },
+        "hover": { "value": "#62abf5" },
+        "active": { "value": "#96c6fa" },
+        "focus": { "value": "#479ef5" },
+        "disabled": { "value": "#474747" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "0.5rem",
+      "lg": "0.75rem",
+      "xl": "1rem",
+      "2xl": "1.5rem",
+      "3xl": "2rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "68ch",
+      "content": "72rem",
+      "wide": "90rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "30rem",
+      "md": "48rem",
+      "lg": "64rem",
+      "xl": "85.375rem"
+    },
+    "grid": {
+      "columns": 12,
+      "gap": "1rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "major-second",
+    "baseSize": "0.875rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "2.5rem",
+        "fontWeight": 700,
+        "lineHeight": 1.12,
+        "letterSpacing": "-0.02em"
+      },
+      "h2": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "1.75rem",
+        "fontWeight": 700,
+        "lineHeight": 1.14,
+        "letterSpacing": "-0.01em"
+      },
+      "h3": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "1.5rem",
+        "fontWeight": 600,
+        "lineHeight": 1.17
+      },
+      "h4": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "1.25rem",
+        "fontWeight": 600,
+        "lineHeight": 1.2
+      },
+      "h5": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "1rem",
+        "fontWeight": 600,
+        "lineHeight": 1.25
+      },
+      "h6": {
+        "fontFamily": ["Segoe UI Variable", "Segoe UI", "system-ui", "sans-serif"],
+        "fontSize": "0.875rem",
+        "fontWeight": 600,
+        "lineHeight": 1.43
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 700 },
+      "subtle": { "opacity": 0.7, "fontSize": "0.8125rem" }
+    }
+  },
+  "modes": {
+    "display": {
+      "name": "display",
+      "description": "Large-scale Fluent typography for hero sections",
+      "tokens": {
+        "typography.heading.fontSize": "3.5rem",
+        "typography.heading.lineHeight": 1.05,
+        "typography.heading.letterSpacing": "-0.03em"
+      }
+    },
+    "interface": {
+      "name": "interface",
+      "description": "Compact Fluent UI component typography",
+      "tokens": {
+        "typography.body.fontSize": "0.8125rem",
+        "typography.body.lineHeight": 1.38,
+        "spacing.scale.xl": "0.75rem"
+      }
+    }
+  },
+  "themes": [
+    {
+      "name": "fluent-teams",
+      "colorScheme": "brand",
+      "tokens": {
+        "color.light.interactive.default.value": "#5b5fc7",
+        "color.light.interactive.hover.value": "#4f52b2",
+        "color.light.background.accent.value": "#e8ebfa",
+        "color.dark.interactive.default.value": "#7f85f5",
+        "color.dark.interactive.hover.value": "#9299f7"
+      }
+    }
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "2.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.16,
+      "letterSpacing": "0em"
+    },
+    "subheading": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "1.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.29,
+      "letterSpacing": "0em"
+    },
+    "body": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43,
+      "letterSpacing": "0.0178em"
+    },
+    "caption": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "0.6875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.45,
+      "letterSpacing": "0.0333em"
+    },
+    "button": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 500,
+      "lineHeight": 1.43,
+      "letterSpacing": "0.0107em",
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 500,
+      "lineHeight": 1.33,
+      "letterSpacing": "0.0417em"
+    },
+    "input": {
+      "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+      "fontSize": "1rem",
+      "fontWeight": 400,
+      "lineHeight": 1.5,
+      "letterSpacing": "0.0094em"
+    },
+    "code": {
+      "fontFamily": ["Roboto Mono", "ui-monospace", "monospace"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#1c1b1f" },
+        "secondary": { "value": "#49454f" },
+        "muted": { "value": "#79747e" },
+        "accent": { "value": "{color.light.interactive.default.value}" },
+        "inverse": { "value": "#f4eff4" }
+      },
+      "background": {
+        "primary": { "value": "#fffbfe" },
+        "secondary": { "value": "#f7f2fa" },
+        "accent": { "value": "#eaddff" },
+        "muted": { "value": "#e7e0ec" }
+      },
+      "border": {
+        "default": { "value": "#cac4d0" },
+        "muted": { "value": "#e7e0ec" },
+        "accent": { "value": "#6750a4" }
+      },
+      "interactive": {
+        "default": { "value": "#6750a4" },
+        "hover": { "value": "#4f378b" },
+        "active": { "value": "#381e72" },
+        "focus": { "value": "#6750a4" },
+        "disabled": { "value": "#c4c7c5" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#e6e1e5" },
+        "secondary": { "value": "#cac4d0" },
+        "muted": { "value": "#938f99" },
+        "accent": { "value": "{color.dark.interactive.default.value}" },
+        "inverse": { "value": "#313033" }
+      },
+      "background": {
+        "primary": { "value": "#1c1b1f" },
+        "secondary": { "value": "#211f26" },
+        "accent": { "value": "#4a4458" },
+        "muted": { "value": "#36343b" }
+      },
+      "border": {
+        "default": { "value": "#49454f" },
+        "muted": { "value": "#36343b" },
+        "accent": { "value": "#d0bcff" }
+      },
+      "interactive": {
+        "default": { "value": "#d0bcff" },
+        "hover": { "value": "#e8deff" },
+        "active": { "value": "#f6edff" },
+        "focus": { "value": "#d0bcff" },
+        "disabled": { "value": "#49454f" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "0.75rem",
+      "lg": "1rem",
+      "xl": "1.5rem",
+      "2xl": "2rem",
+      "3xl": "3rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "68ch",
+      "content": "72rem",
+      "wide": "90rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "37.5rem",
+      "md": "52.5rem",
+      "lg": "75rem",
+      "xl": "100rem"
+    },
+    "grid": {
+      "columns": 12,
+      "gap": "1.5rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "major-third",
+    "baseSize": "0.875rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "3.5625rem",
+        "fontWeight": 400,
+        "lineHeight": 1.12,
+        "letterSpacing": "-0.0156em"
+      },
+      "h2": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "2.8125rem",
+        "fontWeight": 400,
+        "lineHeight": 1.16,
+        "letterSpacing": "0em"
+      },
+      "h3": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "2rem",
+        "fontWeight": 400,
+        "lineHeight": 1.25,
+        "letterSpacing": "0.0156em"
+      },
+      "h4": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "1.75rem",
+        "fontWeight": 400,
+        "lineHeight": 1.29,
+        "letterSpacing": "0em"
+      },
+      "h5": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "1.5rem",
+        "fontWeight": 400,
+        "lineHeight": 1.33,
+        "letterSpacing": "0em"
+      },
+      "h6": {
+        "fontFamily": ["Roboto", "system-ui", "sans-serif"],
+        "fontSize": "1.375rem",
+        "fontWeight": 400,
+        "lineHeight": 1.27,
+        "letterSpacing": "0em"
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 700 },
+      "subtle": { "opacity": 0.74, "fontSize": "0.8125rem" }
+    }
+  },
+  "modes": {
+    "display": {
+      "name": "display",
+      "description": "Material Design display typography",
+      "tokens": {
+        "typography.heading.fontSize": "3.5625rem",
+        "typography.heading.fontWeight": 400,
+        "typography.heading.lineHeight": 1.12,
+        "typography.heading.letterSpacing": "-0.0156em"
+      }
+    },
+    "interface": {
+      "name": "interface",
+      "description": "Compact Material Design component typography",
+      "tokens": {
+        "typography.body.fontSize": "0.8125rem",
+        "typography.body.lineHeight": 1.38,
+        "spacing.scale.xl": "1rem"
+      }
+    }
+  },
+  "themes": [
+    {
+      "name": "material-green",
+      "colorScheme": "brand",
+      "tokens": {
+        "color.light.interactive.default.value": "#386a20",
+        "color.light.interactive.hover.value": "#2d5518",
+        "color.light.background.accent.value": "#c4efaf",
+        "color.dark.interactive.default.value": "#a9d18e",
+        "color.dark.interactive.hover.value": "#bfe0a6"
+      }
+    }
+  ]
+}

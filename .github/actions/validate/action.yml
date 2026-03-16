@@ -1,0 +1,61 @@
+name: Fetchtype Validate
+description: Install a packaged fetchtype CLI artifact and validate a token file.
+
+inputs:
+  token-file:
+    description: Path to the token JSON file to validate.
+    required: true
+  package-spec:
+    description: npm package spec or local tarball path for the fetchtype CLI.
+    required: false
+    default: 'fetchtype'
+  github-annotations:
+    description: Emit GitHub step summaries and review annotations during validation.
+    required: false
+    default: 'true'
+  node-version:
+    description: Node.js version to use.
+    required: false
+    default: '20'
+  pnpm-version:
+    description: pnpm version to use.
+    required: false
+    default: '10'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ inputs.pnpm-version }}
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: ${{ inputs.node-version }}
+        cache: pnpm
+
+    - name: Install packaged fetchtype CLI
+      shell: bash
+      run: |
+        runner_dir="${RUNNER_TEMP}/fetchtype-cli-runner"
+        rm -rf "${runner_dir}"
+        mkdir -p "${runner_dir}"
+        cat > "${runner_dir}/package.json" <<'EOF'
+        {
+          "name": "fetchtype-cli-runner",
+          "private": true
+        }
+        EOF
+        pnpm --dir "${runner_dir}" add "${{ inputs.package-spec }}"
+
+    - name: Validate token file
+      shell: bash
+      run: |
+        runner_dir="${RUNNER_TEMP}/fetchtype-cli-runner"
+        github_flag=""
+        if [ "${{ inputs.github-annotations }}" = "true" ]; then
+          github_flag="--github"
+        fi
+        pnpm --dir "${runner_dir}" exec fetchtype validate --input "${{ inputs.token-file }}" ${github_flag}

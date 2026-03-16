@@ -1,0 +1,63 @@
+{
+  "name": "fetchtype",
+  "version": "0.1.1",
+  "description": "Typography validation for design systems. Catch readability bugs, enforce WCAG thresholds, export to CSS/Tailwind/shadcn/W3C.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fetchtype/fetchtype.git",
+    "directory": "packages/cli"
+  },
+  "homepage": "https://fetchtype.com",
+  "keywords": [
+    "typography",
+    "design-tokens",
+    "validation",
+    "wcag",
+    "accessibility",
+    "tailwind",
+    "shadcn",
+    "css",
+    "design-system",
+    "font"
+  ],
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "bin": {
+    "fetchtype": "dist/bin.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests",
+    "dev": "tsx src/bin.ts"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.27.1",
+    "chalk": "^5.4.1",
+    "commander": "^13.1.0",
+    "lilconfig": "^3.1.3"
+  },
+  "devDependencies": {
+    "@fetchtype/cdn": "workspace:*",
+    "@fetchtype/components": "workspace:*",
+    "@fetchtype/core": "workspace:*",
+    "@fetchtype/fonts": "workspace:*",
+    "@fetchtype/types": "workspace:*",
+    "tsx": "^4.19.3"
+  }
+}

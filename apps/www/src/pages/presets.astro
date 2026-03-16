@@ -1,0 +1,162 @@
+---
+import BaseLayout from '@fetchtype/ui/src/components/BaseLayout.astro';
+import SEOHead from '@fetchtype/ui/src/components/SEOHead.astro';
+import '../styles/global.css';
+
+const presets = [
+  { id: 'base', name: 'Base', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third', description: 'Clean geometric sans for universal applications' },
+  { id: 'editorial', name: 'Editorial', heading: 'Georgia', body: 'Georgia', code: 'JetBrains Mono', scale: 'perfect-fourth', description: 'Classical serif for long-form reading and editorial content' },
+  { id: 'dashboard', name: 'Dashboard', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second', description: 'Compact information-dense layouts for data dashboards' },
+  { id: 'ecommerce', name: 'E-commerce', heading: 'DM Sans', body: 'Inter', code: 'JetBrains Mono', scale: 'major-second', description: 'Friendly geometric display with neutral body text for product catalogs' },
+  { id: 'docs', name: 'Documentation', heading: 'Source Serif 4', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'minor-third', description: 'Readable serif for technical documentation and reference material' },
+  { id: 'fluent', name: 'Fluent', heading: 'Segoe UI Variable', body: 'Segoe UI Variable', code: 'Cascadia Code', scale: 'major-second', description: 'Microsoft Fluent design system typographic foundation' },
+  { id: 'material', name: 'Material', heading: 'Roboto', body: 'Roboto', code: 'Roboto Mono', scale: 'major-third', description: 'Google Material Design typographic scale and recommendations' },
+  { id: 'carbon', name: 'Carbon', heading: 'IBM Plex Sans', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'perfect-fourth', description: 'IBM Carbon design system with Plex type family' },
+  { id: 'spectrum', name: 'Spectrum', heading: 'Adobe Clean', body: 'Adobe Clean', code: 'Source Code Pro', scale: 'major-third', description: 'Adobe Spectrum design system typographic foundation' },
+  { id: 'radix', name: 'Radix', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third', description: 'Radix UI design system with Inter type stack' },
+];
+
+const systemFonts = ['Segoe UI Variable', 'Adobe Clean', 'Georgia'];
+
+const googleFonts = [...new Set(presets.flatMap(p => [p.heading, p.body, p.code]))].filter(f => !systemFonts.includes(f));
+const fontsUrl = `https://fonts.googleapis.com/css2?${googleFonts.map(f => `family=${f.replace(/ /g, '+')}`).join('&')}&display=swap`;
+
+function toFontId(family: string): string {
+  return family.toLowerCase().replace(/ /g, '-');
+}
+
+function isLinkable(family: string): boolean {
+  return !systemFonts.includes(family);
+}
+---
+
+<BaseLayout
+  title="Typography Presets"
+  site="www"
+  currentPath="/presets"
+  description="10 curated typography presets for design systems."
+>
+  <SEOHead
+    slot="head"
+    title="Typography Presets — Fetchtype"
+    description="10 curated typography presets for design systems: Base, Editorial, Dashboard, E-commerce, Docs, Fluent, Material, Carbon, Spectrum, and Radix."
+    canonicalUrl="https://fetchtype.com/presets"
+    ogType="website"
+  />
+
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href={fontsUrl} rel="stylesheet" />
+  </Fragment>
+
+  <!-- Hero -->
+  <section class="max-w-[1400px] mx-auto px-6 pt-16 pb-12">
+    <div class="max-w-3xl">
+      <p class="font-mono text-xs text-ft-muted uppercase tracking-[0.15em] mb-6">
+        Design System Presets
+      </p>
+
+      <h1 class="font-display text-6xl md:text-7xl leading-[0.93] tracking-tight text-ft-dark mb-8">
+        Presets
+      </h1>
+
+      <p class="font-body text-lg leading-relaxed text-ft-muted max-w-xl">
+        10 curated typography configurations for common design system patterns.
+      </p>
+    </div>
+  </section>
+
+  <div class="border-t border-thin"></div>
+
+  <!-- Preset list -->
+  <section class="max-w-[1400px] mx-auto px-6 py-12">
+    {presets.map((preset, i) => (
+      <article id={preset.id} class="mb-16 last:mb-0">
+
+        <!-- Header row -->
+        <div class="flex items-baseline gap-4 mb-4">
+          <span class="font-mono text-sm text-ft-accent">
+            {String(i + 1).padStart(2, '0')}
+          </span>
+          <h2 class="font-display text-3xl md:text-4xl text-ft-dark tracking-tight">
+            {preset.name}
+          </h2>
+        </div>
+
+        <p class="font-body text-base text-ft-muted leading-relaxed mb-6 max-w-2xl">
+          {preset.description}
+        </p>
+
+        <!-- Font stack + scale -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+          <div>
+            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Heading</p>
+            {isLinkable(preset.heading) ? (
+              <a href={`/registry/${toFontId(preset.heading)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                {preset.heading}
+              </a>
+            ) : (
+              <p class="font-body text-sm text-ft-dark">{preset.heading}</p>
+            )}
+          </div>
+          <div>
+            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Body</p>
+            {isLinkable(preset.body) ? (
+              <a href={`/registry/${toFontId(preset.body)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                {preset.body}
+              </a>
+            ) : (
+              <p class="font-body text-sm text-ft-dark">{preset.body}</p>
+            )}
+          </div>
+          <div>
+            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Mono</p>
+            {isLinkable(preset.code) ? (
+              <a href={`/registry/${toFontId(preset.code)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                {preset.code}
+              </a>
+            ) : (
+              <p class="font-body text-sm text-ft-dark">{preset.code}</p>
+            )}
+          </div>
+          <div>
+            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Scale</p>
+            <p class="font-body text-sm text-ft-dark">{preset.scale}</p>
+          </div>
+        </div>
+
+        <!-- Type specimen -->
+        <div class="border border-thin p-6 md:p-8 mb-4 bg-white">
+          <p
+            class="text-4xl md:text-5xl text-ft-dark tracking-tight mb-4"
+            style={`font-family: '${preset.heading}', sans-serif;`}
+          >
+            The quick brown fox
+          </p>
+          <p
+            class="text-base text-ft-muted leading-relaxed mb-4 max-w-xl"
+            style={`font-family: '${preset.body}', sans-serif;`}
+          >
+            Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed.
+          </p>
+          <code
+            class="text-sm text-ft-accent"
+            style={`font-family: '${preset.code}', monospace;`}
+          >
+            fetchtype init --preset {preset.id}
+          </code>
+        </div>
+
+        <!-- Usage code block -->
+        <div class="bg-ft-code-bg px-5 py-4 font-mono text-sm text-white overflow-x-auto">
+          <span class="text-ft-muted">$</span> npx fetchtype init --preset {preset.id}
+        </div>
+
+        {i < presets.length - 1 && (
+          <div class="border-b border-thin mt-16"></div>
+        )}
+      </article>
+    ))}
+  </section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@fetchtype/types": ["packages/types/src/index.ts"],
+      "@fetchtype/fonts": ["packages/fonts/src/index.ts"],
+      "@fetchtype/core": ["packages/core/src/index.ts"],
+      "@fetchtype/cdn": ["packages/cdn/src/index.ts"],
+      "@fetchtype/components": ["packages/components/src/index.ts"],
+      "fetchtype": ["packages/cli/src/index.ts"]
+    }
+  },
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/fonts" },
+    { "path": "packages/core" },
+    { "path": "packages/cdn" },
+    { "path": "packages/components" },
+    { "path": "packages/cli" }
+  ],
+  "include": []
+}

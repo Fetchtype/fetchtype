@@ -1,0 +1,55 @@
+---
+interface Props {
+  site: 'www' | 'docs';
+  currentPath?: string;
+}
+
+const { site, currentPath = '/' } = Astro.props;
+
+const wwwNav = [
+  { label: 'Registry', href: '/registry' },
+  { label: 'Presets', href: '/presets' },
+  { label: 'Docs', href: 'https://fetchtype.dev' },
+];
+
+const docsNav = [
+  { label: 'Commands', href: '/#commands' },
+  { label: 'Tokens', href: '/#tokens' },
+  { label: 'API', href: '/#api' },
+  { label: 'MCP', href: '/#mcp' },
+  { label: 'Home', href: 'https://fetchtype.com' },
+];
+
+const nav = site === 'www' ? wwwNav : docsNav;
+---
+
+<header class="w-full border-b border-thin">
+  <div class="max-w-[1400px] mx-auto flex items-center justify-between px-6 py-4">
+    <a href="/" class="font-display text-2xl tracking-tight text-ft-dark hover:text-ft-accent transition-colors">
+      Fetchtype
+    </a>
+    <nav class="hidden md:flex items-center gap-8">
+      {nav.map(item => (
+        <a
+          href={item.href}
+          class:list={[
+            'text-sm font-mono uppercase tracking-wider transition-colors',
+            currentPath === item.href
+              ? 'text-ft-accent'
+              : 'text-ft-muted hover:text-ft-dark',
+          ]}
+        >
+          {item.label}
+        </a>
+      ))}
+    </nav>
+    <a
+      href="https://github.com/fetchtype/fetchtype"
+      class="text-ft-muted hover:text-ft-dark transition-colors text-sm font-mono"
+      target="_blank"
+      rel="noopener"
+    >
+      GitHub
+    </a>
+  </div>
+</header>

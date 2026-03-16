@@ -1,0 +1,223 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "2.25rem",
+      "fontWeight": 700,
+      "lineHeight": 1.22,
+      "letterSpacing": "-0.025em"
+    },
+    "subheading": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "1.5rem",
+      "fontWeight": 600,
+      "lineHeight": 1.33,
+      "letterSpacing": "-0.01em"
+    },
+    "body": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "0.9375rem",
+      "fontWeight": 400,
+      "lineHeight": 1.6
+    },
+    "caption": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.38
+    },
+    "button": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 500,
+      "lineHeight": 1.43,
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 500,
+      "lineHeight": 1.23
+    },
+    "input": {
+      "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.43
+    },
+    "code": {
+      "fontFamily": ["JetBrains Mono", "Menlo", "ui-monospace", "monospace"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.54
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#11181c" },
+        "secondary": { "value": "#3b4752" },
+        "muted": { "value": "#687076" },
+        "accent": { "value": "{color.light.interactive.default.value}" },
+        "inverse": { "value": "#ffffff" }
+      },
+      "background": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#f9f9fb" },
+        "accent": { "value": "#e1e9ff" },
+        "muted": { "value": "#eceef0" }
+      },
+      "border": {
+        "default": { "value": "#d7dbdf" },
+        "muted": { "value": "#e6e8eb" },
+        "accent": { "value": "#3e63dd" }
+      },
+      "interactive": {
+        "default": { "value": "#3e63dd" },
+        "hover": { "value": "#3358d4" },
+        "active": { "value": "#2f4eb2" },
+        "focus": { "value": "#3e63dd" },
+        "disabled": { "value": "#b5b9bd" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#edeef0" },
+        "secondary": { "value": "#b0b4ba" },
+        "muted": { "value": "#7c8188" },
+        "accent": { "value": "{color.dark.interactive.default.value}" },
+        "inverse": { "value": "#11181c" }
+      },
+      "background": {
+        "primary": { "value": "#111113" },
+        "secondary": { "value": "#191a1c" },
+        "accent": { "value": "#1f2b5f" },
+        "muted": { "value": "#27282b" }
+      },
+      "border": {
+        "default": { "value": "#3a3d42" },
+        "muted": { "value": "#27282b" },
+        "accent": { "value": "#7b93db" }
+      },
+      "interactive": {
+        "default": { "value": "#7b93db" },
+        "hover": { "value": "#93a8e5" },
+        "active": { "value": "#b1c2f0" },
+        "focus": { "value": "#7b93db" },
+        "disabled": { "value": "#3a3d42" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "0.75rem",
+      "lg": "1rem",
+      "xl": "1.5rem",
+      "2xl": "2rem",
+      "3xl": "3rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "65ch",
+      "content": "72rem",
+      "wide": "90rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "30rem",
+      "md": "48rem",
+      "lg": "64rem",
+      "xl": "80rem"
+    },
+    "grid": {
+      "columns": 12,
+      "gap": "1.25rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "major-third",
+    "baseSize": "0.9375rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "2.25rem",
+        "fontWeight": 700,
+        "lineHeight": 1.17,
+        "letterSpacing": "-0.025em"
+      },
+      "h2": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "1.875rem",
+        "fontWeight": 700,
+        "lineHeight": 1.2,
+        "letterSpacing": "-0.02em"
+      },
+      "h3": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "1.5rem",
+        "fontWeight": 600,
+        "lineHeight": 1.25,
+        "letterSpacing": "-0.01em"
+      },
+      "h4": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "1.25rem",
+        "fontWeight": 600,
+        "lineHeight": 1.3
+      },
+      "h5": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "1.0625rem",
+        "fontWeight": 600,
+        "lineHeight": 1.35
+      },
+      "h6": {
+        "fontFamily": ["Inter", "system-ui", "-apple-system", "sans-serif"],
+        "fontSize": "0.9375rem",
+        "fontWeight": 600,
+        "lineHeight": 1.4
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 600 },
+      "subtle": { "opacity": 0.72, "fontSize": "0.8125rem" }
+    }
+  },
+  "modes": {
+    "display": {
+      "name": "display",
+      "description": "Radix display typography for hero content",
+      "tokens": {
+        "typography.heading.fontSize": "3.5rem",
+        "typography.heading.lineHeight": 1.08,
+        "typography.heading.letterSpacing": "-0.04em"
+      }
+    },
+    "interface": {
+      "name": "interface",
+      "description": "Radix compact component typography",
+      "tokens": {
+        "typography.body.fontSize": "0.8125rem",
+        "typography.body.lineHeight": 1.38,
+        "spacing.scale.xl": "1rem"
+      }
+    }
+  },
+  "themes": [
+    {
+      "name": "radix-violet",
+      "colorScheme": "brand",
+      "tokens": {
+        "color.light.interactive.default.value": "#6e56cf",
+        "color.light.interactive.hover.value": "#5b4ab5",
+        "color.light.background.accent.value": "#ede9fe",
+        "color.dark.interactive.default.value": "#9e8cfc",
+        "color.dark.interactive.hover.value": "#b4a5ff"
+      }
+    }
+  ]
+}

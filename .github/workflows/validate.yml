@@ -1,0 +1,44 @@
+name: Validate
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: '20'
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build workspace
+        run: pnpm build
+
+      - name: Pack CLI artifact
+        run: pnpm --filter fetchtype pack --pack-destination .fetchtype-dist
+
+      - name: Validate fetchtype preset from tarball
+        uses: ./.github/actions/validate
+        with:
+          package-spec: ./.fetchtype-dist/fetchtype-cli-0.1.0.tgz
+          token-file: packages/core/src/base.tokens.json
+
+      - name: Build example bundle from tarball
+        shell: bash
+        run: |
+          runner_dir="${RUNNER_TEMP}/fetchtype-cli-runner"
+          pnpm --dir "${runner_dir}" exec fetchtype build --input "${GITHUB_WORKSPACE}/packages/core/src/base.tokens.json" --out-dir "${GITHUB_WORKSPACE}/dist/example"

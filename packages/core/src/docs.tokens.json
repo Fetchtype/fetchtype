@@ -1,0 +1,214 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "2.5rem",
+      "fontWeight": 700,
+      "lineHeight": 1.1,
+      "letterSpacing": "-0.02em"
+    },
+    "subheading": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "1.75rem",
+      "fontWeight": 600,
+      "lineHeight": 1.2
+    },
+    "body": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "1rem",
+      "fontWeight": 400,
+      "lineHeight": 1.7
+    },
+    "caption": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.5
+    },
+    "button": {
+      "fontFamily": ["Inter", "system-ui", "sans-serif"],
+      "fontSize": "0.9375rem",
+      "fontWeight": 600,
+      "lineHeight": 1.2,
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["Inter", "system-ui", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 500,
+      "lineHeight": 1.3
+    },
+    "input": {
+      "fontFamily": ["Inter", "system-ui", "sans-serif"],
+      "fontSize": "1rem",
+      "fontWeight": 400,
+      "lineHeight": 1.4
+    },
+    "chart-label": {
+      "fontFamily": ["Inter", "system-ui", "sans-serif"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 500,
+      "lineHeight": 1.3
+    },
+    "chart-axis": {
+      "fontFamily": ["Inter", "system-ui", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.3
+    },
+    "chart-title": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "1.125rem",
+      "fontWeight": 600,
+      "lineHeight": 1.2
+    },
+    "code": {
+      "fontFamily": ["JetBrains Mono", "ui-monospace", "monospace"],
+      "fontSize": "0.9375rem",
+      "fontWeight": 500,
+      "lineHeight": 1.5
+    },
+    "blockquote": {
+      "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+      "fontSize": "1.125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.8,
+      "letterSpacing": "0em"
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#111827" },
+        "secondary": { "value": "#374151" },
+        "muted": { "value": "#6b7280" },
+        "accent": { "value": "#2563eb" },
+        "inverse": { "value": "#f9fafb" }
+      },
+      "background": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#f8fafc" },
+        "accent": { "value": "#dbeafe" },
+        "muted": { "value": "#e5e7eb" }
+      },
+      "border": {
+        "default": { "value": "#d1d5db" },
+        "muted": { "value": "#e5e7eb" },
+        "accent": { "value": "#60a5fa" }
+      },
+      "interactive": {
+        "default": { "value": "#2563eb" },
+        "hover": { "value": "#1d4ed8" },
+        "active": { "value": "#1e40af" },
+        "focus": { "value": "#2563eb" },
+        "disabled": { "value": "#94a3b8" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#f9fafb" },
+        "secondary": { "value": "#d1d5db" },
+        "muted": { "value": "#9ca3af" },
+        "accent": { "value": "#60a5fa" },
+        "inverse": { "value": "#111827" }
+      },
+      "background": {
+        "primary": { "value": "#0f172a" },
+        "secondary": { "value": "#111827" },
+        "accent": { "value": "#1e3a8a" },
+        "muted": { "value": "#1f2937" }
+      },
+      "border": {
+        "default": { "value": "#334155" },
+        "muted": { "value": "#1f2937" },
+        "accent": { "value": "#3b82f6" }
+      },
+      "interactive": {
+        "default": { "value": "#60a5fa" },
+        "hover": { "value": "#93c5fd" },
+        "active": { "value": "#bfdbfe" },
+        "focus": { "value": "#60a5fa" },
+        "disabled": { "value": "#475569" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "0.75rem",
+      "lg": "1rem",
+      "xl": "1.5rem",
+      "2xl": "2rem",
+      "3xl": "3rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "68ch",
+      "content": "72rem",
+      "wide": "90rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "40rem",
+      "md": "48rem",
+      "lg": "64rem",
+      "xl": "80rem"
+    },
+    "grid": {
+      "columns": 12,
+      "gap": "1.5rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "minor-third",
+    "baseSize": "1rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "2.4883rem",
+        "fontWeight": 700,
+        "lineHeight": 1.05,
+        "letterSpacing": "-0.02em"
+      },
+      "h2": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "2.0736rem",
+        "fontWeight": 700,
+        "lineHeight": 1.08,
+        "letterSpacing": "-0.02em"
+      },
+      "h3": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "1.728rem",
+        "fontWeight": 650,
+        "lineHeight": 1.12
+      },
+      "h4": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "1.44rem",
+        "fontWeight": 600,
+        "lineHeight": 1.2
+      },
+      "h5": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "1.2rem",
+        "fontWeight": 600,
+        "lineHeight": 1.3
+      },
+      "h6": {
+        "fontFamily": ["Source Serif 4", "Georgia", "serif"],
+        "fontSize": "1rem",
+        "fontWeight": 600,
+        "lineHeight": 1.4
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 700 },
+      "subtle": { "opacity": 0.78, "fontSize": "0.9375rem" }
+    }
+  },
+  "themes": []
+}

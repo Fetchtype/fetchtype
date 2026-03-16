@@ -1,0 +1,27 @@
+{
+  "name": "fetchtype",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -r --stream run build",
+    "test": "pnpm build && pnpm -r --stream run test",
+    "typecheck": "pnpm build && pnpm -r --stream run typecheck",
+    "lint": "prettier --check .",
+    "format": "prettier --write .",
+    "init:repo": "./init.sh",
+    "check": "pnpm typecheck && pnpm test",
+    "pack:cli": "pnpm build && mkdir -p .fetchtype-dist && pnpm --filter fetchtype pack --pack-destination .fetchtype-dist"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "prettier": "^3.5.3",
+    "tsup": "^8.4.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  },
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=20",
+    "pnpm": ">=9"
+  }
+}

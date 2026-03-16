@@ -1,0 +1,222 @@
+{
+  "typography": {
+    "heading": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "2.75rem",
+      "fontWeight": 700,
+      "lineHeight": 1.18,
+      "letterSpacing": "-0.01em"
+    },
+    "subheading": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "1.5rem",
+      "fontWeight": 700,
+      "lineHeight": 1.25,
+      "letterSpacing": "-0.005em"
+    },
+    "body": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.49
+    },
+    "caption": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "0.6875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.45
+    },
+    "button": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 700,
+      "lineHeight": 1.2,
+      "textTransform": "none"
+    },
+    "label": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "0.75rem",
+      "fontWeight": 400,
+      "lineHeight": 1.3
+    },
+    "input": {
+      "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+      "fontSize": "0.875rem",
+      "fontWeight": 400,
+      "lineHeight": 1.49
+    },
+    "code": {
+      "fontFamily": ["Source Code Pro", "ui-monospace", "monospace"],
+      "fontSize": "0.8125rem",
+      "fontWeight": 400,
+      "lineHeight": 1.54
+    }
+  },
+  "color": {
+    "light": {
+      "text": {
+        "primary": { "value": "#1d1d1d" },
+        "secondary": { "value": "#464646" },
+        "muted": { "value": "#747474" },
+        "accent": { "value": "{color.light.interactive.default.value}" },
+        "inverse": { "value": "#ffffff" }
+      },
+      "background": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#f8f8f8" },
+        "accent": { "value": "#e5e5f7" },
+        "muted": { "value": "#eaeaea" }
+      },
+      "border": {
+        "default": { "value": "#cacaca" },
+        "muted": { "value": "#e1e1e1" },
+        "accent": { "value": "#0d66d0" }
+      },
+      "interactive": {
+        "default": { "value": "#0d66d0" },
+        "hover": { "value": "#095aba" },
+        "active": { "value": "#054da0" },
+        "focus": { "value": "#0d66d0" },
+        "disabled": { "value": "#b8b8b8" }
+      }
+    },
+    "dark": {
+      "text": {
+        "primary": { "value": "#ffffff" },
+        "secondary": { "value": "#cdcdcd" },
+        "muted": { "value": "#909090" },
+        "accent": { "value": "{color.dark.interactive.default.value}" },
+        "inverse": { "value": "#1d1d1d" }
+      },
+      "background": {
+        "primary": { "value": "#1e1e1e" },
+        "secondary": { "value": "#2c2c2c" },
+        "accent": { "value": "#1b3a5e" },
+        "muted": { "value": "#3a3a3a" }
+      },
+      "border": {
+        "default": { "value": "#4a4a4a" },
+        "muted": { "value": "#3a3a3a" },
+        "accent": { "value": "#378ef0" }
+      },
+      "interactive": {
+        "default": { "value": "#378ef0" },
+        "hover": { "value": "#5aa9fa" },
+        "active": { "value": "#7cc0ff" },
+        "focus": { "value": "#378ef0" },
+        "disabled": { "value": "#4a4a4a" }
+      }
+    }
+  },
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": {
+      "xs": "0.25rem",
+      "sm": "0.5rem",
+      "md": "0.75rem",
+      "lg": "1rem",
+      "xl": "1.5rem",
+      "2xl": "2rem",
+      "3xl": "3rem"
+    }
+  },
+  "layout": {
+    "maxWidth": {
+      "prose": "68ch",
+      "content": "72rem",
+      "wide": "90rem",
+      "full": "100%"
+    },
+    "breakpoints": {
+      "sm": "40rem",
+      "md": "48rem",
+      "lg": "64rem",
+      "xl": "80rem"
+    },
+    "grid": {
+      "columns": 12,
+      "gap": "1.5rem"
+    }
+  },
+  "hierarchy": {
+    "scale": "major-third",
+    "baseSize": "0.875rem",
+    "headings": {
+      "h1": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "2.75rem",
+        "fontWeight": 700,
+        "lineHeight": 1.13,
+        "letterSpacing": "-0.01em"
+      },
+      "h2": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "2.25rem",
+        "fontWeight": 700,
+        "lineHeight": 1.17,
+        "letterSpacing": "-0.005em"
+      },
+      "h3": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "1.75rem",
+        "fontWeight": 700,
+        "lineHeight": 1.21
+      },
+      "h4": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "1.5rem",
+        "fontWeight": 700,
+        "lineHeight": 1.25
+      },
+      "h5": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "1.125rem",
+        "fontWeight": 700,
+        "lineHeight": 1.33
+      },
+      "h6": {
+        "fontFamily": ["Adobe Clean", "Source Sans 3", "Helvetica Neue", "sans-serif"],
+        "fontSize": "0.9375rem",
+        "fontWeight": 700,
+        "lineHeight": 1.4
+      }
+    },
+    "emphasis": {
+      "strong": { "fontWeight": 700 },
+      "subtle": { "opacity": 0.75, "fontSize": "0.8125rem" }
+    }
+  },
+  "modes": {
+    "display": {
+      "name": "display",
+      "description": "Spectrum display typography for hero content",
+      "tokens": {
+        "typography.heading.fontSize": "3.625rem",
+        "typography.heading.lineHeight": 1.07,
+        "typography.heading.letterSpacing": "-0.02em"
+      }
+    },
+    "interface": {
+      "name": "interface",
+      "description": "Spectrum compact component typography",
+      "tokens": {
+        "typography.body.fontSize": "0.8125rem",
+        "typography.body.lineHeight": 1.38,
+        "spacing.scale.xl": "1rem"
+      }
+    }
+  },
+  "themes": [
+    {
+      "name": "spectrum-express",
+      "colorScheme": "brand",
+      "tokens": {
+        "color.light.interactive.default.value": "#1473e6",
+        "color.light.interactive.hover.value": "#0d66d0",
+        "color.light.background.accent.value": "#deebff",
+        "color.dark.interactive.default.value": "#4b9cf5",
+        "color.dark.interactive.hover.value": "#6bb1ff"
+      }
+    }
+  ]
+}

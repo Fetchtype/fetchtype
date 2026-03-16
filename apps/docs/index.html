@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>fetchtype docs</title>
+    <meta
+      name="description"
+      content="Install fetchtype, validate typography tokens, export to Tailwind and shadcn, suggest fonts, preview reports, and wire validation into CI."
+    />
+    <meta property="og:title" content="fetchtype docs" />
+    <meta
+      property="og:description"
+      content="Typography validation docs. Token format, validation rules, exporters, CI setup, and agent integration."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://fetchtype.dev" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="page-shell page-shell-docs">
+      <header class="site-header">
+        <a class="brand" href="https://fetchtype.com" aria-label="fetchtype home">
+          <svg class="brand-mark" viewBox="0 0 64 64" role="img" aria-hidden="true">
+            <path d="M12 18h28l12 12-12 12H12z" />
+            <path d="M22 18v28" />
+            <path d="M22 30h26" />
+          </svg>
+          <span>fetchtype</span>
+        </a>
+        <nav class="site-nav">
+          <a href="https://fetchtype.com">home</a>
+          <a href="#commands">commands</a>
+          <a href="#tokens">tokens</a>
+          <a href="#github">ci</a>
+        </nav>
+      </header>
+
+      <main class="docs-main">
+        <section class="docs-hero">
+          <p class="eyebrow">documentation</p>
+          <h1>Install, validate, build.</h1>
+          <p class="hero-text hero-text-strong">
+            What each command does, what the token file looks like, what the output means,
+            and how to wire it into CI.
+          </p>
+        </section>
+
+        <section class="docs-layout">
+          <aside class="docs-nav">
+            <a href="#install">Install</a>
+            <a href="#commands">Commands</a>
+            <a href="#tokens">Token format</a>
+            <a href="#presets">Presets</a>
+            <a href="#modes">Modes</a>
+            <a href="#checks">What gets checked</a>
+            <a href="#exporters">Exporters</a>
+            <a href="#preview">Preview &amp; Report</a>
+            <a href="#fonts">Font intelligence</a>
+            <a href="#agent">Agent integration</a>
+            <a href="#github">GitHub CI</a>
+            <a href="#output">Build output</a>
+          </aside>
+
+          <div class="docs-content">
+
+            <!-- ─── INSTALL ─── -->
+            <section id="install" class="docs-section">
+              <h2>Install</h2>
+              <pre class="terminal"><code>pnpm add -D fetchtype</code></pre>
+              <p>Or with npm:</p>
+              <pre class="terminal"><code>npm install -D fetchtype</code></pre>
+            </section>
+
+            <!-- ─── COMMANDS ─── -->
+            <section id="commands" class="docs-section">
+              <h2>Commands</h2>
+
+              <div class="docs-grid">
+                <article class="docs-card">
+                  <h3>fetchtype init</h3>
+                  <p>
+                    Writes a starter token file to fetchtype.tokens.json. The file includes
+                    typography definitions for 12 contexts (heading, body, button, caption, label,
+                    input, code, blockquote, and more), light and dark color palettes, a spacing
+                    scale, layout breakpoints, and heading hierarchy with two named themes. It passes
+                    all validation checks out of the box.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype init
+pnpm exec fetchtype init --force              # overwrite existing
+pnpm exec fetchtype init custom.json          # custom path
+pnpm exec fetchtype init --preset dashboard   # from a preset
+pnpm exec fetchtype init --prompt "modern SaaS dashboard"  # natural language</code></pre>
+                  <p>
+                    <code>--preset</code> accepts: base, editorial, dashboard, ecommerce, docs.
+                    <code>--prompt</code> generates a token file from a natural-language description.
+                  </p>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype validate</h3>
+                  <p>
+                    Checks a token file against 13 rules for schema correctness, accessibility
+                    violations, and structural problems. Exits with code 1 if any errors are found,
+                    so it works directly as a CI gate.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype validate -i fetchtype.tokens.json
+pnpm exec fetchtype validate -i tokens.json --json      # machine-readable
+pnpm exec fetchtype validate -i tokens.json --github    # PR annotations</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype build</h3>
+                  <p>
+                    Runs validation first (stops if it fails), then exports to the specified format.
+                    Supports CSS custom properties, Tailwind config partials, shadcn CSS with HSL
+                    variables, and W3C Design Tokens format.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype build -i fetchtype.tokens.json
+pnpm exec fetchtype build -i tokens.json --format tailwind
+pnpm exec fetchtype build -i tokens.json --format shadcn
+pnpm exec fetchtype build -i tokens.json --format w3c
+pnpm exec fetchtype build -i tokens.json --report          # standalone HTML report
+pnpm exec fetchtype build -i tokens.json --prefix ds       # --ds-typography-*</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype preview</h3>
+                  <p>
+                    Starts a local dev server that renders your token file with live reload.
+                    Shows heading hierarchy, body text, buttons, color palettes with contrast ratios,
+                    spacing scale, and a mode switcher.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype preview -i tokens.json</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype suggest</h3>
+                  <p>
+                    Recommends fonts from a catalog of 31 Google Fonts, filtered by typographic
+                    context. Returns font families suited for the specified role with metadata
+                    on style, weight range, and classification.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype suggest --context display
+pnpm exec fetchtype suggest --context interface
+pnpm exec fetchtype suggest --context reading
+pnpm exec fetchtype suggest --context mono</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype import</h3>
+                  <p>
+                    Imports a W3C Design Tokens file and converts it to fetchtype token format.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype import -i w3c-tokens.json</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>fetchtype mcp</h3>
+                  <p>
+                    Starts an MCP (Model Context Protocol) server over stdio with 5 tools:
+                    validate, build, suggest, init, and presets. Enables AI agents to interact
+                    with fetchtype programmatically.
+                  </p>
+                  <pre class="terminal"><code>pnpm exec fetchtype mcp</code></pre>
+                </article>
+
+                <article class="docs-card">
+                  <h3>Output formats</h3>
+                  <p>
+                    <code>--format</code> accepts: all (default), css, json, tailwind, shadcn, w3c.
+                    <code>--prefix</code> sets the CSS variable namespace (default: ft).
+                    <code>--out-dir</code> controls where files land (default: dist/tokens).
+                    <code>--json</code> on validate gives machine-readable diagnostic output.
+                    <code>--report</code> on build generates a standalone HTML report.
+                  </p>
+                </article>
+              </div>
+            </section>
+
+            <!-- ─── TOKEN FORMAT ─── -->
+            <section id="tokens" class="docs-section">
+              <h2>Token file format</h2>
+              <p>
+                A fetchtype.tokens.json file has six sections: typography, color, spacing, layout,
+                hierarchy, and optionally themes and modes. All are required except themes and modes.
+              </p>
+
+              <pre class="terminal"><code>{
+  "typography": {
+    "heading":    { "fontFamily": [...], "fontSize": "3.052rem", "fontWeight": 700, "lineHeight": 1.1 },
+    "body":       { "fontFamily": [...], "fontSize": "1rem",     "fontWeight": 400, "lineHeight": 1.6 },
+    "button":     { "fontSize": "0.9375rem", ... },
+    "caption":    { ... },
+    "label":      { ... },
+    "input":      { ... },
+    "code":       { ... },
+    "blockquote": { ... },
+    "subheading": { ... },
+    "chart-label": { ... },
+    "chart-axis":  { ... },
+    "chart-title": { ... }
+  },
+
+  "color": {
+    "light": {
+      "text":        { "primary": { "value": "#111827" }, "secondary": {...}, "muted": {...} },
+      "background":  { "primary": { "value": "#ffffff" }, "secondary": {...} },
+      "border":      { "default": {...}, "muted": {...}, "accent": {...} },
+      "interactive": { "default": {...}, "hover": {...}, "active": {...}, "disabled": {...} }
+    },
+    "dark": { /* same structure */ }
+  },
+
+  "spacing": {
+    "unit": "0.25rem",
+    "scale": { "xs": "0.25rem", "sm": "0.5rem", "md": "0.75rem", "lg": "1rem", ... }
+  },
+
+  "layout": {
+    "maxWidth":     { "prose": "68ch", "content": "72rem", "wide": "90rem", "full": "100%" },
+    "breakpoints":  { "sm": "40rem", "md": "48rem", "lg": "64rem", "xl": "80rem" },
+    "grid":         { "columns": 12, "gap": "1.5rem" }
+  },
+
+  "hierarchy": {
+    "scale": "major-third",
+    "baseSize": "1rem",
+    "headings": {
+      "h1": { "fontSize": "3.052rem", "lineHeight": 1.08 },
+      "h2": { "fontSize": "2.441rem", "lineHeight": 1.1 },
+      ...
+    }
+  },
+
+  "themes": [
+    {
+      "name": "brand-ocean",
+      "colorScheme": "brand",
+      "selector": "[data-theme=\"brand-ocean\"]",
+      "tokens": { "color.light.interactive.default.value": "#0f766e" }
+    }
+  ],
+
+  "modes": {
+    "display": {
+      "name": "display",
+      "tokens": { "typography.heading.lineHeight": 0.95, "typography.heading.letterSpacing": "-0.02em" }
+    },
+    "interface": {
+      "name": "interface",
+      "tokens": { "typography.body.fontSize": "0.875rem", "typography.body.lineHeight": 1.45 }
+    },
+    "reading": {
+      "name": "reading",
+      "tokens": { "typography.body.lineHeight": 1.7, "typography.body.fontSize": "1.125rem" }
+    },
+    "mono": {
+      "name": "mono",
+      "tokens": { "typography.body.fontFamily": ["JetBrains Mono", "monospace"] }
+    }
+  }
+}</code></pre>
+
+              <h3>Token references</h3>
+              <p>
+                Values can reference other tokens with {path.to.value} syntax. References are
+                resolved at build time. Circular references are detected and reported as errors.
+              </p>
+              <pre class="terminal"><code>"accent": { "value": "{color.light.interactive.default.value}" }</code></pre>
+
+              <h3>Typography contexts</h3>
+              <p>
+                The typography section supports 12 named contexts: heading, subheading, body,
+                caption, button, label, input, code, blockquote, chart-label, chart-axis, and
+                chart-title. Body and button are required — validation errors if either is missing.
+                Each context accepts fontFamily (string array), fontSize, fontWeight, lineHeight,
+                and letterSpacing.
+              </p>
+
+              <h3>Themes</h3>
+              <p>
+                Named themes override any token path. Each theme gets its own CSS block using the
+                selector you specify (default: [data-theme="name"]). Theme names must be unique.
+                Themes can override typography, color, spacing, layout, and hierarchy values.
+              </p>
+            </section>
+
+            <!-- ─── PRESETS ─── -->
+            <section id="presets" class="docs-section">
+              <h2>Presets</h2>
+              <p>
+                Presets provide opinionated starter token files tuned for specific use cases.
+                Each preset passes all 13 validation rules, includes WCAG-safe contrast ratios
+                for both light and dark themes, and ships with appropriate type scales,
+                spacing, and color palettes.
+              </p>
+              <pre class="terminal"><code>pnpm exec fetchtype init --preset editorial</code></pre>
+
+              <h3>Available presets</h3>
+              <ul>
+                <li>
+                  <strong>base</strong> — general-purpose defaults. Major-third scale, system font
+                  stack, neutral palette with light and dark color tokens. The default when no preset is specified.
+                </li>
+                <li>
+                  <strong>editorial</strong> — long-form reading. Larger body text (1.125rem),
+                  generous line-height (1.7), serif headings, narrower prose width (65ch).
+                </li>
+                <li>
+                  <strong>dashboard</strong> — data-dense interfaces. Compact body text (0.875rem),
+                  tighter line-height (1.5), monospace for data, wider content area.
+                </li>
+                <li>
+                  <strong>ecommerce</strong> — product and conversion pages. Clear heading hierarchy,
+                  prominent button sizing, high-contrast interactive states in both light and dark themes.
+                </li>
+                <li>
+                  <strong>docs</strong> — documentation sites. Code-friendly with monospace support,
+                  balanced heading scale, optimized for scanning and navigation.
+                </li>
+              </ul>
+            </section>
+
+            <!-- ─── MODES ─── -->
+            <section id="modes" class="docs-section">
+              <h2>Modes</h2>
+              <p>
+                Typography modes override specific tokens for a given rendering context. They are
+                optional — a token file works without them. When present, each mode is validated
+                independently and emits its own CSS block.
+              </p>
+
+              <h3>Built-in modes</h3>
+              <ul>
+                <li>
+                  <strong>display</strong> — tight heading line-height (0.95), negative letter-spacing.
+                  For hero sections and large type.
+                </li>
+                <li>
+                  <strong>interface</strong> — smaller body text (0.875rem), compact line-height (1.45).
+                  For UI-dense screens like dashboards and settings.
+                </li>
+                <li>
+                  <strong>reading</strong> — larger body text (1.125rem), generous line-height (1.7).
+                  For long-form content.
+                </li>
+                <li>
+                  <strong>mono</strong> — monospace font family. For code, terminal output, data tables.
+                </li>
+              </ul>
+
+              <h3>CSS output</h3>
+              <p>
+                Each mode generates a <code>[data-mode]</code> CSS block:
+              </p>
+              <pre class="terminal"><code>[data-mode="display"] {
+  --ft-typography-heading-line-height: 0.95;
+  --ft-typography-heading-letter-spacing: -0.02em;
+}
+
+[data-mode="reading"] {
+  --ft-typography-body-line-height: 1.7;
+  --ft-typography-body-font-size: 1.125rem;
+}</code></pre>
+
+              <h3>Composing modes with themes</h3>
+              <p>
+                Modes and themes are orthogonal. A page can use <code>[data-theme="dark"]</code> and
+                <code>[data-mode="reading"]</code> simultaneously. Modes override typography tokens;
+                themes override color tokens (including dark mode contrast pairs). Both compose
+                without conflict — and fetchtype validates every combination.
+              </p>
+            </section>
+
+            <!-- ─── WHAT GETS CHECKED ─── -->
+            <section id="checks" class="docs-section">
+              <h2>What gets checked</h2>
+              <p>
+                Validation runs 13 rules across both light and dark themes: schema checks first
+                (hard errors), then accessibility (WCAG contrast for each theme), readability,
+                structural, and font-loading checks.
+              </p>
+
+              <h3>Schema (errors)</h3>
+              <ul>
+                <li>All required fields present and correctly typed</li>
+                <li>Typography context names from the allowed enum</li>
+                <li>Color structure: light and dark modes with text, background, border, interactive groups</li>
+                <li>Layout: maxWidth, breakpoints, optional grid</li>
+                <li>Hierarchy: valid scale enum, heading levels h1-h6</li>
+                <li>Themes: unique names, valid token override paths</li>
+              </ul>
+
+              <h3>Accessibility (errors)</h3>
+              <ul>
+                <li>
+                  <strong>Contrast ratio ≥ 4.5:1 (WCAG AA)</strong> — primary text against primary background,
+                  validated separately for light and dark themes. Each reports its own ratio
+                  (<code>contrast.light</code>, <code>contrast.dark</code>) using WCAG 2.1 relative luminance
+                  (0.2126R + 0.7152G + 0.0722B). Ratios ≥ 7:1 are flagged as WCAG AAA.
+                </li>
+                <li>
+                  <strong>Required contexts</strong> — body and button typography must be defined.
+                  These are the minimum for any functional interface.
+                </li>
+              </ul>
+
+              <h3>Readability (warnings)</h3>
+              <ul>
+                <li>
+                  <strong>Body line-height ≥ 1.5</strong> — WCAG 1.4.12 requires spacing of at least
+                  1.5x the font size for body text.
+                </li>
+                <li>
+                  <strong>Button font-size ≥ 14px</strong> — interactive text needs to be large enough
+                  to read and tap reliably on touch devices.
+                </li>
+                <li>
+                  <strong>Caption/label font-size ≥ 11px</strong> — small text contexts must remain
+                  legible. Below 11px, text becomes unreadable at standard screen densities.
+                </li>
+                <li>
+                  <strong>Prose max-width ≤ 75ch</strong> — lines longer than 75 characters increase
+                  reading fatigue and reduce comprehension.
+                </li>
+              </ul>
+
+              <h3>Structural (warnings)</h3>
+              <ul>
+                <li>
+                  <strong>Heading sizes decrease h1 → h6</strong> — heading font sizes must form a
+                  strictly decreasing sequence from h1 through h6.
+                </li>
+                <li>
+                  <strong>Heading line-height &lt; body line-height</strong> — headings use tighter
+                  leading than body text. If heading line-height exceeds body line-height, the
+                  visual hierarchy breaks.
+                </li>
+                <li>
+                  <strong>Spacing scale monotonically increasing</strong> — spacing values (xs, sm,
+                  md, lg, xl, etc.) must increase from smallest to largest without inversions.
+                </li>
+                <li>
+                  <strong>Scale divergence within ±10%</strong> — computed heading sizes from the named
+                  ratio should not diverge more than 10% from the declared heading sizes.
+                </li>
+                <li>
+                  <strong>Dark mode completeness</strong> — if a light theme defines a color token, the
+                  corresponding dark theme must also define it. Missing dark-mode values are flagged
+                  so dark themes never ship with untested contrast or missing overrides.
+                </li>
+              </ul>
+
+              <h3>Font loading (warnings)</h3>
+              <ul>
+                <li>
+                  <strong>Font fallback chains present</strong> — every fontFamily array must include
+                  at least one generic fallback (sans-serif, serif, monospace, etc.).
+                </li>
+                <li>
+                  <strong>Font payload estimate ≤ 150KB</strong> — estimated total font payload across
+                  all declared families. Exceeding 150KB triggers a warning with the estimated size.
+                </li>
+              </ul>
+
+              <h3>References (errors)</h3>
+              <ul>
+                <li>All {path.to.token} aliases resolve to actual values</li>
+                <li>No circular reference chains</li>
+                <li>Reference paths must point to valid locations in the token tree</li>
+              </ul>
+            </section>
+
+            <!-- ─── EXPORTERS ─── -->
+            <section id="exporters" class="docs-section">
+              <h2>Exporters</h2>
+              <p>
+                fetchtype build writes validated tokens to the format your stack needs. Each exporter
+                produces files in the output directory (default: dist/tokens).
+              </p>
+
+              <h3>Tailwind</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype build -i tokens.json --format tailwind</code></pre>
+              <p>
+                Generates a tailwind.config.ts partial with your typography, colors, and spacing
+                mapped to Tailwind's theme structure. Drop it into your Tailwind config's
+                <code>theme.extend</code>.
+              </p>
+              <pre class="terminal"><code>// tailwind.config.ts (generated partial)
+export default {
+  theme: {
+    extend: {
+      fontSize: {
+        heading: "3.052rem",
+        body: "1rem",
+        button: "0.9375rem",
+      },
+      lineHeight: {
+        heading: "1.1",
+        body: "1.6",
+      },
+      colors: {
+        text: { primary: "#111827", secondary: "#374151" },
+        bg: { primary: "#ffffff", secondary: "#f9fafb" },
+      },
+    },
+  },
+};</code></pre>
+
+              <h3>shadcn</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype build -i tokens.json --format shadcn</code></pre>
+              <p>
+                Generates CSS with HSL variables matching shadcn/ui conventions. Compatible with
+                shadcn's theming system — use alongside your existing shadcn config.
+              </p>
+              <pre class="terminal"><code>:root {
+  --background: 0 0% 100%;
+  --foreground: 220 13% 9%;
+  --primary: 220 13% 9%;
+  --primary-foreground: 0 0% 100%;
+  /* ... */
+}
+
+.dark {
+  --background: 220 13% 9%;
+  --foreground: 210 20% 98%;
+  /* ... */
+}</code></pre>
+
+              <h3>W3C Design Tokens</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype build -i tokens.json --format w3c</code></pre>
+              <p>
+                Exports to the W3C Design Tokens Community Group format. Useful for interop with
+                other design token tools (Style Dictionary, Tokens Studio, etc.).
+              </p>
+              <pre class="terminal"><code>pnpm exec fetchtype import -i w3c-tokens.json</code></pre>
+              <p>
+                Import works in the other direction: convert a W3C token file into fetchtype format.
+              </p>
+            </section>
+
+            <!-- ─── PREVIEW & REPORT ─── -->
+            <section id="preview" class="docs-section">
+              <h2>Preview and report</h2>
+
+              <h3>Live preview</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype preview -i tokens.json</code></pre>
+              <p>
+                Starts a local dev server that renders your token file. The preview includes heading
+                hierarchy, body text samples, button states, color palettes with computed contrast
+                ratios, spacing scale visualization, and a mode switcher. Changes to the token file
+                trigger a live reload.
+              </p>
+
+              <h3>HTML report</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype build -i tokens.json --report</code></pre>
+              <p>
+                Generates a standalone HTML report alongside the normal build output. The report
+                contains the same views as the preview server: heading hierarchy, body text, buttons,
+                color palettes with contrast ratios, spacing scale, and mode switcher. Use it as a CI
+                artifact or share it with designers for review.
+              </p>
+            </section>
+
+            <!-- ─── FONT INTELLIGENCE ─── -->
+            <section id="fonts" class="docs-section">
+              <h2>Font intelligence</h2>
+
+              <h3>Font suggestions</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype suggest --context display
+pnpm exec fetchtype suggest --context interface
+pnpm exec fetchtype suggest --context reading
+pnpm exec fetchtype suggest --context mono</code></pre>
+              <p>
+                Recommends fonts from a curated catalog of 31 Google Fonts. Each suggestion is
+                filtered by the specified context — display fonts optimize for impact at large sizes,
+                interface fonts for legibility at small sizes, reading fonts for sustained
+                comprehension, and mono fonts for code and data.
+              </p>
+
+              <h3>Font validation</h3>
+              <p>
+                Three font-related rules run during validation:
+              </p>
+              <ul>
+                <li>
+                  <strong>Missing fallbacks</strong> — every fontFamily array must end with a generic
+                  family (sans-serif, serif, monospace, system-ui, cursive).
+                </li>
+                <li>
+                  <strong>Payload estimate</strong> — estimated total font weight across all declared
+                  families. Warns if the estimate exceeds 150KB.
+                </li>
+                <li>
+                  <strong>Unknown font family</strong> — flags font families not found in the catalog
+                  (informational, not a blocking error).
+                </li>
+              </ul>
+            </section>
+
+            <!-- ─── AGENT INTEGRATION ─── -->
+            <section id="agent" class="docs-section">
+              <h2>Agent integration</h2>
+              <p>
+                fetchtype is an agent-native typography stack. AI coding agents can validate tokens,
+                generate configurations, and get font recommendations through the MCP server or
+                the natural-language init command.
+              </p>
+
+              <h3>MCP server</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype mcp</code></pre>
+              <p>
+                Starts an MCP (Model Context Protocol) server over stdio. The server exposes 5 tools:
+              </p>
+              <ul>
+                <li><strong>validate</strong> — run validation on a token file, returns diagnostics</li>
+                <li><strong>build</strong> — export tokens to any supported format</li>
+                <li><strong>suggest</strong> — get font recommendations for a context</li>
+                <li><strong>init</strong> — generate a starter token file from a preset or prompt</li>
+                <li><strong>presets</strong> — list available presets with descriptions</li>
+              </ul>
+              <p>
+                Any MCP-compatible agent (Claude, Cursor, Windsurf, etc.) can connect to the server
+                and use these tools directly.
+              </p>
+
+              <h3>Natural-language init</h3>
+              <pre class="terminal"><code>pnpm exec fetchtype init --prompt "modern SaaS dashboard with dark mode"</code></pre>
+              <p>
+                Generates a token file from a natural-language description. The output passes all
+                13 validation rules and can be further refined by hand or by an agent.
+              </p>
+            </section>
+
+            <!-- ─── GITHUB CI ─── -->
+            <section id="github" class="docs-section">
+              <h2>GitHub CI</h2>
+              <p>
+                Add --github to any validate command to get two things: inline annotations on the
+                PR diff, and a step summary with the full diagnostic report.
+              </p>
+
+              <h3>Workflow file</h3>
+              <pre class="terminal"><code># .github/workflows/typography.yml
+name: Typography
+on: [pull_request]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+      - run: pnpm install
+      - run: pnpm exec fetchtype validate -i fetchtype.tokens.json --github</code></pre>
+
+              <h3>What --github emits</h3>
+              <ul>
+                <li>
+                  <strong>Workflow annotations</strong> — ::error, ::warning, and ::notice commands
+                  that appear inline on the PR diff. Each annotation includes the rule name, the
+                  source file, and the diagnostic message with actual values.
+                </li>
+                <li>
+                  <strong>Step summary</strong> — a markdown report appended to GITHUB_STEP_SUMMARY
+                  with pass/fail status, source file, error/warning/info counts, and a bulleted
+                  list of every diagnostic.
+                </li>
+              </ul>
+            </section>
+
+            <!-- ─── BUILD OUTPUT ─── -->
+            <section id="output" class="docs-section">
+              <h2>Build output</h2>
+              <p>
+                fetchtype build produces files in the output directory (default: dist/tokens).
+                The exact files depend on the chosen format.
+              </p>
+
+              <h3>tokens.css</h3>
+              <pre class="terminal"><code>:root {
+  --ft-typography-heading-font-family: Inter, system-ui, sans-serif;
+  --ft-typography-heading-font-size: 3.052rem;
+  --ft-typography-heading-font-weight: 700;
+  --ft-typography-heading-line-height: 1.1;
+  --ft-typography-body-font-size: 1rem;
+  --ft-typography-body-line-height: 1.6;
+  --ft-color-light-text-primary: #111827;
+  --ft-color-light-background-primary: #ffffff;
+  --ft-spacing-unit: 0.25rem;
+  --ft-spacing-sm: 0.5rem;
+  --ft-spacing-lg: 1rem;
+  --ft-layout-max-width-prose: 68ch;
+  /* ... */
+}
+
+[data-theme="dark"] {
+  --ft-color-dark-text-primary: #f9fafb;
+  --ft-color-dark-background-primary: #111827;
+  /* ... */
+}
+
+[data-mode="display"] {
+  --ft-typography-heading-line-height: 0.95;
+  --ft-typography-heading-letter-spacing: -0.02em;
+}
+
+[data-mode="reading"] {
+  --ft-typography-body-line-height: 1.7;
+  --ft-typography-body-font-size: 1.125rem;
+}
+
+[data-theme="brand-ocean"] {
+  --ft-color-light-interactive-default: #0f766e;
+  /* ... */
+}</code></pre>
+
+              <h3>tokens.json</h3>
+              <p>
+                The full resolved token set with all aliases expanded. Same structure as the input
+                file, but every {reference} has been replaced with its concrete value. Useful for
+                feeding into Tailwind configs, Figma plugins, or any tool that consumes structured
+                tokens.
+              </p>
+
+              <h3>Using the output</h3>
+              <p>
+                The CSS file is a standalone stylesheet. Import it or link it — no build plugin
+                needed. Use the custom properties anywhere:
+              </p>
+              <pre class="terminal"><code>body {
+  font-size: var(--ft-typography-body-font-size);
+  line-height: var(--ft-typography-body-line-height);
+  color: var(--ft-color-light-text-primary);
+  max-width: var(--ft-layout-max-width-prose);
+}</code></pre>
+            </section>
+
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
