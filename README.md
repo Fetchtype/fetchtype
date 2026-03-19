@@ -78,6 +78,25 @@ fetchtype checks 20 rules covering accessibility, readability, font loading, and
 | Fluid type | Clamp ordering | min < max, body ≥ 12px |
 | Font policy | Allow/block enforcement | Per-config rules |
 
+## Example output
+
+```
+$ fetchtype validate -i fetchtype.tokens.json
+
+  fetchtype v0.2.0
+
+  ✓ contrast.ratio          4.5:1 — passes WCAG AA
+  ✓ body.line-height        1.6 ≥ 1.5
+  ✓ button.font-size        15px ≥ 14px
+  ✓ caption.font-size       13px ≥ 11px
+  ✓ prose.width             65ch ≤ 75ch
+  ✓ heading.direction       h1 > h2 > h3 > h4 > h5 > h6
+  ✓ heading.line-height     1.1 < 1.6
+  ✗ dark-mode.completeness  missing dark theme
+
+  19 passed · 1 failed
+```
+
 ## Token format
 
 fetchtype uses a single JSON file to describe your entire typography system:
@@ -135,6 +154,7 @@ fetchtype build -i fetchtype.tokens.json -o dist/tokens --format all
 | `check` | Fast validation for pre-commit hooks. `--install-hook` to set up |
 | `drift` | Compare token snapshots and report breaking changes |
 | `generate` | Generate validated tokens from context and constraints |
+| `mcp` | Start an MCP server for AI agent integration (12 tools) |
 
 ## Presets
 
@@ -264,6 +284,16 @@ pnpm install
 pnpm build
 pnpm test
 ```
+
+## AI agent integration
+
+fetchtype includes an MCP server with 12 tools so AI coding agents can validate, generate, and manage typography tokens directly. See [`agents.md`](agents.md) for the full machine-readable reference.
+
+```bash
+fetchtype mcp
+```
+
+Tools: `fetchtype_validate`, `fetchtype_build`, `fetchtype_suggest`, `fetchtype_init`, `fetchtype_presets`, `fetchtype_audit`, `fetchtype_pair`, `fetchtype_search`, `fetchtype_resolve`, `fetchtype_prepare`, `fetchtype_generate`, `fetchtype_drift`.
 
 ## Links
 
