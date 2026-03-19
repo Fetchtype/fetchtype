@@ -8,7 +8,7 @@
     "typecheck": "pnpm build && pnpm -r --stream run typecheck",
     "lint": "prettier --check .",
     "format": "prettier --write .",
-    "init:repo": "./init.sh",
+
     "check": "pnpm typecheck && pnpm test",
     "pack:cli": "pnpm build && mkdir -p .fetchtype-dist && pnpm --filter fetchtype pack --pack-destination .fetchtype-dist"
   },

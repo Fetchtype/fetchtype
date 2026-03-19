@@ -1,9 +1,35 @@
 # fetchtype
 
-Typography validation and token build system for design-system teams. Catch readability bugs, enforce WCAG thresholds, manage font intelligence, and export tokens to CSS, Tailwind, shadcn, and W3C Design Tokens — from one file.
+**Typography that ships correct.** Validate tokens, enforce WCAG, and export to CSS, Tailwind, shadcn, and W3C Design Tokens — from one file.
+
+Every design system gets typography wrong eventually. Heading scales drift, contrast breaks, font payloads bloat, dark mode gets forgotten. fetchtype catches these problems before they reach production.
 
 ```bash
+npx fetchtype init
+npx fetchtype validate -i fetchtype.tokens.json
+npx fetchtype build -i fetchtype.tokens.json --format tailwind
+```
+
+## Why fetchtype?
+
+- **20 validation rules** — contrast, line-height, font loading, scale consistency, dark mode coverage, and more
+- **WCAG AA/AAA enforcement** — not just contrast; body line-height, button tap targets, caption legibility
+- **Export anywhere** — CSS custom properties, Tailwind config, shadcn variables, W3C Design Tokens
+- **1,929-font registry** — context-aware scoring, curated pairings, size guidance, performance budgets
+- **CI-ready** — GitHub Actions annotations, SARIF output, pre-commit hooks, drift detection
+- **One-command setup** — `fetchtype init --preset dashboard` gives you production-ready tokens in seconds
+
+## Install
+
+```bash
+# npm
+npm install -D fetchtype
+
+# pnpm
 pnpm add -D fetchtype
+
+# yarn
+yarn add -D fetchtype
 ```
 
 ## Quick start
@@ -12,120 +38,49 @@ pnpm add -D fetchtype
 # Generate a starter token file
 fetchtype init
 
-# Start from a preset
+# Start from a preset tuned for your use case
 fetchtype init --preset dashboard
 
-# Or describe what you're building
+# Or describe what you're building in plain English
 fetchtype init --prompt "modern SaaS dashboard with dark mode"
 
-# Validate against 20 rules
+# Validate your tokens against 20 rules
 fetchtype validate -i fetchtype.tokens.json
 
-# Export to any format
+# Export to your framework
 fetchtype build -i fetchtype.tokens.json --format tailwind
-
-# Audit an existing project for typography issues
-fetchtype audit --dir src/
-
-# Find the right font for your context
-fetchtype suggest -c interface
-
-# Get pairing recommendations
-fetchtype pair Inter
 ```
 
-## What gets checked
+## What gets validated
 
-20 rules covering accessibility, readability, font loading, and structural consistency:
+fetchtype checks 20 rules covering accessibility, readability, font loading, and structural consistency:
 
-| Rule | Threshold |
-|------|-----------|
-| Text contrast | ≥ 4.5:1 (WCAG AA) |
-| Body line-height | ≥ 1.5 |
-| Button font-size | ≥ 14px |
-| Caption / label font-size | ≥ 11px |
-| Prose width | ≤ 75ch |
-| Heading size direction | h1 → h6 decreasing |
-| Heading line-height | < body line-height |
-| Spacing scale | Monotonically increasing |
-| Scale divergence | Within ±10% of computed scale |
-| Dark mode completeness | All themes covered |
-| Font fallback chains | Generic fallback present |
-| Font payload | ≤ 150 KB estimated |
-| Token references | Resolve without cycles |
-| Font weight available | Requested weight exists in font |
-| Font axis range | Variable font axis bounds respected |
-| Subset coverage | Required subsets present in font |
-| Font display strategy | Warns on `auto` (prefer `swap`) |
-| Preload count | ≤ 4 preloaded web fonts |
-| Fluid type ordering | `clamp()` min < max, body ≥ 12px |
-| Font allowlist/blocklist | Policy enforcement via config |
-
-## Configuration
-
-Create `.fetchtype.json` in your project root to customize rules, set policies, and share config across repos:
-
-```json
-{
-  "extends": "fetchtype:recommended",
-  "rules": {
-    "contrast.ratio": { "severity": "error", "threshold": 7 },
-    "font.preload-count": { "severity": "warn", "max": 3 }
-  },
-  "fonts": {
-    "allow": ["Inter", "JetBrains Mono"],
-    "block": [{ "family": "Comic Sans MS", "reason": "Brand guidelines" }]
-  },
-  "performance": {
-    "budget": 120
-  }
-}
-```
-
-Built-in profiles: `fetchtype:recommended`, `fetchtype:strict`, `fetchtype:accessibility` (WCAG AAA).
-
-Configs are shareable via npm: `"extends": "@myorg/fetchtype-config"`.
-
-## Commands
-
-| Command | Description |
-|---------|-------------|
-| `init [output]` | Write a starter token file. `--preset`, `--prompt`, `--force` |
-| `validate -i <path>` | Validate tokens. `--github`, `--ci`, `--json`, `--sarif` |
-| `build -i <path>` | Export tokens. `--format` (css\|json\|tailwind\|shadcn\|w3c\|all) |
-| `import -i <path>` | Import a W3C Design Tokens file |
-| `suggest -c <context>` | Recommend fonts. Context: display\|interface\|reading\|mono\|editorial\|data |
-| `pair <font>` | Get pairing recommendations for a font |
-| `search <query>` | Search the 1,929-font registry |
-| `resolve <font>` | Get full metadata for a font |
-| `audit --dir <path>` | Scan CSS/Tailwind/HTML for typography issues |
-| `prepare -i <path>` | Download, subset, and optimize web fonts |
-| `preview -i <path>` | Start a live preview server with file watching |
-| `check` | Fast validation for pre-commit hooks. `--install-hook` |
-| `drift` | Compare token snapshots for breaking changes |
-| `generate` | Generate validated tokens from context + constraints |
-| `mcp` | Start an MCP server for AI agent integration |
-
-## Font registry
-
-1,929 Google Fonts with enriched metadata:
-
-- **Context scores** — display, interface, reading, mono, editorial, data fitness (0–1)
-- **Curated + algorithmic pairings** — 369 curated recommendations for 123 popular fonts, algorithmic coverage for all 1,929
-- **Size guidance** — per-font recommended body/display/caption sizes
-- **Performance estimates** — file size, loading strategy recommendations
-- **Tags** — 100% coverage with semantic classification
-- **Fallback CSS** — platform-aware fallback font stacks
-
-```bash
-# Find the best interface fonts under 80KB
-fetchtype search --context interface --max-size 80
-
-# Get Inter's full profile
-fetchtype resolve Inter
-```
+| Rule | What it checks | Threshold |
+|------|---------------|-----------|
+| Contrast | Text against background | WCAG AA ≥ 4.5:1 |
+| Body line-height | Readable paragraph spacing | ≥ 1.5 |
+| Button font-size | Tap target legibility | ≥ 14px |
+| Caption / label size | Small text legibility | ≥ 11px |
+| Prose width | Line length for readability | ≤ 75ch |
+| Heading direction | Scale flows h1 → h6 | Monotonically decreasing |
+| Heading line-height | Tighter than body | < body line-height |
+| Spacing scale | Consistent spacing ramp | Monotonically increasing |
+| Scale divergence | Matches computed type scale | Within ±10% |
+| Dark mode | Theme completeness | All modes covered |
+| Font fallbacks | System fallback chain | Generic fallback present |
+| Font payload | Web font budget | ≤ 150 KB |
+| Token references | Alias resolution | No circular references |
+| Font weight | Weight availability | Requested weight exists |
+| Font axis range | Variable font bounds | Axis values in range |
+| Subset coverage | Character set support | Required subsets present |
+| Font display | Loading strategy | Warns on `auto` |
+| Preload count | Font preload limit | ≤ 4 preloaded fonts |
+| Fluid type | Clamp ordering | min < max, body ≥ 12px |
+| Font policy | Allow/block enforcement | Per-config rules |
 
 ## Token format
+
+fetchtype uses a single JSON file to describe your entire typography system:
 
 ```json
 {
@@ -146,7 +101,7 @@ fetchtype resolve Inter
 }
 ```
 
-12 typography contexts: heading, subheading, body, caption, button, label, input, code, blockquote, chart-label, chart-axis, chart-title. Plus color, spacing, layout, hierarchy, optional themes and modes.
+Supports 12 typography contexts: `heading`, `subheading`, `body`, `caption`, `button`, `label`, `input`, `code`, `blockquote`, `chart-label`, `chart-axis`, `chart-title`. Plus `color`, `spacing`, `layout`, `hierarchy`, themes, and modes.
 
 ## Export formats
 
@@ -154,24 +109,122 @@ fetchtype resolve Inter
 fetchtype build -i fetchtype.tokens.json -o dist/tokens --format all
 ```
 
-| Format | Output | Description |
-|--------|--------|-------------|
+| Format | Output | Use case |
+|--------|--------|----------|
 | `css` | `tokens.css` | CSS custom properties with configurable prefix |
-| `json` | `tokens.json` | Fully resolved token values |
-| `tailwind` | `tailwind.config.ts` | `theme.extend` partial |
-| `shadcn` | `shadcn.css` | HSL variables, shadcn-compatible |
+| `json` | `tokens.json` | Fully resolved values for JS/TS consumption |
+| `tailwind` | `tailwind.config.ts` | Drop-in `theme.extend` partial |
+| `shadcn` | `shadcn.css` | HSL variables compatible with shadcn/ui |
 | `w3c` | `tokens.w3c.json` | W3C Design Tokens Community Group format |
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `init [output]` | Generate a starter token file. Flags: `--preset`, `--prompt`, `--force` |
+| `validate -i <file>` | Validate tokens against all rules. Flags: `--ci`, `--github`, `--json`, `--sarif` |
+| `build -i <file>` | Export tokens. Flags: `--format` (css\|json\|tailwind\|shadcn\|w3c\|all), `--out-dir` |
+| `import -i <file>` | Import tokens from a W3C Design Tokens file |
+| `suggest -c <context>` | Font recommendations. Contexts: display, interface, reading, mono, editorial, data |
+| `pair <font>` | Get pairing recommendations for any font |
+| `search <query>` | Search the 1,929-font registry by name, category, or tag |
+| `resolve <font>` | Get full metadata, scores, and pairings for a font |
+| `audit --dir <path>` | Scan CSS, Tailwind, and HTML files for typography issues |
+| `prepare -i <file>` | Download, subset, and optimize web fonts |
+| `preview -i <file>` | Start a live preview server with file watching |
+| `check` | Fast validation for pre-commit hooks. `--install-hook` to set up |
+| `drift` | Compare token snapshots and report breaking changes |
+| `generate` | Generate validated tokens from context and constraints |
+
+## Presets
+
+Start with a preset and customize from there:
+
+```bash
+fetchtype init --preset editorial
+```
+
+| Preset | Tuned for |
+|--------|-----------|
+| `base` | General-purpose defaults |
+| `editorial` | Long-form reading — larger body, generous line-height, serif stacks, 65ch prose width |
+| `dashboard` | Data-dense interfaces — compact body, tighter line-height, monospace, wider content |
+| `ecommerce` | Product pages and conversion flows |
+| `docs` | Documentation and knowledge bases |
+| `carbon` | IBM Carbon Design System alignment |
+| `fluent` | Microsoft Fluent Design System alignment |
+| `material` | Google Material Design 3 alignment |
+| `radix` | Radix UI alignment |
+| `spectrum` | Adobe Spectrum Design System alignment |
+
+## Font registry
+
+fetchtype includes a registry of 1,929 Google Fonts with enriched metadata beyond what the Google Fonts API provides:
+
+- **Context scores** — how well each font fits display, interface, reading, mono, editorial, and data contexts (scored 0–1)
+- **Curated pairings** — 369 hand-picked recommendations for 123 popular fonts, plus algorithmic pairings for all 1,929
+- **Size guidance** — per-font recommended sizes for body, display, and caption use
+- **Performance data** — file size estimates and loading strategy recommendations
+- **Semantic tags** — every font classified by style, mood, and use case
+- **Fallback stacks** — platform-aware CSS fallback chains
+
+```bash
+# Find the best interface fonts under 80 KB
+fetchtype search --context interface --max-size 80
+
+# Get Inter's full profile: scores, pairings, sizes, metadata
+fetchtype resolve Inter
+
+# Get pairing suggestions for any font
+fetchtype pair "Source Sans 3"
+```
+
+## Configuration
+
+Create `.fetchtype.json` in your project root to customize rules, enforce policies, and share config across repos:
+
+```json
+{
+  "extends": "fetchtype:recommended",
+  "rules": {
+    "contrast.ratio": { "severity": "error", "threshold": 7 },
+    "font.preload-count": { "severity": "warn", "max": 3 }
+  },
+  "fonts": {
+    "allow": ["Inter", "JetBrains Mono"],
+    "block": [{ "family": "Comic Sans MS", "reason": "Brand guidelines" }]
+  },
+  "performance": {
+    "budget": 120
+  }
+}
+```
+
+Built-in profiles:
+- `fetchtype:recommended` — sensible defaults for most projects
+- `fetchtype:strict` — tighter thresholds, all warnings promoted to errors
+- `fetchtype:accessibility` — WCAG AAA enforcement (7:1 contrast, stricter sizing)
+
+Share configs via npm: `"extends": "@myorg/fetchtype-config"`.
 
 ## CI integration
 
-### GitHub Actions (SARIF annotations)
+### GitHub Actions
 
 ```yaml
 - name: Validate typography
-  run: pnpm exec fetchtype validate -i fetchtype.tokens.json --ci --sarif
+  run: npx fetchtype validate -i fetchtype.tokens.json --ci --sarif
 ```
 
-SARIF output integrates with GitHub Code Scanning for inline PR annotations.
+SARIF output integrates with GitHub Code Scanning for inline PR annotations. Use `--github` for step summaries.
+
+A reusable composite action is included at `.github/actions/validate`:
+
+```yaml
+- uses: fetchtype/fetchtype/.github/actions/validate@main
+  with:
+    token-file: fetchtype.tokens.json
+```
 
 ### Pre-commit hook
 
@@ -191,67 +244,26 @@ Or with lint-staged:
 fetchtype drift --baseline tokens.baseline.json --current tokens.json
 ```
 
-Reports breaking vs. non-breaking typography changes in plain language.
-
-## Presets
-
-| Preset | Tuned for |
-|--------|-----------|
-| `base` | General-purpose defaults |
-| `editorial` | Long-form reading — larger body, generous line-height, serif, 65ch prose |
-| `dashboard` | Data-dense — compact body, tighter line-height, monospace, wider content |
-| `ecommerce` | Product and conversion pages |
-| `docs` | Documentation sites |
-| `carbon` | IBM Carbon Design System tokens |
-| `fluent` | Microsoft Fluent Design System tokens |
-| `material` | Google Material Design 3 tokens |
-| `radix` | Radix UI tokens |
-| `spectrum` | Adobe Spectrum Design System tokens |
-
-## AI agent integration
-
-fetchtype includes an MCP server with 12 tools so AI coding agents can validate, generate, and manage typography tokens:
-
-```bash
-fetchtype mcp
-```
-
-### MCP tools
-
-| Tool | Description |
-|------|-------------|
-| `fetchtype_validate` | Validate a token file |
-| `fetchtype_build` | Export tokens to any format |
-| `fetchtype_suggest` | Font recommendations by context |
-| `fetchtype_init` | Generate starter tokens |
-| `fetchtype_presets` | List available presets |
-| `fetchtype_audit` | Scan a project for typography issues |
-| `fetchtype_pair` | Get font pairing recommendations |
-| `fetchtype_search` | Search the font registry |
-| `fetchtype_resolve` | Get full font metadata |
-| `fetchtype_prepare` | Download and optimize web fonts |
-| `fetchtype_generate` | One-call validated token generation |
-| `fetchtype_drift` | Compare token snapshots |
-
-All responses follow a structured decision protocol with `decision`, `confidence`, `alternatives`, and `nextAction` fields for seamless agent workflows.
-
-### One-call token generation
-
-```bash
-fetchtype generate --context saas-dashboard --budget 100kb --accessibility wcag-aa
-```
-
-Or via MCP: agents send context + constraints, get back a complete validated token file. No multi-step workflow needed.
+Reports breaking vs. non-breaking typography changes in plain language — useful for PR reviews and release notes.
 
 ## Packages
 
-| Package | Description |
-|---------|-------------|
-| `fetchtype` | CLI and MCP server |
-| `@fetchtype/core` | Validation engine, presets, exporters, drift detection |
-| `@fetchtype/types` | Zod schemas and shared contracts |
-| `@fetchtype/fonts` | Font registry, pairing engine, scoring, size guidance |
-| `@fetchtype/ui` | Shared Astro components |
+| Package | npm | Description |
+|---------|-----|-------------|
+| `fetchtype` | [![npm](https://img.shields.io/npm/v/fetchtype)](https://www.npmjs.com/package/fetchtype) | CLI — validation, export, font tools |
+| `@fetchtype/core` | | Validation engine, presets, exporters, drift detection |
+| `@fetchtype/types` | | Zod schemas and TypeScript contracts |
+| `@fetchtype/fonts` | | Font registry, pairing engine, scoring, size guidance |
+
+## Contributing
+
+```bash
+git clone https://github.com/fetchtype/fetchtype.git
+cd fetchtype
+pnpm install
+pnpm build
+pnpm test
+```
 
 ## Links
 

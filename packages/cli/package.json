@@ -5,7 +5,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Tim-ReJet/fetchtype.git",
+    "url": "https://github.com/fetchtype/fetchtype.git",
     "directory": "packages/cli"
   },
   "homepage": "https://fetchtype.com",
