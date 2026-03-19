@@ -1,11 +1,11 @@
 {
   "name": "fetchtype",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Typography validation for design systems. Catch readability bugs, enforce WCAG thresholds, export to CSS/Tailwind/shadcn/W3C.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fetchtype/fetchtype.git",
+    "url": "https://github.com/Tim-ReJet/fetchtype.git",
     "directory": "packages/cli"
   },
   "homepage": "https://fetchtype.com",

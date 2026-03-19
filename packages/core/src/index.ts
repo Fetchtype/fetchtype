@@ -1357,6 +1357,48 @@ export function validateFonts(tokenSet: DesignTokenSet, config?: ValidationConfi
     );
   }
 
+  // -- Font platform rendering check --
+  // Validates that fonts have acceptable metric drift across rendering targets.
+  // A size-adjust > 5% from 100% means the font will look noticeably different
+  // on that platform when the web font fails to load.
+  for (const { path, fontFamily } of fontFamilySources) {
+    const families = Array.isArray(fontFamily) ? fontFamily : [fontFamily];
+    const primary = families[0];
+    if (!primary || TOKEN_REFERENCE_PATTERN.test(primary)) continue;
+    const resolved = resolveFont(primary);
+    if (!resolved) continue;
+    const targets = resolved.fallback?.targets;
+    if (!targets || targets.length === 0) continue;
+    for (const t of targets) {
+      const sizeAdj = parseFloat(t.overrides.sizeAdjust);
+      if (isNaN(sizeAdj)) continue;
+      const drift = Math.abs(sizeAdj - 100);
+      if (drift >= 8) {
+        pushDiagnosticWithConfig(
+          diagnostics, config,
+          'font.platform-rendering',
+          'warning',
+          path,
+          `"${primary}" has ${drift.toFixed(1)}% metric drift on ${t.target} (fallback: ${t.fallbackFont}). Users on this platform will see a noticeable layout shift when the web font loads. Consider testing or providing a tighter fallback.`,
+          '<= 5% size-adjust drift',
+          `${drift.toFixed(1)}% on ${t.target}`,
+        );
+      }
+    }
+    // Check if font requires platform-specific fallback splits
+    if (resolved.fallback?.requiresPlatformSplit) {
+      pushDiagnosticWithConfig(
+        diagnostics, config,
+        'font.platform-rendering',
+        'info',
+        path,
+        `"${primary}" requires platform-specific fallback CSS for optimal rendering. Use \`fetchtype resolve ${primary.toLowerCase().replace(/ /g, '-')} --css\` to generate per-platform @font-face rules.`,
+        'Single fallback',
+        'Platform split required',
+      );
+    }
+  }
+
   // -- F076: Font allowlist --
   if (config?.fonts?.allow && config.fonts.allow.length > 0) {
     const allowSet = new Set(config.fonts.allow.map((f) => f.toLowerCase()));

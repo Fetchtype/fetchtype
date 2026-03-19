@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@fetchtype/ui/src/components/BaseLayout.astro';
 import SEOHead from '@fetchtype/ui/src/components/SEOHead.astro';
-import '../../styles/global.css';
+import '../styles/global.css';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
@@ -66,7 +66,7 @@ const jsonLdRegistry = {
 
 <BaseLayout
   title="Font Registry"
-  site="www"
+  site="registry"
   currentPath="/registry"
   description={registryDescription}
 >
@@ -608,7 +608,7 @@ const jsonLdRegistry = {
     document.getElementById('font-grid')?.addEventListener('click', e => {
       const card = (e.target as HTMLElement).closest<HTMLElement>('.font-card');
       if (card?.dataset.id) {
-        window.location.href = `/registry/${card.dataset.id}`;
+        window.location.href = `/${card.dataset.id}`;
       }
     });
 

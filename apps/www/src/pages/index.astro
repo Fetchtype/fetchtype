@@ -57,7 +57,7 @@ const presets = [
           <span class="text-ft-muted mr-2">$</span>npx fetchtype init
         </div>
         <a
-          href="/registry"
+          href="https://registry.fetchtype.com"
           class="inline-flex items-center justify-center bg-ft-accent text-white px-6 py-3 font-mono text-sm uppercase tracking-wider hover:bg-ft-accent-hover transition-colors"
         >
           Browse Registry →
@@ -82,7 +82,7 @@ const presets = [
         <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mt-1">MCP Tools</p>
       </div>
       <div class="bg-ft-cream px-6 py-2">
-        <p class="font-display text-4xl text-ft-dark">10</p>
+        <p class="font-display text-4xl text-ft-dark">100</p>
         <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mt-1">Presets</p>
       </div>
     </div>
@@ -279,11 +279,11 @@ const presets = [
       <!-- Preset selector -->
       <div class="mb-16">
         <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-5">
-          10 presets included
+          100 presets included
         </p>
         <div class="grid grid-cols-2 md:grid-cols-5 gap-px bg-ft-border">
           {presets.map((preset) => (
-            <a href={`/presets#${preset.name}`} class="bg-ft-cream p-5 border-thin hover:bg-white transition-colors block">
+            <a href="/presets" class="bg-ft-cream p-5 border-thin hover:bg-white transition-colors block">
               <p class="font-mono text-xs text-ft-accent uppercase tracking-wider mb-2">{preset.name}</p>
               <p class="font-body text-sm text-ft-dark">{preset.font}</p>
             </a>

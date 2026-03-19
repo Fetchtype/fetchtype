@@ -1,4 +1,4 @@
-// Fetchtype design system tokens
+// Stitch design system tokens adapted for fetchtype registry
 export const fetchTypeTheme = {
   colors: {
     'ft-cream': '#f4f4f0',

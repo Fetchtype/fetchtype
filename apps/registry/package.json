@@ -1,0 +1,23 @@
+{
+  "name": "@fetchtype/registry",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --port 4175",
+    "build": "astro build",
+    "preview": "astro preview --port 4175"
+  },
+  "dependencies": {
+    "@fetchtype/ui": "workspace:*",
+    "@fetchtype/fonts": "workspace:*",
+    "@fetchtype/types": "workspace:*",
+    "astro": "^5.5.0",
+    "@astrojs/sitemap": "^3.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^5.7.3"
+  }
+}

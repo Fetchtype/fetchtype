@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '@fetchtype/ui/src/components/BaseLayout.astro';
 import SEOHead from '@fetchtype/ui/src/components/SEOHead.astro';
-import '../../styles/global.css';
+import '../styles/global.css';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { FontEntry, PairingRecommendation } from '@fetchtype/types';
@@ -138,7 +138,35 @@ const pageDescription = `${font.family} — ${CATEGORY_LABEL[font.category] ?? f
 const fontsourceId = font.install?.fontsource ?? font.id;
 
 // SEO
-const canonicalUrl = `https://fetchtype.com/registry/${font.id}`;
+const canonicalUrl = `https://registry.fetchtype.com/${font.id}`;
+
+// Platform rendering labels and icons
+const PLATFORM_LABELS: Record<string, string> = {
+  apple: 'Apple (Core Text)',
+  windows: 'Windows (DirectWrite)',
+  android: 'Android (FreeType)',
+  linux: 'Linux (FreeType)',
+  universal: 'Universal Fallback',
+};
+const PLATFORM_ICONS: Record<string, string> = {
+  apple: '🍎',
+  windows: '🪟',
+  android: '🤖',
+  linux: '🐧',
+  universal: '🌐',
+};
+
+function getPlatformDrift(sizeAdjustStr: string): { drift: number; driftClass: string; driftLabel: string } {
+  const sizeAdj = parseFloat(sizeAdjustStr);
+  const drift = Math.abs(sizeAdj - 100);
+  const driftClass = drift < 2
+    ? 'text-green-700 bg-green-50 border-green-200'
+    : drift < 5
+      ? 'text-yellow-700 bg-yellow-50 border-yellow-200'
+      : 'text-red-700 bg-red-50 border-red-200';
+  const driftLabel = drift < 2 ? 'Excellent' : drift < 5 ? 'Good' : 'Notable shift';
+  return { drift, driftClass, driftLabel };
+}
 
 // Generate a descriptive sentence based on font contexts
 function contextSentence(f: FontEntry): string {
@@ -173,7 +201,7 @@ const jsonLdBreadcrumb = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Registry', item: 'https://fetchtype.com/registry' },
+    { '@type': 'ListItem', position: 1, name: 'Registry', item: 'https://registry.fetchtype.com' },
     { '@type': 'ListItem', position: 2, name: font.family, item: canonicalUrl },
   ],
 };
@@ -181,8 +209,8 @@ const jsonLdBreadcrumb = {
 
 <BaseLayout
   title={pageTitle}
-  site="www"
-  currentPath={`/registry/${font.id}`}
+  site="registry"
+  currentPath={`/${font.id}`}
   description={pageDescription}
 >
   <!-- SEO head tags -->
@@ -207,7 +235,7 @@ const jsonLdBreadcrumb = {
     <nav class="border-b border-thin px-6 py-3 flex items-center gap-2 font-mono text-xs text-ft-muted">
       <a href="/" class="hover:text-ft-dark transition-colors">Fetchtype</a>
       <span aria-hidden="true">/</span>
-      <a href="/registry" class="hover:text-ft-dark transition-colors">Registry</a>
+      <a href="/" class="hover:text-ft-dark transition-colors">Registry</a>
       <span aria-hidden="true">/</span>
       <span class="text-ft-dark">{font.family}</span>
     </nav>
@@ -488,6 +516,46 @@ const jsonLdBreadcrumb = {
           </div>
         </section>
 
+        <!-- Platform Rendering -->
+        {font.fallback?.targets?.length > 0 && (
+          <section class="px-6 py-8">
+            <h2 class="font-display text-xl mb-6">Platform Rendering</h2>
+            <p class="font-body text-xs text-ft-muted mb-5 leading-relaxed">
+              How this font renders across operating systems. Each platform uses a different text rendering engine
+              with its own fallback font and metric adjustments.
+            </p>
+            <div class="flex flex-col gap-px bg-ft-border">
+              {font.fallback.targets.map((t: any) => {
+                const { drift, driftClass, driftLabel } = getPlatformDrift(t.overrides.sizeAdjust);
+                return (
+                  <div class="bg-ft-cream px-4 py-3">
+                    <div class="flex items-center justify-between mb-1">
+                      <div class="flex items-center gap-2">
+                        <span class="text-sm">{PLATFORM_ICONS[t.target] ?? '💻'}</span>
+                        <span class="font-mono text-xs text-ft-dark font-medium">
+                          {PLATFORM_LABELS[t.target] ?? t.target}
+                        </span>
+                      </div>
+                      <span class={`font-mono text-[10px] uppercase tracking-wider px-1.5 py-0.5 border ${driftClass}`}>
+                        {driftLabel}
+                      </span>
+                    </div>
+                    <div class="flex items-center gap-4 font-mono text-[10px] text-ft-muted">
+                      <span>Fallback: <span class="text-ft-dark">{t.fallbackFont}</span></span>
+                      <span>Size adjust: <span class="text-ft-dark">{t.overrides.sizeAdjust}</span></span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {font.fallback.requiresPlatformSplit && (
+              <p class="font-mono text-[10px] text-yellow-700 bg-yellow-50 border border-yellow-200 px-3 py-2 mt-3">
+                This font requires platform-specific fallback splits for optimal rendering.
+              </p>
+            )}
+          </section>
+        )}
+
         <!-- Variable Axes (if variable) -->
         {font.variable && font.axes.length > 0 && (
           <section class="px-6 py-8">
@@ -521,7 +589,7 @@ const jsonLdBreadcrumb = {
             <div class="flex flex-col gap-4">
               {pairingDetails.map(({ font: paired, role, confidence, rationale }) => (
                 <a
-                  href={`/registry/${paired.id}`}
+                  href={`/${paired.id}`}
                   class="pairing-card group block border border-thin bg-ft-cream hover:bg-ft-surface transition-colors p-4"
                   data-family={paired.family}
                   data-source={paired.source}
@@ -740,7 +808,7 @@ const jsonLdBreadcrumb = {
     <!-- ── Footer nav ─────────────────────────────────────────────────────── -->
     <div class="border-t border-thin px-6 py-6 flex items-center justify-between">
       <a
-        href="/registry"
+        href="/"
         class="font-mono text-xs text-ft-muted hover:text-ft-dark transition-colors uppercase tracking-wider flex items-center gap-2"
       >
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">

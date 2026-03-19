@@ -1,0 +1,7 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "cd ../.. && pnpm install",
+  "buildCommand": "cd ../.. && NODE_OPTIONS='--max-old-space-size=7168' pnpm --filter @fetchtype/registry build",
+  "outputDirectory": "dist",
+  "cleanUrls": true
+}

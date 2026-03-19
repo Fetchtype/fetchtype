@@ -1177,7 +1177,10 @@ export function createMcpServer(): McpServer {
           confidence: result.warnings.length === 0 ? 0.95 : 0.7,
           alternatives: [],
           constraints: result.warnings,
-          nextActions: [{ tool: 'fetchtype_validate', description: 'Validate the generated token set' }],
+          nextActions: [
+            { tool: 'fetchtype_validate', description: 'Validate the generated token set' },
+            { tool: 'save_as_preset', description: 'Save as fetchtype.tokens.json in the project root. To make it a reusable team preset, publish as an npm package and reference via "extends" in .fetchtype.json.' },
+          ],
         }),
       );
     },

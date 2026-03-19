@@ -3,18 +3,1235 @@ import BaseLayout from '@fetchtype/ui/src/components/BaseLayout.astro';
 import SEOHead from '@fetchtype/ui/src/components/SEOHead.astro';
 import '../styles/global.css';
 
-const presets = [
-  { id: 'base', name: 'Base', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third', description: 'Clean geometric sans for universal applications' },
-  { id: 'editorial', name: 'Editorial', heading: 'Georgia', body: 'Georgia', code: 'JetBrains Mono', scale: 'perfect-fourth', description: 'Classical serif for long-form reading and editorial content' },
-  { id: 'dashboard', name: 'Dashboard', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second', description: 'Compact information-dense layouts for data dashboards' },
-  { id: 'ecommerce', name: 'E-commerce', heading: 'DM Sans', body: 'Inter', code: 'JetBrains Mono', scale: 'major-second', description: 'Friendly geometric display with neutral body text for product catalogs' },
-  { id: 'docs', name: 'Documentation', heading: 'Source Serif 4', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'minor-third', description: 'Readable serif for technical documentation and reference material' },
-  { id: 'fluent', name: 'Fluent', heading: 'Segoe UI Variable', body: 'Segoe UI Variable', code: 'Cascadia Code', scale: 'major-second', description: 'Microsoft Fluent design system typographic foundation' },
-  { id: 'material', name: 'Material', heading: 'Roboto', body: 'Roboto', code: 'Roboto Mono', scale: 'major-third', description: 'Google Material Design typographic scale and recommendations' },
-  { id: 'carbon', name: 'Carbon', heading: 'IBM Plex Sans', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'perfect-fourth', description: 'IBM Carbon design system with Plex type family' },
-  { id: 'spectrum', name: 'Spectrum', heading: 'Adobe Clean', body: 'Adobe Clean', code: 'Source Code Pro', scale: 'major-third', description: 'Adobe Spectrum design system typographic foundation' },
-  { id: 'radix', name: 'Radix', heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third', description: 'Radix UI design system with Inter type stack' },
+type Preset = {
+  id: string;
+  name: string;
+  category: string;
+  heading: string;
+  body: string;
+  code: string;
+  scale: string;
+  description: string;
+  stylePrompt: string;
+  layout: string;
+  sizes: { h1: string; body: string; caption: string; lineHeight: string };
+  colors: { primary: string; accent: string; bg: string; text: string };
+  similarTo: string[];
+  contrastWith: string[];
+  imagery: string;
+};
+
+const presets: Preset[] = [
+  // ── General Purpose ──────────────────────────────────────────────────
+  {
+    id: 'base', name: 'Base', category: 'General Purpose',
+    heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third',
+    description: 'Clean geometric sans for universal applications. The safest starting point when you don\'t yet know the final direction.',
+    stylePrompt: 'Neutral, professional, adaptable. Works with any brand color. Think Stripe, Linear, Vercel — products that let content speak.',
+    layout: 'Centered content column (65ch), generous whitespace, 4px baseline grid. Works for landing pages, apps, and marketing sites equally.',
+    sizes: { h1: '3rem / 48px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+    colors: { primary: '#111827', accent: '#2563eb', bg: '#ffffff', text: '#374151' },
+    similarTo: ['radix', 'dashboard'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Clean product photography, abstract gradients, minimal icons. Avoid heavy textures or vintage imagery.',
+  },
+  {
+    id: 'startup', name: 'Startup', category: 'General Purpose',
+    heading: 'Plus Jakarta Sans', body: 'Inter', code: 'Fira Code', scale: 'major-third',
+    description: 'Friendly geometric display with a modern tech feel. Slightly warmer than Base — the default for SaaS landing pages.',
+    stylePrompt: 'Approachable, modern, confident. Rounded terminals on headings soften the tech edge. Pair with vibrant accent colors.',
+    layout: 'Full-width hero, alternating 2-column sections, card grids. Generous padding (64px+ between sections).',
+    sizes: { h1: '3.5rem / 56px', body: '1.0625rem / 17px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+    colors: { primary: '#0f172a', accent: '#7c3aed', bg: '#fafafa', text: '#475569' },
+    similarTo: ['base', 'ecommerce'],
+    contrastWith: ['editorial', 'brutalist'],
+    imagery: 'Isometric illustrations, 3D renders, product screenshots with browser chrome. Avoid stock photography.',
+  },
+
+  // ── Content & Editorial ──────────────────────────────────────────────
+  {
+    id: 'editorial', name: 'Editorial', category: 'Content & Editorial',
+    heading: 'Newsreader', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'perfect-fourth',
+    description: 'Classical serif pairing for long-form reading. Generous line-height and a wider scale ratio create a calm, authoritative reading experience.',
+    stylePrompt: 'Timeless, literate, unhurried. Like opening a well-typeset book. Use ample margins and let the text breathe.',
+    layout: 'Single column (60ch max), large margins, pull quotes, drop caps. Sidenotes over footnotes.',
+    sizes: { h1: '3rem / 48px', body: '1.125rem / 18px', caption: '0.875rem / 14px', lineHeight: '1.8' },
+    colors: { primary: '#1a1a1a', accent: '#8b5cf6', bg: '#fffdf7', text: '#333333' },
+    similarTo: ['magazine', 'docs'],
+    contrastWith: ['dashboard', 'brutalist'],
+    imagery: 'Black and white photography, editorial illustration, woodcut-style graphics. Embrace negative space.',
+  },
+  {
+    id: 'magazine', name: 'Magazine', category: 'Content & Editorial',
+    heading: 'Playfair Display', body: 'Lora', code: 'JetBrains Mono', scale: 'perfect-fourth',
+    description: 'High-contrast serif pairing for magazine-style layouts. Playfair\'s sharp contrast headlines grab attention; Lora\'s calligraphic body holds it.',
+    stylePrompt: 'Dramatic, editorial, high-contrast. Think Vogue meets The New York Times. Headlines are large and commanding.',
+    layout: 'Asymmetric grids, full-bleed images, overlapping text on images. Multi-column body text for longer pieces.',
+    sizes: { h1: '4rem / 64px', body: '1.0625rem / 17px', caption: '0.8125rem / 13px', lineHeight: '1.7' },
+    colors: { primary: '#000000', accent: '#c41e3a', bg: '#ffffff', text: '#2d2d2d' },
+    similarTo: ['editorial', 'luxury'],
+    contrastWith: ['dashboard', 'base'],
+    imagery: 'Full-bleed photography, fashion/lifestyle imagery, strong diagonals. Color photography with high saturation.',
+  },
+  {
+    id: 'blog', name: 'Blog', category: 'Content & Editorial',
+    heading: 'Merriweather', body: 'Open Sans', code: 'Source Code Pro', scale: 'minor-third',
+    description: 'Screen-optimized serif headings with a clean sans body. The workhorse of content sites — readable at any size, on any screen.',
+    stylePrompt: 'Warm, readable, trustworthy. Merriweather\'s chunky serifs were designed for screens first. Friendly without being casual.',
+    layout: 'Narrow content column (55-65ch), generous paragraph spacing, inline images. Sidebar optional for categories/TOC.',
+    sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+    colors: { primary: '#1e293b', accent: '#0ea5e9', bg: '#ffffff', text: '#475569' },
+    similarTo: ['editorial', 'docs'],
+    contrastWith: ['dashboard', 'brutalist'],
+    imagery: 'Inline illustrations, author photos, code screenshots. Keep imagery supporting the text, not competing.',
+  },
+
+  // ── Application & Interface ──────────────────────────────────────────
+  {
+    id: 'dashboard', name: 'Dashboard', category: 'Application & Interface',
+    heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second',
+    description: 'Compact information-dense layout for data dashboards. Tight scale ratio maximizes data visibility without sacrificing legibility.',
+    stylePrompt: 'Dense, functional, precise. Every pixel earns its space. Use tabular numbers, clear hierarchy through weight not size.',
+    layout: 'Dense grid of cards (12+ column grid), collapsible sidebar, sticky header with breadcrumbs. Minimal padding (12-16px).',
+    sizes: { h1: '1.5rem / 24px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+    colors: { primary: '#0f172a', accent: '#3b82f6', bg: '#f8fafc', text: '#475569' },
+    similarTo: ['base', 'data'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Data visualizations, charts, sparklines, status indicators. Minimal decorative imagery.',
+  },
+  {
+    id: 'admin', name: 'Admin Panel', category: 'Application & Interface',
+    heading: 'DM Sans', body: 'DM Sans', code: 'DM Mono', scale: 'minor-second',
+    description: 'Slightly friendlier than Dashboard — DM Sans has rounder terminals that soften dense admin interfaces without losing information density.',
+    stylePrompt: 'Approachable density. DM Sans at 14px body is just as dense as Inter but feels warmer. Good for tools used all day.',
+    layout: 'Sidebar navigation + main content area. Tables, forms, and detail panels. Use cards sparingly — flat sections work better.',
+    sizes: { h1: '1.5rem / 24px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+    colors: { primary: '#18181b', accent: '#6366f1', bg: '#fafafa', text: '#52525b' },
+    similarTo: ['dashboard', 'base'],
+    contrastWith: ['editorial', 'magazine'],
+    imagery: 'Form elements, tables, status badges, avatar thumbnails. Functional, not decorative.',
+  },
+  {
+    id: 'saas', name: 'SaaS Product', category: 'Application & Interface',
+    heading: 'Outfit', body: 'Inter', code: 'Fira Code', scale: 'major-second',
+    description: 'Geometric display headings meet a neutral body. The balance between marketing polish and product density — ideal for products with both public and in-app pages.',
+    stylePrompt: 'Modern, polished, scalable. Outfit\'s geometric shapes make headings feel intentional without being decorative. Brand-able.',
+    layout: 'Marketing: hero + feature grid. Product: sidebar + content. Both share the same type system — only density changes.',
+    sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+    colors: { primary: '#0c0a09', accent: '#ea580c', bg: '#ffffff', text: '#44403c' },
+    similarTo: ['startup', 'base'],
+    contrastWith: ['editorial', 'brutalist'],
+    imagery: 'Product UI screenshots, feature illustrations, customer logos. Clean and professional.',
+  },
+
+  // ── E-commerce & Conversion ──────────────────────────────────────────
+  {
+    id: 'ecommerce', name: 'E-commerce', category: 'E-commerce & Conversion',
+    heading: 'DM Sans', body: 'Inter', code: 'JetBrains Mono', scale: 'major-second',
+    description: 'Friendly geometric display with neutral body text. Designed for product catalogs where the product imagery is the hero, not the typography.',
+    stylePrompt: 'Clean, trustworthy, invisible. Typography should frame products, not compete with them. Use weight for hierarchy, not size.',
+    layout: 'Product grid (3-4 columns), sticky filters sidebar, product detail with image gallery. Price and CTA prominent.',
+    sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+    colors: { primary: '#111827', accent: '#059669', bg: '#ffffff', text: '#374151' },
+    similarTo: ['base', 'startup'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Product photography on white/neutral backgrounds. Lifestyle shots for category pages. Minimal text on images.',
+  },
+  {
+    id: 'luxury', name: 'Luxury', category: 'E-commerce & Conversion',
+    heading: 'Cormorant Garamond', body: 'Raleway', code: 'JetBrains Mono', scale: 'perfect-fourth',
+    description: 'High-contrast serif headings with an elegant thin sans body. For premium brands where the typography itself signals quality.',
+    stylePrompt: 'Refined, restrained, spacious. Generous letter-spacing on headings (0.05em+). Thin weights for body. Less is always more.',
+    layout: 'Centered, generous whitespace (100px+ padding). Full-bleed imagery. Minimal navigation. Each page is a curated composition.',
+    sizes: { h1: '4rem / 64px', body: '0.9375rem / 15px', caption: '0.75rem / 12px', lineHeight: '1.7' },
+    colors: { primary: '#1a1a1a', accent: '#b8860b', bg: '#f5f5f0', text: '#4a4a4a' },
+    similarTo: ['magazine', 'editorial'],
+    contrastWith: ['dashboard', 'brutalist'],
+    imagery: 'Studio photography, muted tones, close-up textures. No cluttered compositions. One image, one focal point.',
+  },
+  {
+    id: 'marketplace', name: 'Marketplace', category: 'E-commerce & Conversion',
+    heading: 'Manrope', body: 'Nunito Sans', code: 'JetBrains Mono', scale: 'major-second',
+    description: 'Rounded geometric pairing for trust-centric marketplace UIs. Manrope\'s openness and Nunito Sans\'s warmth create a welcoming, accessible feel.',
+    stylePrompt: 'Friendly, open, trustworthy. Rounded forms reduce perceived friction. Great for platforms where users need to feel safe transacting.',
+    layout: 'Search-first hero, card grid results, seller/buyer profiles. Clear trust signals (reviews, badges) in the typography hierarchy.',
+    sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+    colors: { primary: '#1e293b', accent: '#0891b2', bg: '#ffffff', text: '#475569' },
+    similarTo: ['ecommerce', 'startup'],
+    contrastWith: ['luxury', 'brutalist'],
+    imagery: 'User-generated content, product thumbnails, avatar circles. Diverse, authentic photography.',
+  },
+
+  // ── Documentation & Technical ────────────────────────────────────────
+  {
+    id: 'docs', name: 'Documentation', category: 'Documentation & Technical',
+    heading: 'Source Serif 4', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'minor-third',
+    description: 'Readable serif for technical documentation. The Source family was designed by Adobe for extended on-screen reading — it handles code blocks, tables, and prose equally.',
+    stylePrompt: 'Authoritative, scannable, reference-grade. Headings as wayfinding, not decoration. Deep hierarchy (h1–h5 common).',
+    layout: 'Three-column: sidebar TOC, content (65ch), on-page anchors. Collapsible code blocks, tabbed examples.',
+    sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+    colors: { primary: '#1a1a2e', accent: '#6d28d9', bg: '#ffffff', text: '#374151' },
+    similarTo: ['editorial', 'blog'],
+    contrastWith: ['dashboard', 'luxury'],
+    imagery: 'Code screenshots, architecture diagrams, annotated UI examples. Technical illustrations over photography.',
+  },
+  {
+    id: 'developer', name: 'Developer', category: 'Documentation & Technical',
+    heading: 'Inter', body: 'Inter', code: 'Fira Code', scale: 'minor-third',
+    description: 'Sans-serif docs with ligature-enabled code font. For developer audiences who spend as much time reading code as prose.',
+    stylePrompt: 'Sharp, code-first, dark mode native. Fira Code\'s ligatures make code examples feel polished. Syntax highlighting matters.',
+    layout: 'Full-width code examples, copy buttons, language tabs. API reference tables. Dark code blocks on light page (or full dark mode).',
+    sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+    colors: { primary: '#e2e8f0', accent: '#22d3ee', bg: '#0f172a', text: '#94a3b8' },
+    similarTo: ['dashboard', 'docs'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Terminal screenshots, API response examples, architecture diagrams. Dark theme native.',
+  },
+  {
+    id: 'api-reference', name: 'API Reference', category: 'Documentation & Technical',
+    heading: 'Space Grotesk', body: 'Inter', code: 'Space Mono', scale: 'minor-second',
+    description: 'Technical monospace-influenced headings with dense interface body. For API docs, schema explorers, and developer portals where precision matters.',
+    stylePrompt: 'Precise, technical, structured. Space Grotesk\'s monospace heritage makes headings feel systematic. Tables and key-value layouts everywhere.',
+    layout: 'Two-panel: description left, code right (Stripe-style). Sticky endpoint headers. Collapsible parameter tables.',
+    sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.55' },
+    colors: { primary: '#f8fafc', accent: '#10b981', bg: '#020617', text: '#94a3b8' },
+    similarTo: ['developer', 'dashboard'],
+    contrastWith: ['editorial', 'magazine'],
+    imagery: 'Endpoint trees, JSON examples, status code badges. Minimal — the code IS the content.',
+  },
+
+  // ── Design System Foundations ─────────────────────────────────────────
+  {
+    id: 'fluent', name: 'Fluent', category: 'Design System',
+    heading: 'Segoe UI Variable', body: 'Segoe UI Variable', code: 'Cascadia Code', scale: 'major-second',
+    description: 'Microsoft Fluent design system typographic foundation. Variable font with optical sizing provides seamless scaling from 10px UI labels to 68px display text.',
+    stylePrompt: 'Systematic, accessible, platform-native on Windows. Segoe UI Variable was designed for the full range of Windows UI density levels.',
+    layout: 'Fluent\'s 8px grid, 600px max content width, compact density option. NavigationView + content pattern.',
+    sizes: { h1: '2.5rem / 40px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.43' },
+    colors: { primary: '#242424', accent: '#0078d4', bg: '#ffffff', text: '#616161' },
+    similarTo: ['carbon', 'material'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Fluent icons (outlined, 24px default), Azure/Office brand illustrations. Clean, functional iconography.',
+  },
+  {
+    id: 'material', name: 'Material', category: 'Design System',
+    heading: 'Roboto', body: 'Roboto', code: 'Roboto Mono', scale: 'major-third',
+    description: 'Google Material Design 3 type scale. Roboto\'s mechanical skeleton with humanist proportions bridges the gap between geometric precision and natural reading flow.',
+    stylePrompt: 'Systematic, elevation-aware, responsive. Material\'s type scale uses display/headline/title/body/label roles. Color and elevation reinforce hierarchy.',
+    layout: 'Material 3 layout grid (compact/medium/expanded). Surface elevation hierarchy. FAB, bottom sheets, cards as containers.',
+    sizes: { h1: '2.25rem / 36px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.43' },
+    colors: { primary: '#1c1b1f', accent: '#6750a4', bg: '#fffbfe', text: '#49454f' },
+    similarTo: ['fluent', 'carbon'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Material Symbols icons, tonal color system illustrations. Geometric shapes, layered surfaces.',
+  },
+  {
+    id: 'carbon', name: 'Carbon', category: 'Design System',
+    heading: 'IBM Plex Sans', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'perfect-fourth',
+    description: 'IBM Carbon design system with the complete Plex type family. Plex was designed to express IBM\'s brand identity — neutral, corporate, and globally legible.',
+    stylePrompt: 'Corporate, systematic, information-rich. Carbon\'s larger scale ratio creates stronger visual hierarchy. 2rem grid, productive vs. expressive modes.',
+    layout: 'Carbon\'s 16-column grid, left-aligned content, data table-heavy. Breadcrumb navigation, tag-based filtering.',
+    sizes: { h1: '3rem / 48px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.43' },
+    colors: { primary: '#161616', accent: '#0f62fe', bg: '#ffffff', text: '#525252' },
+    similarTo: ['fluent', 'material'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'IBM Pictograms, carbon icons. Data visualization with Carbon Charts. Enterprise photography guidelines.',
+  },
+  {
+    id: 'spectrum', name: 'Spectrum', category: 'Design System',
+    heading: 'Adobe Clean', body: 'Adobe Clean', code: 'Source Code Pro', scale: 'major-third',
+    description: 'Adobe Spectrum design system. Adobe Clean is a proprietary font — use Source Sans 3 as the open-source alternative for non-Adobe projects.',
+    stylePrompt: 'Creative-professional, tool-focused. Spectrum balances creative expression with tool UI density. Dark mode is first-class.',
+    layout: 'Spectrum\'s responsive grid, left rail navigation, panel-based workspace. Detail overlays, inline editing.',
+    sizes: { h1: '2.25rem / 36px', body: '0.875rem / 14px', caption: '0.6875rem / 11px', lineHeight: '1.5' },
+    colors: { primary: '#1d1d1d', accent: '#1473e6', bg: '#f5f5f5', text: '#4b4b4b' },
+    similarTo: ['carbon', 'material'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Spectrum icons (workflow + UI), creative tool screenshots. Dark surfaces with accent color pops.',
+  },
+  {
+    id: 'radix', name: 'Radix', category: 'Design System',
+    heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-third',
+    description: 'Radix UI design system with Inter. A developer-first component library that stays out of the way — typography follows suit.',
+    stylePrompt: 'Minimal, composable, developer-friendly. Radix\'s philosophy: no opinions on aesthetics, maximum flexibility. Type scale is a starting point, not a rule.',
+    layout: 'Component-driven: dialogs, popovers, dropdown menus. Content-first, chrome-minimal. Radix Themes for opinionated defaults.',
+    sizes: { h1: '2.25rem / 36px', body: '0.9375rem / 15px', caption: '0.75rem / 12px', lineHeight: '1.6' },
+    colors: { primary: '#11181c', accent: '#0091ff', bg: '#ffffff', text: '#687076' },
+    similarTo: ['base', 'dashboard'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Component examples, accessibility-focused UI patterns. Minimal decoration, maximum functionality.',
+  },
+
+  // ── Expressive & Creative ────────────────────────────────────────────
+  {
+    id: 'brutalist', name: 'Brutalist', category: 'Expressive & Creative',
+    heading: 'Space Grotesk', body: 'Work Sans', code: 'Space Mono', scale: 'perfect-fourth',
+    description: 'Raw, structural, unapologetic. Monospace-influenced headings with a workhorse sans body. For creative agencies, portfolios, and brands that embrace the grid.',
+    stylePrompt: 'Loud, grid-visible, raw HTML energy. Show the structure — borders, columns, gaps. Typography IS the design.',
+    layout: 'Visible grid lines, oversized type, clashing columns, raw borders. Content as texture. Break conventional alignment on purpose.',
+    sizes: { h1: '5rem / 80px', body: '1rem / 16px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+    colors: { primary: '#000000', accent: '#ff0000', bg: '#ffffff', text: '#000000' },
+    similarTo: ['api-reference', 'developer'],
+    contrastWith: ['luxury', 'editorial'],
+    imagery: 'Raw photography, ASCII art, pixel art, generated patterns. Anti-polish. The rougher the better.',
+  },
+  {
+    id: 'portfolio', name: 'Portfolio', category: 'Expressive & Creative',
+    heading: 'Sora', body: 'Inter', code: 'JetBrains Mono', scale: 'perfect-fourth',
+    description: 'Modern geometric display with a generous scale. Sora\'s perfectly circular forms make headings feel designed. For creative professionals showing their work.',
+    stylePrompt: 'Clean but expressive. Large headings, lots of whitespace, work samples dominate. Typography frames the portfolio pieces.',
+    layout: 'Full-bleed project images, minimal navigation, case study format. Large project titles, small descriptor text.',
+    sizes: { h1: '4rem / 64px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+    colors: { primary: '#0a0a0a', accent: '#f43f5e', bg: '#fafafa', text: '#525252' },
+    similarTo: ['luxury', 'startup'],
+    contrastWith: ['dashboard', 'docs'],
+    imagery: 'Full-bleed project screenshots, process photos, before/after. The work IS the imagery.',
+  },
+
+  // ── Data & Specialized ───────────────────────────────────────────────
+  {
+    id: 'data', name: 'Data Visualization', category: 'Data & Specialized',
+    heading: 'Inter', body: 'Inter', code: 'IBM Plex Mono', scale: 'minor-second',
+    description: 'Optimized for charts, tables, and numerical data. Tabular numbers, tight line-height, and a condensed scale keep data dense without sacrificing legibility.',
+    stylePrompt: 'Precise, numerical, annotation-heavy. Use tabular lining figures always. Axis labels, legends, and tooltips need distinct sizes.',
+    layout: 'Full-width charts, dashboard grid, KPI cards at top. Sortable tables. Filter bar or faceted search. Print-friendly.',
+    sizes: { h1: '1.5rem / 24px', body: '0.8125rem / 13px', caption: '0.6875rem / 11px', lineHeight: '1.4' },
+    colors: { primary: '#1e293b', accent: '#0ea5e9', bg: '#ffffff', text: '#64748b' },
+    similarTo: ['dashboard', 'admin'],
+    contrastWith: ['editorial', 'luxury'],
+    imagery: 'Charts, heatmaps, treemaps, sparklines. Data IS the visual. Use color systematically for categories.',
+  },
+  {
+    id: 'presentation', name: 'Presentation', category: 'Data & Specialized',
+    heading: 'Poppins', body: 'Nunito Sans', code: 'Fira Code', scale: 'perfect-fifth',
+    description: 'Large-scale type designed for projection and screen sharing. Poppins\' geometric circles are instantly legible at any distance; Nunito Sans is warm and clear for supporting text.',
+    stylePrompt: 'Big, bold, distant-readable. Design for the person in the back row. One idea per slide. Minimal text, maximum impact.',
+    layout: 'Full-screen slides: one headline + one visual. Bullet points only when unavoidable. Dark backgrounds for projector rooms.',
+    sizes: { h1: '5rem / 80px', body: '1.5rem / 24px', caption: '1rem / 16px', lineHeight: '1.4' },
+    colors: { primary: '#ffffff', accent: '#f59e0b', bg: '#0f172a', text: '#cbd5e1' },
+    similarTo: ['brutalist', 'portfolio'],
+    contrastWith: ['dashboard', 'data'],
+    imagery: 'Full-bleed photos, single icons, large numbers. One visual per slide. No clip art.',
+  },
+// ── General Purpose ──────────────────────────────────────────────────
+{
+  id: 'minimal', name: 'Minimal', category: 'General Purpose',
+  heading: 'Geist', body: 'Geist', code: 'JetBrains Mono', scale: 'major-second',
+  description: 'Vercel\'s Geist family for both heading and body creates a perfectly cohesive system with a single typeface. Ideal when brand neutrality and developer credibility are both required.',
+  stylePrompt: 'Stripped-back, high-signal, zero noise. Use for tools, CLIs with web UIs, or any product where the interface should disappear. Think Vercel, Railway, Render.',
+  layout: 'Full-width layout, flush-left type, invisible grid. No decorative elements — borders, not shadows. Monospace for all code and numeric data.',
+  sizes: { h1: '2.25rem / 36px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#000000', accent: '#0070f3', bg: '#ffffff', text: '#444444' },
+  similarTo: ['base', 'radix'],
+  contrastWith: ['magazine', 'luxury'],
+  imagery: 'Terminal output, deployment status, minimal iconography. Black on white with one accent pop.',
+},
+{
+  id: 'corporate', name: 'Corporate', category: 'General Purpose',
+  heading: 'Libre Franklin', body: 'Source Sans 3', code: 'IBM Plex Mono', scale: 'minor-third',
+  description: 'Franklin Gothic lineage meets a workhorse screen sans. The combination projects institutional authority without feeling cold — the right register for B2B, finance, and enterprise.',
+  stylePrompt: 'Trustworthy, measured, professional. For banks, law firms, insurance, or any brand where conservative typography signals reliability over creativity.',
+  layout: 'Wide masthead, clean horizontal sections, table-heavy content areas. Consistent vertical rhythm. Form-heavy pages work well here.',
+  sizes: { h1: '2.75rem / 44px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#0d1b2a', accent: '#1a56db', bg: '#f9fafb', text: '#374151' },
+  similarTo: ['base', 'carbon'],
+  contrastWith: ['brutalist', 'portfolio'],
+  imagery: 'Corporate photography, headshots, office environments. Consistent aspect ratios, no cropping surprises.',
+},
+{
+  id: 'open-source', name: 'Open Source', category: 'General Purpose',
+  heading: 'Public Sans', body: 'Public Sans', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Public Sans — a US government-derived typeface — brings civic credibility and excellent legibility to open-source project sites and community platforms.',
+  stylePrompt: 'Community-first, accessible, egalitarian. For OSS project homepages, community wikis, or any product that wants to signal it is for everyone.',
+  layout: 'Wide content with sidebar nav, code examples prominent, changelog sections. GitHub-flavored markdown rendering conventions.',
+  sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1b1b1b', accent: '#005ea2', bg: '#ffffff', text: '#3d4551' },
+  similarTo: ['developer', 'docs'],
+  contrastWith: ['luxury', 'magazine'],
+  imagery: 'Contributor avatars, GitHub activity graphs, architecture diagrams. Community-generated, authentic.',
+},
+{
+  id: 'accessible', name: 'Accessible', category: 'General Purpose',
+  heading: 'Atkinson Hyperlegible', body: 'Atkinson Hyperlegible', code: 'Ubuntu Mono', scale: 'major-second',
+  description: 'Atkinson Hyperlegible was designed by the Braille Institute specifically to improve readability for people with low vision. The clearest typeface for accessibility-first products.',
+  stylePrompt: 'Maximum legibility, WCAG AAA intent, high contrast. For healthcare, government, educational platforms, or any product where clarity of information is life-critical.',
+  layout: 'Generous line height, wide measures, large touch targets (48px+). Skip-nav links visible. No color-only information encoding.',
+  sizes: { h1: '2.5rem / 40px', body: '1.125rem / 18px', caption: '1rem / 16px', lineHeight: '1.8' },
+  colors: { primary: '#1a1a1a', accent: '#0052cc', bg: '#ffffff', text: '#2d2d2d' },
+  similarTo: ['open-source', 'corporate'],
+  contrastWith: ['luxury', 'brutalist'],
+  imagery: 'High-contrast photography, labeled diagrams, icon + text always paired. Never rely on color alone.',
+},
+{
+  id: 'performance', name: 'Performance', category: 'General Purpose',
+  heading: 'Barlow', body: 'Barlow', code: 'Roboto Mono', scale: 'major-second',
+  description: 'Barlow\'s condensed variants enable maximum information density at larger sizes while the regular weight reads cleanly for body. One family for all contexts keeps the variable font payload lean.',
+  stylePrompt: 'Lean, fast, functional. For products where web performance is a brand value — lightweight font stack, single-family, works with aggressive font subsetting.',
+  layout: 'Narrow column widths, condensed headings for space efficiency. Prefer system font fallbacks in hero sections. Core content loads first.',
+  sizes: { h1: '2.75rem / 44px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#111111', accent: '#16a34a', bg: '#fafafa', text: '#404040' },
+  similarTo: ['minimal', 'base'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Performance metrics as imagery: Lighthouse scores, speed graphs, benchmarks. Technical and functional.',
+},
+{
+  id: 'news', name: 'News', category: 'General Purpose',
+  heading: 'Libre Baskerville', body: 'PT Sans', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Baskerville-derived headings with a legible humanist sans body mirrors the classic newspaper pairing in a screen-first format. Authority and readability in equal measure.',
+  stylePrompt: 'Journalistic, factual, authoritative. For news sites, media organizations, or any platform where credibility and fast scanning are primary reader needs.',
+  layout: 'Multi-column grid for article lists, single-column for articles. Prominent bylines, datelines, and related articles. Breaking news banner at top.',
+  sizes: { h1: '3rem / 48px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#1a1a1a', accent: '#c0392b', bg: '#ffffff', text: '#333333' },
+  similarTo: ['magazine', 'editorial'],
+  contrastWith: ['dashboard', 'brutalist'],
+  imagery: 'News photography, photojournalism, infographics. Wire-quality images acceptable — credibility over aesthetics.',
+},
+{
+  id: 'education', name: 'Education', category: 'General Purpose',
+  heading: 'Nunito', body: 'Nunito Sans', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Nunito\'s rounded letterforms create an inviting, encouraging atmosphere ideal for learning platforms. The family cohesion (Nunito + Nunito Sans) simplifies the font stack.',
+  stylePrompt: 'Encouraging, clear, student-friendly. For e-learning platforms, course sites, or educational tools where the typography should motivate rather than intimidate.',
+  layout: 'Course cards grid, video-first lesson view, progress indicators. Sidebar for curriculum navigation. Generous spacing to reduce cognitive load.',
+  sizes: { h1: '2.5rem / 40px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#1e3a5f', accent: '#f97316', bg: '#fefefe', text: '#374151' },
+  similarTo: ['accessible', 'blog'],
+  contrastWith: ['brutalist', 'api-reference'],
+  imagery: 'Illustrated characters, progress badges, team collaboration photos. Bright, optimistic, inclusive.',
+},
+{
+  id: 'nonprofit', name: 'Nonprofit', category: 'General Purpose',
+  heading: 'Vollkorn', body: 'Open Sans', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Vollkorn\'s robust old-style serif warmth paired with Open Sans\'s universally legible clarity strike the balance between mission-driven authenticity and credible professionalism.',
+  stylePrompt: 'Warm, mission-driven, trustworthy. For charities, NGOs, foundations — typography that signals the organization deserves your donation and your trust.',
+  layout: 'Impactful hero with stats, donor testimonials, program cards. Clear donation CTAs. Annual report sections need strong hierarchy.',
+  sizes: { h1: '3rem / 48px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#1a3352', accent: '#059669', bg: '#ffffff', text: '#374151' },
+  similarTo: ['education', 'blog'],
+  contrastWith: ['dashboard', 'api-reference'],
+  imagery: 'Community photography, before/after impact shots, beneficiary portraits. Real people, real stories.',
+},
+
+// ── Content & Editorial ──────────────────────────────────────────────
+{
+  id: 'longform', name: 'Long-form', category: 'Content & Editorial',
+  heading: 'Fraunces', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'perfect-fourth',
+  description: 'Fraunces\'s optical variable axes (wonky, optical size, softness) let you create expressive headlines while Source Serif 4\'s screen-optimized serifs hold extended body reading.',
+  stylePrompt: 'Deeply literary, unhurried, magazine-quality. For essays, features, memoirs, or investigative pieces that need to reward slow reading. Think The Atlantic or Longreads.',
+  layout: 'Single column, 58-65ch measure, generous top and bottom padding. Fraunces works beautifully as drop caps. Pull quotes set at 1.4em with left border rule.',
+  sizes: { h1: '3.5rem / 56px', body: '1.125rem / 18px', caption: '0.875rem / 14px', lineHeight: '1.85' },
+  colors: { primary: '#1c1917', accent: '#b45309', bg: '#fffbf7', text: '#292524' },
+  similarTo: ['editorial', 'magazine'],
+  contrastWith: ['dashboard', 'api-reference'],
+  imagery: 'Full-bleed documentary photography, chapter illustrations, hand-drawn section dividers. Analog warmth.',
+},
+{
+  id: 'newsletter', name: 'Newsletter', category: 'Content & Editorial',
+  heading: 'Spectral', body: 'Karla', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Spectral\'s elegant screen-first serif creates distinct newsletter identity in headings; Karla\'s low-contrast sans body works across email clients and web views alike.',
+  stylePrompt: 'Personal, curated, subscriber-first. For email newsletters, Substack-style publications, or weekly digests where the author\'s voice is the brand.',
+  layout: 'Single 600px column (email-safe), strong header section, clear issue number/date. Dividers between sections. Plain-text fallback compatible.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1a1a2e', accent: '#e11d48', bg: '#fffef9', text: '#374151' },
+  similarTo: ['blog', 'editorial'],
+  contrastWith: ['dashboard', 'brutalist'],
+  imagery: 'Author headshots, inline illustrations, pull-quote callouts. Intimate, personal, editorial photography.',
+},
+{
+  id: 'food', name: 'Food & Recipe', category: 'Content & Editorial',
+  heading: 'Vollkorn', body: 'Lato', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Vollkorn\'s robust old-style serif brings appetite appeal and warmth to headlines; Lato\'s humanist sans keeps ingredients and instructions scannable under kitchen conditions.',
+  stylePrompt: 'Warm, tactile, appetizing. For recipe blogs, food magazines, restaurant sites, or cookbooks translated to web. Typography should feel like it belongs in a kitchen.',
+  layout: 'Hero food photo full-bleed, recipe card with grid layout for ingredients/steps. Jump-to-recipe anchor. Print-friendly version essential.',
+  sizes: { h1: '3rem / 48px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#2d1810', accent: '#c05621', bg: '#fffdf5', text: '#44332a' },
+  similarTo: ['longform', 'blog'],
+  contrastWith: ['api-reference', 'dashboard'],
+  imagery: 'Overhead food photography, process shots, ingredient flatlay. Warm tones, natural lighting. Real food only.',
+},
+{
+  id: 'travel', name: 'Travel', category: 'Content & Editorial',
+  heading: 'Playfair Display', body: 'Lato', code: 'Inconsolata', scale: 'major-third',
+  description: 'Playfair\'s high-contrast drama suits destination headlines that need to evoke aspiration; Lato\'s clean neutral body handles practical travel details without distraction.',
+  stylePrompt: 'Aspirational, cinematic, wanderlust-inducing. For travel blogs, destination guides, or booking platforms where imagery and editorial storytelling share equal weight.',
+  layout: 'Full-bleed hero imagery, overlaid display text, article grid with large thumbnail dominance. Maps as inline content.',
+  sizes: { h1: '4rem / 64px', body: '1.0625rem / 17px', caption: '0.8125rem / 13px', lineHeight: '1.7' },
+  colors: { primary: '#1a1a2e', accent: '#0891b2', bg: '#ffffff', text: '#374151' },
+  similarTo: ['magazine', 'longform'],
+  contrastWith: ['dashboard', 'admin'],
+  imagery: 'Landscape photography, golden-hour shots, cultural detail macro photography. Large format, immersive.',
+},
+{
+  id: 'academic', name: 'Academic', category: 'Content & Editorial',
+  heading: 'EB Garamond', body: 'EB Garamond', code: 'Source Code Pro', scale: 'perfect-fourth',
+  description: 'EB Garamond brings the scholarly tradition of Garamond typefaces to the screen with genuine historical authenticity. A single-family system that nods to centuries of academic publishing.',
+  stylePrompt: 'Scholarly, classical, text-rich. For academic papers, research publications, university sites, or any content where the tradition of the printed page matters.',
+  layout: 'Narrow justified columns (52-58ch), extensive footnote system, figure captions below images, abstract box at top. Citation-dense.',
+  sizes: { h1: '2.5rem / 40px', body: '1.125rem / 18px', caption: '0.9375rem / 15px', lineHeight: '1.8' },
+  colors: { primary: '#1a1a1a', accent: '#7c2d12', bg: '#fffff8', text: '#2d2d2d' },
+  similarTo: ['editorial', 'longform'],
+  contrastWith: ['brutalist', 'startup'],
+  imagery: 'Archival photographs, scientific diagrams, charts from datasets. Captions more important than the image itself.',
+},
+{
+  id: 'health', name: 'Health & Wellness', category: 'Content & Editorial',
+  heading: 'Nunito', body: 'Noto Sans', code: 'Ubuntu Mono', scale: 'minor-third',
+  description: 'Nunito\'s rounded warmth softens clinical content, while Noto Sans\'s global coverage ensures medical terminology in any script renders correctly. Clarity with empathy.',
+  stylePrompt: 'Calm, reassuring, clearly structured. For health content sites, medical information portals, or wellness apps where anxiety reduction is a design goal.',
+  layout: 'Clear section headers, info boxes for key takeaways, warning/caution callouts. Accessibility baked in — large base font, high contrast.',
+  sizes: { h1: '2.5rem / 40px', body: '1.0625rem / 17px', caption: '0.9375rem / 15px', lineHeight: '1.8' },
+  colors: { primary: '#134e4a', accent: '#0d9488', bg: '#f0fdf9', text: '#134e4a' },
+  similarTo: ['accessible', 'education'],
+  contrastWith: ['brutalist', 'api-reference'],
+  imagery: 'Clean lifestyle photography, calming nature scenes, illustrated anatomical diagrams. Avoid clinical stock imagery.',
+},
+{
+  id: 'culture', name: 'Arts & Culture', category: 'Content & Editorial',
+  heading: 'Crimson Pro', body: 'Libre Franklin', code: 'Inconsolata', scale: 'perfect-fourth',
+  description: 'Crimson Pro\'s elegant italics and small caps make cultural criticism feel sophisticated; Libre Franklin\'s versatile weight range handles everything from captions to pull quotes.',
+  stylePrompt: 'Cultured, critical, intelligent. For arts publications, museum sites, film criticism, music reviews — where the editorial voice is as important as the content.',
+  layout: 'Review card grid, critic bylines prominent, star/rating display typographically integrated. Generous imagery with editorial captions.',
+  sizes: { h1: '3.5rem / 56px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.8' },
+  colors: { primary: '#1a0f2e', accent: '#9333ea', bg: '#fefefe', text: '#292524' },
+  similarTo: ['editorial', 'magazine'],
+  contrastWith: ['dashboard', 'admin'],
+  imagery: 'Artwork photography, performance stills, exhibition installation shots. High quality, properly credited.',
+},
+{
+  id: 'science', name: 'Science & Technology', category: 'Content & Editorial',
+  heading: 'Source Serif 4', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'minor-third',
+  description: 'Source Serif 4\'s screen-optimized letterforms handle complex scientific headings; IBM Plex Sans and Mono form a cohesive body system for equations, code, and prose.',
+  stylePrompt: 'Rigorous, evidence-forward, technically precise. For science journalism, research blogs, or tech explainers where accuracy and nuance are non-negotiable.',
+  layout: 'Long article format with deep heading hierarchy, data tables, embedded interactive charts, and footnoted references. Abstract-first convention.',
+  sizes: { h1: '2.75rem / 44px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#0f2027', accent: '#0ea5e9', bg: '#ffffff', text: '#334155' },
+  similarTo: ['academic', 'docs'],
+  contrastWith: ['food', 'travel'],
+  imagery: 'Scientific visualization, data plots, laboratory photography, microscopy images. Technical precision over aesthetics.',
+},
+{
+  id: 'podcast', name: 'Podcast & Audio', category: 'Content & Editorial',
+  heading: 'Figtree', body: 'Figtree', code: 'Fira Code', scale: 'minor-third',
+  description: 'Figtree\'s modern geometric shapes create a fresh, audio-native feel. A single-family system keeps the focus on the listening experience rather than the design.',
+  stylePrompt: 'Conversational, binge-worthy, discoverable. For podcast websites, audio platforms, or transcript-heavy content where episode discoverability is the primary UX goal.',
+  layout: 'Episode card grid, waveform-inspired dividers, transcript toggle. Show notes with chapter markers. Subscribe CTA above fold.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#18181b', accent: '#a855f7', bg: '#fafafa', text: '#52525b' },
+  similarTo: ['culture', 'blog'],
+  contrastWith: ['academic', 'api-reference'],
+  imagery: 'Cover art thumbnails, host headshots, waveform visualizations. Episode art grid as primary visual.',
+},
+{
+  id: 'sports', name: 'Sports & Fitness', category: 'Content & Editorial',
+  heading: 'Oswald', body: 'Barlow', code: 'Roboto Mono', scale: 'perfect-fourth',
+  description: 'Oswald\'s condensed bold headings command attention at high impact; Barlow\'s versatile weight range handles everything from scoreboards to training guides.',
+  stylePrompt: 'High energy, action-first, score-focused. For sports news, fitness apps, or performance tracking platforms where data and drama coexist.',
+  layout: 'Scoreboard-style hero stats, condensed headline grid, video-heavy article pages. Live scores banner persistent.',
+  sizes: { h1: '4rem / 64px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.5' },
+  colors: { primary: '#0a0a0a', accent: '#dc2626', bg: '#ffffff', text: '#374151' },
+  similarTo: ['news', 'magazine'],
+  contrastWith: ['academic', 'luxury'],
+  imagery: 'Action photography, freeze-frame moments, athlete portraits. High contrast, motion blur acceptable.',
+},
+
+// ── Application & Interface ──────────────────────────────────────────
+{
+  id: 'mobile-first', name: 'Mobile-First', category: 'Application & Interface',
+  heading: 'Rubik', body: 'Rubik', code: 'DM Mono', scale: 'major-second',
+  description: 'Rubik\'s slightly rounded square forms were designed for small screens — excellent legibility at 13-15px body, generous x-height, and a single family reduces font loading overhead.',
+  stylePrompt: 'Thumb-first, tap-friendly, scroll-native. For progressive web apps, mobile-optimized dashboards, or apps that see >70% mobile traffic.',
+  layout: 'Bottom navigation, 44px+ touch targets, card-based scrollable content. Stack layout adapts to mobile naturally. Hamburger-free.',
+  sizes: { h1: '2rem / 32px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#1e1b4b', accent: '#7c3aed', bg: '#ffffff', text: '#4b5563' },
+  similarTo: ['admin', 'marketplace'],
+  contrastWith: ['api-reference', 'academic'],
+  imagery: 'Mobile screenshots at device scale, gesture illustrations, notification previews.',
+},
+{
+  id: 'command-palette', name: 'Command Palette', category: 'Application & Interface',
+  heading: 'Space Grotesk', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second',
+  description: 'Space Grotesk\'s monospace-influenced geometric headings feel at home in command-line aesthetic interfaces; Inter body handles list items and descriptions at density.',
+  stylePrompt: 'Keyboard-first, power-user, slash-command native. For tools like Linear, Raycast, or any interface where the command palette is the primary navigation.',
+  layout: 'Modal-dominant, keyboard-navigable lists, contextual shortcut displays. Minimal chrome. Spotlight-style search above fold.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#f1f5f9', accent: '#818cf8', bg: '#0f172a', text: '#94a3b8' },
+  similarTo: ['developer', 'api-reference'],
+  contrastWith: ['luxury', 'food'],
+  imagery: 'Keyboard shortcut visualizations, command tree illustrations, terminal-style output.',
+},
+{
+  id: 'crm', name: 'CRM & Sales', category: 'Application & Interface',
+  heading: 'Albert Sans', body: 'Albert Sans', code: 'DM Mono', scale: 'minor-second',
+  description: 'Albert Sans\'s low-contrast strokes and open apertures perform well at small sizes in data-dense tables while feeling personable enough for customer-facing contexts.',
+  stylePrompt: 'Efficient, relationship-oriented, activity-focused. For CRMs, sales tools, or pipeline management UIs where reps spend all day inside the product.',
+  layout: 'Pipeline kanban or list view, contact profile with activity feed, email thread integration. Keyboard shortcuts essential.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#0f172a', accent: '#0891b2', bg: '#f8fafc', text: '#475569' },
+  similarTo: ['admin', 'dashboard'],
+  contrastWith: ['magazine', 'luxury'],
+  imagery: 'Contact avatars, pipeline stage icons, activity timeline visualizations.',
+},
+{
+  id: 'finance-app', name: 'Finance App', category: 'Application & Interface',
+  heading: 'Manrope', body: 'Inter', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'Manrope\'s variable weight and optical clarity at small sizes make it ideal for financial figures; IBM Plex Mono handles all numeric data with proper tabular spacing.',
+  stylePrompt: 'Precise, trustworthy, number-forward. For fintech apps, portfolio trackers, or budgeting tools where financial figures must be unambiguous and instantly readable.',
+  layout: 'Balance sheets, transaction lists, chart-dominant dashboards. Tabular lining figures throughout. Color-coded gain/loss.',
+  sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.55' },
+  colors: { primary: '#0f172a', accent: '#10b981', bg: '#f8fafc', text: '#334155' },
+  similarTo: ['dashboard', 'data'],
+  contrastWith: ['food', 'travel'],
+  imagery: 'Candlestick charts, portfolio allocation pies, trend lines. Data visualization is the imagery.',
+},
+{
+  id: 'healthcare-ui', name: 'Healthcare UI', category: 'Application & Interface',
+  heading: 'Lexend', body: 'Lexend', code: 'Ubuntu Mono', scale: 'major-second',
+  description: 'Lexend was researched and designed to improve reading speed and reduce visual stress — a critical quality for clinicians reading patient data under time pressure.',
+  stylePrompt: 'Clinical-grade legibility, error-resistant typography. For EHR systems, clinical dashboards, or any healthcare UI where a misread character can have serious consequences.',
+  layout: 'High-contrast data tables, clear status indicators, alert hierarchy (critical/warning/info). Minimum 14px body, maximum 80ch line length.',
+  sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.875rem / 14px', lineHeight: '1.6' },
+  colors: { primary: '#0c1a2e', accent: '#0369a1', bg: '#f0f9ff', text: '#1e3a5f' },
+  similarTo: ['accessible', 'admin'],
+  contrastWith: ['brutalist', 'portfolio'],
+  imagery: 'Medical icons, anatomy charts, patient flow diagrams. Clinical, not marketing.',
+},
+{
+  id: 'real-estate', name: 'Real Estate', category: 'Application & Interface',
+  heading: 'Montserrat', body: 'Open Sans', code: 'Source Code Pro', scale: 'major-second',
+  description: 'Montserrat\'s geometric boldness gives property listings the confident authority of premium signage; Open Sans body handles address data, specs, and descriptions clearly.',
+  stylePrompt: 'Premium but accessible, location-centric, gallery-first. For property listing platforms, real estate agencies, or home search tools where visual confidence builds buyer trust.',
+  layout: 'Map + list split view, property gallery full-bleed, spec table on detail page. Price and location always above fold.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#1a2332', accent: '#1d4ed8', bg: '#ffffff', text: '#374151' },
+  similarTo: ['marketplace', 'ecommerce'],
+  contrastWith: ['editorial', 'academic'],
+  imagery: 'Architectural photography, interior staging shots, aerial maps. Bright, spacious, aspirational.',
+},
+{
+  id: 'project-mgmt', name: 'Project Management', category: 'Application & Interface',
+  heading: 'Figtree', body: 'Inter', code: 'Fira Code', scale: 'minor-second',
+  description: 'Figtree headings lend just enough visual distinction to differentiate project names and section titles from dense task data, while Inter body keeps the interface neutral and data-forward.',
+  stylePrompt: 'Work-focused, status-at-a-glance, keyboard-navigable. For project trackers, kanban tools, and issue management products where the data is the interface.',
+  layout: 'Kanban board, list view, timeline/Gantt toggle. Inline editing throughout. Priority and assignee always visible in compact cards.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#11181c', accent: '#5a31f4', bg: '#f9fafb', text: '#4b5563' },
+  similarTo: ['admin', 'saas'],
+  contrastWith: ['longform', 'luxury'],
+  imagery: 'Board screenshots, burndown charts, team capacity graphs. Interface itself is the visual hero.',
+},
+{
+  id: 'chat-app', name: 'Chat & Messaging', category: 'Application & Interface',
+  heading: 'DM Sans', body: 'DM Sans', code: 'DM Mono', scale: 'minor-second',
+  description: 'DM Sans\'s name (Display & Message) literally describes its intended use. Excellent legibility at chat bubble sizes, friendly terminals, and single-family simplicity.',
+  stylePrompt: 'Conversational, real-time, notification-aware. For messaging apps, team chat tools, or any interface where conversation threading and status indicators dominate.',
+  layout: 'Sidebar channel list, main message thread, member panel. Thread replies indented. Inline media previews. Unread counts prominent.',
+  sizes: { h1: '1.5rem / 24px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.5' },
+  colors: { primary: '#1a1d21', accent: '#611f69', bg: '#f8f8f8', text: '#1d1c1d' },
+  similarTo: ['admin', 'mobile-first'],
+  contrastWith: ['academic', 'longform'],
+  imagery: 'Emoji reactions, custom status illustrations, channel type icons. Human-first micro-illustrations.',
+},
+{
+  id: 'analytics', name: 'Analytics Platform', category: 'Application & Interface',
+  heading: 'Work Sans', body: 'Work Sans', code: 'Roboto Mono', scale: 'minor-second',
+  description: 'Work Sans was specifically designed to work well for digital and print media making it ideal for analytics platforms where data needs to be communicated clearly across multiple contexts.',
+  stylePrompt: 'Metric-forward, insight-driven, annotation-heavy. For analytics dashboards, reporting tools, or business intelligence platforms where every number tells a story.',
+  layout: 'KPI row at top, chart grid below, data table with inline filtering. Tooltip design is as important as the page layout.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#0d1117', accent: '#238636', bg: '#0d1117', text: '#8b949e' },
+  similarTo: ['data', 'dashboard'],
+  contrastWith: ['luxury', 'travel'],
+  imagery: 'Chart types used as section illustrations, data flow diagrams, funnel visualizations.',
+},
+{
+  id: 'design-tool', name: 'Design Tool', category: 'Application & Interface',
+  heading: 'Geist', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second',
+  description: 'Geist headings and Inter body create an ultra-neutral canvas that won\'t compete with the user\'s creative work. Tool UI should be invisible when the canvas is open.',
+  stylePrompt: 'Tool-chrome minimal, canvas-first, creator-focused. For design tools, code editors, or creative applications where the UI frame should disappear entirely.',
+  layout: 'Narrow toolbar rails, floating panel drawers, canvas takes full remaining space. Typographic density highest in inspector panels.',
+  sizes: { h1: '1.25rem / 20px', body: '0.8125rem / 13px', caption: '0.6875rem / 11px', lineHeight: '1.4' },
+  colors: { primary: '#e8eaed', accent: '#4285f4', bg: '#1e1e1e', text: '#9aa0a6' },
+  similarTo: ['admin', 'command-palette'],
+  contrastWith: ['longform', 'food'],
+  imagery: 'Tool screenshots, component anatomy diagrams, cursor state illustrations.',
+},
+
+// ── E-commerce & Conversion ──────────────────────────────────────────
+{
+  id: 'fashion', name: 'Fashion & Apparel', category: 'E-commerce & Conversion',
+  heading: 'Josefin Sans', body: 'Raleway', code: 'JetBrains Mono', scale: 'perfect-fourth',
+  description: 'Josefin Sans\'s Art Deco-inspired letterforms pair with Raleway\'s elegant geometric body to create a fashion-forward typographic identity that signals style consciousness.',
+  stylePrompt: 'Fashion-forward, aspirational, trend-aware. For apparel brands, fashion marketplaces, or clothing retailers where style is the product. Generous whitespace signals premium.',
+  layout: 'Lookbook grid, editorial product photography dominant, minimal product metadata until hover. Size guide inline.',
+  sizes: { h1: '3.5rem / 56px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.7' },
+  colors: { primary: '#1a1a1a', accent: '#be185d', bg: '#fafafa', text: '#525252' },
+  similarTo: ['luxury', 'ecommerce'],
+  contrastWith: ['developer', 'api-reference'],
+  imagery: 'Editorial fashion photography, model styling shots, flat-lay product photography. Season-aligned color palettes.',
+},
+{
+  id: 'beauty', name: 'Beauty & Cosmetics', category: 'E-commerce & Conversion',
+  heading: 'Cormorant Garamond', body: 'Nunito Sans', code: 'JetBrains Mono', scale: 'major-third',
+  description: 'Cormorant Garamond\'s delicate high-contrast strokes suit premium beauty brands; Nunito Sans keeps product details and ingredients readable at small sizes.',
+  stylePrompt: 'Feminine, premium, sensory. For beauty brands, cosmetics retailers, or skincare lines where the product experience starts with how the page feels.',
+  layout: 'Before/after galleries, ingredient call-outs, routine builder flow. Shade selector as a UI component. Review system prominent.',
+  sizes: { h1: '3.5rem / 56px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.7' },
+  colors: { primary: '#1a0a0a', accent: '#9d174d', bg: '#fff5f7', text: '#44403c' },
+  similarTo: ['luxury', 'fashion'],
+  contrastWith: ['brutalist', 'developer'],
+  imagery: 'Close-up texture photography, product still life, skin-tone-inclusive model photography. Soft lighting.',
+},
+{
+  id: 'home-living', name: 'Home & Living', category: 'E-commerce & Conversion',
+  heading: 'Instrument Serif', body: 'Source Sans 3', code: 'Inconsolata', scale: 'major-third',
+  description: 'Instrument Serif\'s refined elegance suits premium home goods; Source Sans 3 keeps practical product information scannable. This pairing says "quality without pretension".',
+  stylePrompt: 'Considered, quality-forward, aspirational livability. For furniture, home decor, or interior design retailers where lifestyle aspiration meets practical purchase decisions.',
+  layout: 'Room scene hero photography, product in-context imagery, material/finish selectors, dimension spec tables.',
+  sizes: { h1: '3rem / 48px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1c1917', accent: '#78716c', bg: '#fafaf9', text: '#44403c' },
+  similarTo: ['luxury', 'ecommerce'],
+  contrastWith: ['brutalist', 'api-reference'],
+  imagery: 'Lifestyle interiors, room vignettes, material close-ups. Natural light, warm tones, real homes.',
+},
+{
+  id: 'subscription', name: 'Subscription', category: 'E-commerce & Conversion',
+  heading: 'Figtree', body: 'Inter', code: 'JetBrains Mono', scale: 'major-second',
+  description: 'Figtree\'s confident geometry and Inter\'s neutral readability create a conversion-optimized system. Benefit lists and pricing tables are the primary typographic components.',
+  stylePrompt: 'Conversion-focused, benefit-led, trial-encouraging. For SaaS subscriptions, box services, membership sites — where the pricing page is the most critical typography canvas.',
+  layout: 'Tiered pricing cards side by side, feature comparison table, FAQ accordion. Free trial CTA above fold.',
+  sizes: { h1: '3rem / 48px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#111827', accent: '#7c3aed', bg: '#ffffff', text: '#374151' },
+  similarTo: ['saas', 'startup'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Product screenshots, happy customer photos, feature illustration icons. Social proof heavy.',
+},
+{
+  id: 'sports-ecom', name: 'Sports & Outdoor', category: 'E-commerce & Conversion',
+  heading: 'Exo 2', body: 'Barlow', code: 'Roboto Mono', scale: 'major-third',
+  description: 'Exo 2\'s geometric sci-fi undertones suit athletic performance brands; Barlow\'s wide weight range handles everything from gear specs to brand storytelling.',
+  stylePrompt: 'Performance-driven, energy-forward, gear-focused. For athletic equipment, outdoor adventure gear, or sports apparel where product capabilities are the selling proposition.',
+  layout: 'Action video hero, product feature highlights with icons, gear comparison table, athlete testimonials.',
+  sizes: { h1: '3.5rem / 56px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#0f172a', accent: '#f97316', bg: '#ffffff', text: '#334155' },
+  similarTo: ['sports', 'ecommerce'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Action photography, athlete-in-use shots, gear detail photography. High contrast, motion.',
+},
+{
+  id: 'digital-products', name: 'Digital Products', category: 'E-commerce & Conversion',
+  heading: 'Plus Jakarta Sans', body: 'DM Sans', code: 'Fira Code', scale: 'major-second',
+  description: 'Plus Jakarta Sans and DM Sans create a modern, polished feel perfectly suited for selling templates, icons, fonts, and digital tools where preview is the conversion driver.',
+  stylePrompt: 'Creator-to-creator, preview-first, license-clear. For digital marketplaces, design asset shops, or template stores where the product quality must show through typography.',
+  layout: 'Preview-dominant product cards, lightbox gallery, license tier table, related products sidebar.',
+  sizes: { h1: '2.75rem / 44px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#0f172a', accent: '#8b5cf6', bg: '#fafafa', text: '#475569' },
+  similarTo: ['marketplace', 'startup'],
+  contrastWith: ['editorial', 'academic'],
+  imagery: 'Product previews, mockup renders, before/after comparisons. Creator-made content, not stock.',
+},
+{
+  id: 'local-business', name: 'Local Business', category: 'E-commerce & Conversion',
+  heading: 'Bitter', body: 'PT Sans', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Bitter\'s slab serif conveys establishment and permanence; PT Sans brings warmth and legibility to contact details, hours, and menus that need to work on any device.',
+  stylePrompt: 'Rooted, established, community-trusted. For restaurants, local shops, service businesses — where the vibe is "this place has been here forever and earns your trust".',
+  layout: 'Location + hours prominently above fold, menu/services list format, map embed, review stars. Mobile-first mandatory.',
+  sizes: { h1: '2.5rem / 40px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1c1917', accent: '#b45309', bg: '#fffdf5', text: '#44403c' },
+  similarTo: ['food', 'nonprofit'],
+  contrastWith: ['api-reference', 'brutalist'],
+  imagery: 'Storefront photography, team portraits, product/dish photography. Real location, real people.',
+},
+{
+  id: 'pet-care', name: 'Pet & Animal Care', category: 'E-commerce & Conversion',
+  heading: 'Quicksand', body: 'Nunito Sans', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Quicksand\'s playful rounded forms perfectly match the joy and emotion of pet products; Nunito Sans keeps ingredient lists and care instructions readable.',
+  stylePrompt: 'Playful, loving, trust-building. For pet food, veterinary clinics, pet product shops — where the target audience is emotionally invested pet owners who want the best.',
+  layout: 'Pet photography hero, breed-specific product filtering, ingredient/nutrition tables, vet recommendation badges.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1e3a5f', accent: '#f59e0b', bg: '#fffef7', text: '#374151' },
+  similarTo: ['parenting', 'local-business'],
+  contrastWith: ['api-reference', 'admin'],
+  imagery: 'Pet photography (happy animals), product on model/pet, lifestyle with owner. Emotional, joyful.',
+},
+{
+  id: 'marketplace-b2b', name: 'B2B Marketplace', category: 'E-commerce & Conversion',
+  heading: 'Red Hat Display', body: 'Red Hat Text', code: 'IBM Plex Mono', scale: 'minor-third',
+  description: 'The Red Hat family was designed for Red Hat\'s enterprise products — authority and technical credibility are baked in. Ideal for B2B procurement platforms and SaaS marketplaces.',
+  stylePrompt: 'Enterprise-grade, procurement-ready, vendor-trustworthy. For B2B software marketplaces, supplier directories, or wholesale platforms where the buyer is a professional.',
+  layout: 'Vendor cards with trust signals, detailed spec sheets, RFQ forms, comparison tables. Pricing on request common.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#1a1a2e', accent: '#ee0000', bg: '#ffffff', text: '#374151' },
+  similarTo: ['marketplace', 'corporate'],
+  contrastWith: ['luxury', 'fashion'],
+  imagery: 'Product photography, integration logos, customer company logos. Enterprise, professional.',
+},
+{
+  id: 'auction', name: 'Auction & Bidding', category: 'E-commerce & Conversion',
+  heading: 'Libre Baskerville', body: 'Nunito Sans', code: 'IBM Plex Mono', scale: 'major-third',
+  description: 'Libre Baskerville\'s authoritative old-style serifs evoke auction house credibility; Nunito Sans keeps bid increments, deadlines, and lot descriptions scannable under time pressure.',
+  stylePrompt: 'Authoritative, time-sensitive, provenance-signaling. For auction platforms, estate sales, or collectibles markets where the gavel-and-podium seriousness must translate to screen.',
+  layout: 'Lot grid with countdown timers, bid history table, provenance documentation. Current bid always visible. Mobile bid flow optimized.',
+  sizes: { h1: '2.75rem / 44px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#1a1207', accent: '#b45309', bg: '#fffdf5', text: '#44403c' },
+  similarTo: ['luxury', 'marketplace'],
+  contrastWith: ['dashboard', 'developer'],
+  imagery: 'Provenance photography, detail shots of lot items, auction room atmosphere. Photography-first.',
+},
+
+// ── Documentation & Technical ────────────────────────────────────────
+{
+  id: 'sdk-docs', name: 'SDK Documentation', category: 'Documentation & Technical',
+  heading: 'Instrument Sans', body: 'Inter', code: 'Fira Code', scale: 'minor-third',
+  description: 'Instrument Sans provides authority and modernity without the developer-tool coldness of pure monospace headings; Fira Code with ligatures makes SDK examples inviting to read.',
+  stylePrompt: 'SDK-first, developer-experience-focused. For library documentation, SDK guides, or framework references where code examples and prose are equally important.',
+  layout: 'Method signature as h3, parameters table, code example right-aligned. Copy button on every block. Inline type references.',
+  sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+  colors: { primary: '#e2e8f0', accent: '#34d399', bg: '#0f1117', text: '#94a3b8' },
+  similarTo: ['developer', 'api-reference'],
+  contrastWith: ['magazine', 'luxury'],
+  imagery: 'Code snippets as imagery, SDK architecture diagrams, integration flow charts.',
+},
+{
+  id: 'changelog', name: 'Changelog', category: 'Documentation & Technical',
+  heading: 'Bricolage Grotesque', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-third',
+  description: 'Bricolage Grotesque\'s editorial personality gives changelog entries a human voice; Inter body handles technical details cleanly. Updates should feel crafted, not generated.',
+  stylePrompt: 'Version-history-first, feature-announcement-ready. For public changelogs, release notes, or product update pages where the history of the product is a trust signal.',
+  layout: 'Reverse chronological, version number as anchor heading, tag badges (feature/fix/breaking). Subscribe widget above fold.',
+  sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#0f172a', accent: '#7c3aed', bg: '#ffffff', text: '#374151' },
+  similarTo: ['docs', 'blog'],
+  contrastWith: ['luxury', 'food'],
+  imagery: 'Before/after UI screenshots, feature preview animations, product GIFs.',
+},
+{
+  id: 'knowledge-base', name: 'Knowledge Base', category: 'Documentation & Technical',
+  heading: 'Sora', body: 'Noto Sans', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Sora\'s distinctive display personality aids article findability while Noto Sans\'s global character coverage handles multilingual support tickets and documentation.',
+  stylePrompt: 'Search-first, self-serve, globally accessible. For help centers, knowledge bases, or support documentation where findability and translation coverage are top priorities.',
+  layout: 'Search bar hero, category card grid, article with breadcrumb, related articles footer. Feedback widget on every article.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#111827', accent: '#0891b2', bg: '#ffffff', text: '#374151' },
+  similarTo: ['docs', 'blog'],
+  contrastWith: ['brutalist', 'luxury'],
+  imagery: 'Step-by-step screenshots with callout annotations, video tutorial thumbnails, FAQ illustrations.',
+},
+{
+  id: 'runbook', name: 'Runbook & Operations', category: 'Documentation & Technical',
+  heading: 'IBM Plex Sans', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'The complete IBM Plex family creates a unified system for operations documentation where consistent typographic hierarchy reduces cognitive load during incidents.',
+  stylePrompt: 'Incident-ready, step-by-step, scannable under pressure. For runbooks, operational playbooks, or oncall guides where someone reads these at 3am during a production incident.',
+  layout: 'Numbered steps prominent, command blocks copy-able, severity indicator in header. Print-ready essential.',
+  sizes: { h1: '2rem / 32px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#161616', accent: '#0f62fe', bg: '#ffffff', text: '#525252' },
+  similarTo: ['developer', 'api-reference'],
+  contrastWith: ['luxury', 'fashion'],
+  imagery: 'System architecture diagrams, alert screenshots, monitoring dashboard captures.',
+},
+{
+  id: 'tutorial', name: 'Interactive Tutorial', category: 'Documentation & Technical',
+  heading: 'Commissioner', body: 'Karla', code: 'JetBrains Mono', scale: 'minor-third',
+  description: 'Commissioner\'s warm humanist display keeps learning materials encouraging; Karla\'s geometric legibility handles step instructions clearly without intimidating beginners.',
+  stylePrompt: 'Step-by-step, beginner-welcoming, milestone-celebrating. For interactive tutorials, onboarding flows, or structured learning sequences where progress momentum matters.',
+  layout: 'Step indicator sidebar, main content with code panel, hint/reveal system. Progress bar persistent. Checkpoint animations.',
+  sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#0f172a', accent: '#8b5cf6', bg: '#fafafa', text: '#334155' },
+  similarTo: ['education', 'docs'],
+  contrastWith: ['api-reference', 'academic'],
+  imagery: 'Step completion illustrations, progress badge animations, before/after code diffs.',
+},
+{
+  id: 'whitepaper', name: 'Whitepaper & Report', category: 'Documentation & Technical',
+  heading: 'Literata', body: 'Source Sans 3', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Literata\'s Google Fonts-optimized serif was built for extended reading; Source Sans 3 keeps figures, tables, and captions clean. The pairing says "this document was crafted, not generated".',
+  stylePrompt: 'Authoritative, research-backed, lead-generating. For technical whitepapers, industry reports, or research publications designed to establish thought leadership.',
+  layout: 'Executive summary at top, numbered sections with TOC, data tables mid-document, methodology appendix. Print layout critical.',
+  sizes: { h1: '2.75rem / 44px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#1a2332', accent: '#1d4ed8', bg: '#ffffff', text: '#334155' },
+  similarTo: ['academic', 'corporate'],
+  contrastWith: ['brutalist', 'sports'],
+  imagery: 'Data charts, research infographics, abstract cover art. Professional illustration over photography.',
+},
+{
+  id: 'compliance', name: 'Legal & Compliance', category: 'Documentation & Technical',
+  heading: 'Noto Serif', body: 'Noto Sans', code: 'Ubuntu Mono', scale: 'minor-second',
+  description: 'The Noto family\'s comprehensive Unicode coverage handles every legal term, name, and international reference; the serif/sans pairing follows legal document conventions while remaining web-native.',
+  stylePrompt: 'Precise, unambiguous, jurisdiction-ready. For privacy policies, terms of service, legal notices, or compliance documentation where every word must be readable and archived.',
+  layout: 'Dense hierarchical numbered sections, cross-reference links, definition callouts, effective date prominent. Print stylesheet essential.',
+  sizes: { h1: '2rem / 32px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1a1a2e', accent: '#1d4ed8', bg: '#ffffff', text: '#374151' },
+  similarTo: ['corporate', 'academic'],
+  contrastWith: ['brutalist', 'fashion'],
+  imagery: 'Minimal — jurisdiction flags, certification logos, signature fields. No decorative imagery.',
+},
+{
+  id: 'devrel', name: 'Developer Relations', category: 'Documentation & Technical',
+  heading: 'Bricolage Grotesque', body: 'Mulish', code: 'Fira Code', scale: 'minor-third',
+  description: 'Bricolage Grotesque\'s editorial personality gives developer relations content a human, community feel; Mulish keeps tutorials and guides warm yet technical.',
+  stylePrompt: 'Community-building, conference-talk energy, hackathon-inviting. For devrel sites, community hubs, or developer advocate content where building belonging is as important as shipping code.',
+  layout: 'Events calendar, community showcase, tutorial grid, forum activity feed. Discord/Slack join CTA prominent.',
+  sizes: { h1: '2.75rem / 44px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.65' },
+  colors: { primary: '#0f172a', accent: '#6366f1', bg: '#fafafa', text: '#334155' },
+  similarTo: ['developer', 'open-source'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Conference photos, hackathon energy shots, diverse developer portraits. Community-generated.',
+},
+{
+  id: 'status-page', name: 'Status Page', category: 'Documentation & Technical',
+  heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second',
+  description: 'Inter\'s neutrality is a feature here — status pages must feel factual, not branded. The font disappears so the uptime data and incident communications speak without visual editorializing.',
+  stylePrompt: 'Trust-through-clarity, incident-professional, SLA-focused. For service status pages, incident communication, or uptime displays where honest, clear communication is the entire product.',
+  layout: 'System health grid at top, active incidents below, historical uptime chart, subscription widget. Auto-refresh.',
+  sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#111827', accent: '#10b981', bg: '#f9fafb', text: '#374151' },
+  similarTo: ['developer', 'admin'],
+  contrastWith: ['magazine', 'luxury'],
+  imagery: 'Uptime graphs, incident timeline visualizations. Color-coded status indicators. No decorative imagery.',
+},
+{
+  id: 'oss-landing', name: 'OSS Project Landing', category: 'Documentation & Technical',
+  heading: 'Space Grotesk', body: 'Mulish', code: 'JetBrains Mono', scale: 'major-second',
+  description: 'Space Grotesk\'s technical character suits open-source tools; Mulish\'s clean readability handles feature explanations and quick-start guides for developer audiences.',
+  stylePrompt: 'GitHub-adjacent, star-worthy, quick-start-focused. For open-source project landing pages where the goal is stars, installs, and contributors — in that order.',
+  layout: 'npm install command above fold, feature grid, code example, GitHub stats. Contributor wall. MIT badge visible.',
+  sizes: { h1: '3rem / 48px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#0d1117', accent: '#58a6ff', bg: '#0d1117', text: '#8b949e' },
+  similarTo: ['developer', 'open-source'],
+  contrastWith: ['luxury', 'food'],
+  imagery: 'GitHub contribution graphs, CLI terminal recordings, architecture diagrams. Dark native.',
+},
+
+// ── Design System ────────────────────────────────────────────────────
+{
+  id: 'ios-native', name: 'iOS Native', category: 'Design System',
+  heading: 'SF Pro Display', body: 'SF Pro Text', code: 'SF Mono', scale: 'major-second',
+  description: 'Apple\'s San Francisco type system — use Instrument Sans as the Google Fonts proxy for cross-platform documentation. Dynamic type scaling and SF symbols integration define the system.',
+  stylePrompt: 'Platform-native for iOS/macOS. For apps targeting Apple platforms, design system documentation, or Figma libraries where iOS Human Interface Guidelines are the reference.',
+  layout: 'iOS layout conventions: large titles in navigation, grouped list forms, bottom sheet modals. 8pt grid. SF Symbols for iconography.',
+  sizes: { h1: '2.125rem / 34px', body: '1.0625rem / 17px', caption: '0.75rem / 12px', lineHeight: '1.47' },
+  colors: { primary: '#000000', accent: '#007aff', bg: '#f2f2f7', text: '#000000' },
+  similarTo: ['material', 'fluent'],
+  contrastWith: ['brutalist', 'editorial'],
+  imagery: 'iOS UI screenshots, SF Symbol usage examples, device mockups. Platform-native aesthetic.',
+},
+{
+  id: 'ant-design', name: 'Ant Design', category: 'Design System',
+  heading: 'PingFang SC', body: 'PingFang SC', code: 'Source Code Pro', scale: 'major-second',
+  description: 'Ant Design\'s Chinese-first design system uses PingFang SC — use Outfit as the Google Fonts Latin substitute. Designed for enterprise applications serving global + Chinese markets.',
+  stylePrompt: 'Enterprise-grade, east-west bridging, table-heavy. For admin systems, enterprise dashboards, or B2B platforms where Ant Design components are the implementation foundation.',
+  layout: 'Ant\'s 24-column grid, left-fixed menu, breadcrumb header. Dense form layouts, complex data tables, modal confirmation flows.',
+  sizes: { h1: '2.25rem / 36px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5715' },
+  colors: { primary: '#000000', accent: '#1677ff', bg: '#ffffff', text: '#000000' },
+  similarTo: ['carbon', 'material'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Ant Design illustrations, enterprise workflow diagrams, data table examples.',
+},
+{
+  id: 'chakra', name: 'Chakra UI', category: 'Design System',
+  heading: 'Nunito', body: 'Nunito Sans', code: 'Source Code Pro', scale: 'major-second',
+  description: 'Chakra UI\'s accessible-by-default philosophy suits Nunito\'s rounded, inclusive forms. The Nunito family pairing creates warmth and accessibility as a system-level default.',
+  stylePrompt: 'Accessible-first, React-native, composable. For projects using Chakra UI as the component foundation where the theme customization starts from a warm, accessible baseline.',
+  layout: 'Chakra\'s responsive container system, stack/grid/flex primitives. Dark mode built-in. Consistent focus ring visible throughout.',
+  sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.75rem / 12px', lineHeight: '1.625' },
+  colors: { primary: '#171923', accent: '#3182ce', bg: '#ffffff', text: '#2d3748' },
+  similarTo: ['radix', 'material'],
+  contrastWith: ['brutalist', 'luxury'],
+  imagery: 'Component playground screenshots, accessibility audit results, dark/light mode toggles.',
+},
+{
+  id: 'shopify-polaris', name: 'Polaris', category: 'Design System',
+  heading: 'Inter', body: 'Inter', code: 'Fira Code', scale: 'minor-second',
+  description: 'Shopify Polaris uses Inter as its typeface — the system is characterized not by the font but by the color system, component density, and merchant-first information architecture.',
+  stylePrompt: 'Merchant-focused, e-commerce-operational, admin-dense. For Shopify apps, Polaris-based admin extensions, or e-commerce management tools following Polaris guidelines.',
+  layout: 'Shopify admin frame, page-header with action groups, card-based page sections. Page + section + card hierarchy.',
+  sizes: { h1: '2rem / 32px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.429' },
+  colors: { primary: '#202223', accent: '#008060', bg: '#f6f6f7', text: '#202223' },
+  similarTo: ['admin', 'carbon'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Merchant dashboard screenshots, product catalog views, order management tables.',
+},
+{
+  id: 'tailwind-ui', name: 'Tailwind UI', category: 'Design System',
+  heading: 'Inter', body: 'Inter', code: 'JetBrains Mono', scale: 'major-second',
+  description: 'Tailwind UI is built exclusively with Inter — the system\'s differentiation comes through spacing, color, and component composition rather than typographic variety.',
+  stylePrompt: 'Utility-first, component-composable, rapid-prototyping-ready. For projects using Tailwind CSS where the design system is built via class composition. Heroicons for iconography.',
+  layout: 'Tailwind\'s default spacing scale, 8px baseline grid. Container classes, responsive breakpoint-driven layouts. Dark mode variant always prepared.',
+  sizes: { h1: '2.25rem / 36px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.625' },
+  colors: { primary: '#111827', accent: '#4f46e5', bg: '#ffffff', text: '#374151' },
+  similarTo: ['radix', 'base'],
+  contrastWith: ['brutalist', 'editorial'],
+  imagery: 'Component screenshots at multiple breakpoints, dark/light mode comparison, composition examples.',
+},
+{
+  id: 'mantine', name: 'Mantine', category: 'Design System',
+  heading: 'Manrope', body: 'Manrope', code: 'Fira Code', scale: 'major-second',
+  description: 'Mantine\'s open-source React library pairs well with Manrope\'s variable weight range and optical corrections — a single-family system that scales from 200 to 800 weight seamlessly.',
+  stylePrompt: 'Full-featured React components, TypeScript-first, Storybook-integrated. For projects using Mantine as the UI foundation where the design tokens need to be systematically defined.',
+  layout: 'Mantine\'s AppShell with Navbar/Header, responsive breakpoints, notification system. Drawer and modal management consistent.',
+  sizes: { h1: '2.25rem / 36px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.55' },
+  colors: { primary: '#1a1b1e', accent: '#339af0', bg: '#ffffff', text: '#212529' },
+  similarTo: ['chakra', 'radix'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Component documentation screenshots, Mantine UI interactive examples, Storybook captures.',
+},
+{
+  id: 'shadcn', name: 'shadcn/ui', category: 'Design System',
+  heading: 'Geist', body: 'Geist', code: 'JetBrains Mono', scale: 'minor-third',
+  description: 'shadcn/ui\'s copy-paste philosophy is mirrored by Geist\'s developer-native character. Both reject the "install and forget" framework mindset in favor of owned, customizable code.',
+  stylePrompt: 'Copy-paste components, Radix primitive-based, full ownership model. For Next.js/Vercel-ecosystem projects using shadcn/ui where the typography token layer needs explicit definition.',
+  layout: 'shadcn\'s CSS variable token system, dark mode via class toggle, Radix accessibility primitives. Full TypeScript interface for all component props.',
+  sizes: { h1: '2.25rem / 36px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#09090b', accent: '#18181b', bg: '#ffffff', text: '#71717a' },
+  similarTo: ['radix', 'minimal'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Component code + preview split views, dark/light toggle, mobile/desktop comparison.',
+},
+{
+  id: 'design-tokens', name: 'Design Tokens', category: 'Design System',
+  heading: 'Red Hat Display', body: 'Red Hat Text', code: 'Red Hat Mono', scale: 'major-second',
+  description: 'The complete Red Hat family — Display, Text, and Mono — models the design tokens philosophy of one coherent system across all typographic roles. The naming is intentional.',
+  stylePrompt: 'Token-taxonomy-first, W3C DTCG spec, multi-brand. For design token documentation, token-management tooling, or style dictionary documentation where the token structure is the product.',
+  layout: 'Token reference table (name / value / usage), category tree navigation, alias chain visualization. Export format tabs (CSS, JSON, Figma).',
+  sizes: { h1: '2.25rem / 36px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#0f172a', accent: '#e11d48', bg: '#fafafa', text: '#334155' },
+  similarTo: ['carbon', 'fluent'],
+  contrastWith: ['brutalist', 'travel'],
+  imagery: 'Token hierarchy diagrams, alias chain visualizations, theme-switching previews.',
+},
+
+// ── Expressive & Creative ────────────────────────────────────────────
+{
+  id: 'dark-editorial', name: 'Dark Editorial', category: 'Expressive & Creative',
+  heading: 'Playfair Display', body: 'Source Serif 4', code: 'JetBrains Mono', scale: 'perfect-fourth',
+  description: 'Playfair Display\'s ink-trap serifs reverse beautifully on dark backgrounds; Source Serif 4 body remains highly legible at dark-mode color contrasts. Moody and authoritative.',
+  stylePrompt: 'Noir, theatrical, literary darkness. For creative journals, dark-mode publications, or premium media brands where the dark background is a brand statement, not a mode.',
+  layout: 'Full-bleed dark hero, tight heading leading (1.1), generous paragraph spacing. Light text on deep backgrounds throughout.',
+  sizes: { h1: '4rem / 64px', body: '1.125rem / 18px', caption: '0.875rem / 14px', lineHeight: '1.8' },
+  colors: { primary: '#f5f0e8', accent: '#f59e0b', bg: '#0a0909', text: '#c4b89a' },
+  similarTo: ['editorial', 'magazine'],
+  contrastWith: ['dashboard', 'admin'],
+  imagery: 'Dark photography with dramatic lighting, noir illustration, high-contrast black and white.',
+},
+{
+  id: 'neon', name: 'Neon & Cyberpunk', category: 'Expressive & Creative',
+  heading: 'Exo 2', body: 'Barlow', code: 'Space Mono', scale: 'major-third',
+  description: 'Exo 2\'s science-fiction geometric forms and Barlow\'s confident weight range create a cyberpunk aesthetic that still reads clearly. Neon accent colors do the heavy lifting.',
+  stylePrompt: 'Futuristic, high-contrast, neon-lit. For gaming brands, tech-forward startups, or creative agencies targeting audiences who identify with cyberpunk or sci-fi aesthetics.',
+  layout: 'Dark backgrounds, neon glow text effects (CSS), diagonal section breaks, grid overlays. Animation-forward.',
+  sizes: { h1: '4rem / 64px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#00ffff', accent: '#ff00ff', bg: '#050014', text: '#c0c0d0' },
+  similarTo: ['brutalist', 'dark-editorial'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Neon-lit cityscapes, glitch art, holographic textures, sci-fi UI overlays.',
+},
+{
+  id: 'handcrafted', name: 'Handcrafted & Artisan', category: 'Expressive & Creative',
+  heading: 'Fraunces', body: 'Lora', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Fraunces\'s "wonky" optical variable setting and Lora\'s calligraphic body together evoke hand-lettering and artisan craftsmanship translated to a digital medium.',
+  stylePrompt: 'Made-by-hand, small-batch, authentic origin. For artisan brands, craft breweries, handmade goods shops, or any business where the human behind the product is the differentiator.',
+  layout: 'Story-first layout, maker profile section, process photography integrated. Handwritten-style accent elements. Slow aesthetic — don\'t rush the scroll.',
+  sizes: { h1: '3rem / 48px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.8' },
+  colors: { primary: '#2d1810', accent: '#78350f', bg: '#fdf8f0', text: '#44332a' },
+  similarTo: ['food', 'local-business'],
+  contrastWith: ['dashboard', 'api-reference'],
+  imagery: 'Process photography, maker hands, texture close-ups, imperfect materials. Warm, natural light.',
+},
+{
+  id: 'gaming', name: 'Gaming', category: 'Expressive & Creative',
+  heading: 'Exo 2', body: 'Nunito', code: 'Space Mono', scale: 'perfect-fourth',
+  description: 'Exo 2\'s angular geometry and Nunito\'s readable rounded body balance the dramatic with the practical. Game UI needs both readable menus and impactful title screens.',
+  stylePrompt: 'Immersive, lore-rich, achievement-driven. For game studio sites, game wikis, esports platforms, or gaming communities where the brand universe is as important as information.',
+  layout: 'Dark hero video background, lore/universe sections, character roster grid, news feed. Achievement badge display.',
+  sizes: { h1: '4rem / 64px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#e2e8f0', accent: '#22d3ee', bg: '#0f172a', text: '#94a3b8' },
+  similarTo: ['neon', 'sports'],
+  contrastWith: ['academic', 'corporate'],
+  imagery: 'Game artwork, cinematic screenshots, character renders, world maps. Immersive, high quality.',
+},
+{
+  id: 'agency', name: 'Creative Agency', category: 'Expressive & Creative',
+  heading: 'Urbanist', body: 'Mulish', code: 'Fira Code', scale: 'perfect-fourth',
+  description: 'Urbanist\'s striking display weight combined with Mulish\'s clean body creates the confident, self-promotional tone that creative agencies use to attract clients.',
+  stylePrompt: 'Agency-as-brand, work-showcase-first, client-courting. For creative agencies, design studios, or production companies where the site is both portfolio and pitch.',
+  layout: 'Award-type hero ("We made X for Y"), work grid full-bleed, client logo parade, capabilities list. One scroll-per-section.',
+  sizes: { h1: '5rem / 80px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+  colors: { primary: '#0a0a0a', accent: '#f43f5e', bg: '#fafafa', text: '#404040' },
+  similarTo: ['portfolio', 'brutalist'],
+  contrastWith: ['admin', 'dashboard'],
+  imagery: 'Campaign photography, award statues, client work crops. Bold, branded, impressive.',
+},
+{
+  id: 'music', name: 'Music & Audio Brand', category: 'Expressive & Creative',
+  heading: 'Sora', body: 'Karla', code: 'DM Mono', scale: 'perfect-fourth',
+  description: 'Sora\'s circular, rhythmic letterforms feel inherently musical; Karla\'s versatile geometry handles track listings, liner notes, and event details with equal clarity.',
+  stylePrompt: 'Sonic, rhythm-aware, genre-flexible. For music artists, record labels, or audio brands where the typography should carry the energy of the sound without overpowering it.',
+  layout: 'Album art full-bleed, tracklist as typographic element, tour dates calendar, merch grid. Streaming platform links.',
+  sizes: { h1: '4rem / 64px', body: '1rem / 16px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+  colors: { primary: '#0a0a0a', accent: '#ec4899', bg: '#0a0a0a', text: '#d1d5db' },
+  similarTo: ['podcast', 'dark-editorial'],
+  contrastWith: ['academic', 'corporate'],
+  imagery: 'Album artwork, live performance photography, studio sessions, vinyl close-ups.',
+},
+{
+  id: 'film', name: 'Film & Cinema', category: 'Expressive & Creative',
+  heading: 'Libre Baskerville', body: 'Libre Franklin', code: 'Inconsolata', scale: 'perfect-fourth',
+  description: 'Libre Baskerville brings the gravitas of film poster typography; Libre Franklin\'s namesake connects to cinema\'s print tradition. Both share the Libre family\'s screen-optimized metrics.',
+  stylePrompt: 'Cinematic, aspect-ratio-aware, auteur-adjacent. For film production companies, festival sites, or cinema brands where the theatrical tension of movie posters should translate to web.',
+  layout: 'Wide-aspect hero imagery, film poster-inspired type over image, screening schedule, press quotes prominent.',
+  sizes: { h1: '4rem / 64px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#f5f0e8', accent: '#dc2626', bg: '#0a0a0a', text: '#c4b89a' },
+  similarTo: ['dark-editorial', 'culture'],
+  contrastWith: ['dashboard', 'admin'],
+  imagery: 'Film stills, movie posters, behind-the-scenes photography. Cinematic aspect ratios, dramatic lighting.',
+},
+{
+  id: 'architecture', name: 'Architecture & Design', category: 'Expressive & Creative',
+  heading: 'Instrument Serif', body: 'Karla', code: 'Inconsolata', scale: 'perfect-fourth',
+  description: 'Instrument Serif\'s classical elegance maps to architectural traditions of permanence; Karla\'s clean geometry mirrors the rigor of technical drawings. Together they say "built to last".',
+  stylePrompt: 'Spatial, proportional, material-forward. For architecture firms, industrial designers, or built-environment brands where the typography should feel as considered as the structures.',
+  layout: 'Project image dominant, technical specification sidebar, awards list, material palette display. Portfolio-first navigation.',
+  sizes: { h1: '3.5rem / 56px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1a1a1a', accent: '#78716c', bg: '#f5f4f0', text: '#44403c' },
+  similarTo: ['portfolio', 'luxury'],
+  contrastWith: ['brutalist', 'neon'],
+  imagery: 'Architectural photography, technical drawings, material samples, interior/exterior views.',
+},
+{
+  id: 'startup-bold', name: 'Startup Bold', category: 'Expressive & Creative',
+  heading: 'Montserrat', body: 'Source Sans 3', code: 'Fira Code', scale: 'augmented-fourth',
+  description: 'Montserrat at display scale with the wide scale of an augmented fourth creates maximum visual impact for startups that need to punch above their weight in competitive markets.',
+  stylePrompt: 'Disruptive, loud, market-taking. For startups that want to dominate their category from day one — typography as a confidence signal, not just a readability tool.',
+  layout: 'Oversized headline hero (hero font 5rem+), bold color blocking, high-contrast section transitions. Zero subtlety intended.',
+  sizes: { h1: '4.5rem / 72px', body: '1.0625rem / 17px', caption: '0.8125rem / 13px', lineHeight: '1.6' },
+  colors: { primary: '#0f172a', accent: '#f43f5e', bg: '#ffffff', text: '#334155' },
+  similarTo: ['startup', 'agency'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Bold graphic design, product hero shots with motion blur, customer logos at scale.',
+},
+{
+  id: 'vintage', name: 'Vintage & Heritage', category: 'Expressive & Creative',
+  heading: 'Bitter', body: 'PT Serif', code: 'Inconsolata', scale: 'minor-third',
+  description: 'Bitter\'s slab serif heritage and PT Serif\'s Cyrillic-inclusive old-style work together to create authentic vintage typographic character without resorting to decorative fonts.',
+  stylePrompt: 'Established, storied, weathered-by-time. For heritage brands, craft businesses, historical societies, or any product where age and tradition are the brand equity.',
+  layout: 'Aged texture backgrounds (CSS), ruled dividers, centered ornament elements, period-appropriate numbering.',
+  sizes: { h1: '3rem / 48px', body: '1.0625rem / 17px', caption: '0.875rem / 14px', lineHeight: '1.8' },
+  colors: { primary: '#2d1810', accent: '#92400e', bg: '#fdf6e3', text: '#44332a' },
+  similarTo: ['handcrafted', 'food'],
+  contrastWith: ['neon', 'startup-bold'],
+  imagery: 'Archival photography, aged textures, letterpress-style printing, sepia tones.',
+},
+
+// ── Data & Specialized ───────────────────────────────────────────────
+{
+  id: 'scientific-viz', name: 'Scientific Visualization', category: 'Data & Specialized',
+  heading: 'Source Serif 4', body: 'IBM Plex Sans', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'Source Serif 4 headings lend academic gravity to scientific visualizations; IBM Plex Sans and Mono handle axis labels, legends, and annotations with systematic precision.',
+  stylePrompt: 'Publication-grade charts, peer-review ready, reproducible. For scientific papers with embedded interactive visualizations, research platforms, or data journalism with academic rigor.',
+  layout: 'Figure with caption below (APA/MLA format), methodology panel, data source attribution. Export to PDF must match web layout.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.6' },
+  colors: { primary: '#1a1a2e', accent: '#2563eb', bg: '#ffffff', text: '#374151' },
+  similarTo: ['data', 'academic'],
+  contrastWith: ['gaming', 'neon'],
+  imagery: 'Scientific charts (scatter, violin, heatmap), anatomical/geological diagrams, microscopy.',
+},
+{
+  id: 'geospatial', name: 'Geospatial & Mapping', category: 'Data & Specialized',
+  heading: 'Work Sans', body: 'Inter', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'Work Sans\'s clean geometry sits harmoniously over map tiles without competing; Inter body handles coordinate data, place names, and technical specifications efficiently.',
+  stylePrompt: 'Map-first, layer-aware, coordinate-precise. For GIS platforms, mapping tools, location analytics, or geographic data products where the map canvas dominates and UI is secondary.',
+  layout: 'Full-viewport map, floating control panels, bottom sheet for feature details, mini-map for context. Legend absolutely positioned.',
+  sizes: { h1: '1.5rem / 24px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#1e293b', accent: '#0ea5e9', bg: '#f8fafc', text: '#475569' },
+  similarTo: ['data', 'dashboard'],
+  contrastWith: ['luxury', 'editorial'],
+  imagery: 'Map tiles, satellite imagery, choropleth visualizations, geographic heat maps.',
+},
+{
+  id: 'medical-imaging', name: 'Medical Imaging', category: 'Data & Specialized',
+  heading: 'Lexend', body: 'Noto Sans', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'Lexend\'s research-backed legibility improvements and Noto Sans\'s global character coverage handle overlaid image annotations where misread text has direct clinical consequences.',
+  stylePrompt: 'Radiological precision, annotation-accurate, DICOM-adjacent. For medical imaging platforms, PACS viewers, or clinical diagnostic tools where image annotations are safety-critical.',
+  layout: 'Dark viewport for imaging, floating measurement tools, annotation overlays, series navigator. High-contrast mode essential.',
+  sizes: { h1: '1.25rem / 20px', body: '0.8125rem / 13px', caption: '0.6875rem / 11px', lineHeight: '1.4' },
+  colors: { primary: '#e2e8f0', accent: '#fbbf24', bg: '#000000', text: '#cbd5e1' },
+  similarTo: ['healthcare-ui', 'data'],
+  contrastWith: ['luxury', 'travel'],
+  imagery: 'Medical imaging renders, annotation callouts, measurement overlays. Clinical, not decorative.',
+},
+{
+  id: 'financial-report', name: 'Financial Report', category: 'Data & Specialized',
+  heading: 'Noto Serif', body: 'Noto Sans', code: 'Roboto Mono', scale: 'minor-second',
+  description: 'The Noto family\'s comprehensive Unicode coverage handles international financial data — currency symbols, international company names, and regulatory text in any jurisdiction.',
+  stylePrompt: 'Annual-report-grade, investor-relations-ready, SEC-compliant. For financial reports, earnings pages, or investor relations sites where international coverage and print fidelity are required.',
+  layout: 'Full-width financial tables, footnote system, exhibit labels, regulatory filing headers. Print CSS as important as screen.',
+  sizes: { h1: '2rem / 32px', body: '0.9375rem / 15px', caption: '0.8125rem / 13px', lineHeight: '1.65' },
+  colors: { primary: '#1a2332', accent: '#1d4ed8', bg: '#ffffff', text: '#334155' },
+  similarTo: ['corporate', 'whitepaper'],
+  contrastWith: ['neon', 'gaming'],
+  imagery: 'Financial charts, table-dominated layouts. Company logo and report cover as primary imagery.',
+},
+{
+  id: 'iot-dashboard', name: 'IoT & Sensor Dashboard', category: 'Data & Specialized',
+  heading: 'Barlow', body: 'Inter', code: 'IBM Plex Mono', scale: 'minor-second',
+  description: 'Barlow\'s condensed variants handle dense sensor labels at small sizes; Inter body keeps alert messages and device names readable. IBM Plex Mono for numeric sensor readings.',
+  stylePrompt: 'Real-time updates, sensor-grid-dense, alert-state-aware. For IoT platforms, industrial monitoring, or smart building dashboards where hundreds of data points need simultaneous display.',
+  layout: 'Sensor grid tiles, real-time value refresh animation, threshold alert indicators, time-series sparklines.',
+  sizes: { h1: '1.5rem / 24px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.45' },
+  colors: { primary: '#0f2027', accent: '#00d4aa', bg: '#0a0e1a', text: '#8ba7bf' },
+  similarTo: ['data', 'analytics'],
+  contrastWith: ['luxury', 'food'],
+  imagery: 'Sensor topology diagrams, floor plan overlays, real-time chart animations.',
+},
+{
+  id: 'logistics', name: 'Logistics & Supply Chain', category: 'Data & Specialized',
+  heading: 'Cabin', body: 'Inter', code: 'Roboto Mono', scale: 'minor-second',
+  description: 'Cabin\'s humanist geometry is legible on low-resolution warehouse screens while Inter body handles order IDs, coordinates, and manifest data reliably across device types.',
+  stylePrompt: 'Operations-critical, barcode-adjacent, shift-worker-readable. For logistics platforms, warehouse management systems, or supply chain tools used in operational environments.',
+  layout: 'Order queue list, scan-to-confirm flows, route optimization maps, delivery status timeline.',
+  sizes: { h1: '1.75rem / 28px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.55' },
+  colors: { primary: '#0f172a', accent: '#f59e0b', bg: '#f8fafc', text: '#374151' },
+  similarTo: ['admin', 'crm'],
+  contrastWith: ['luxury', 'academic'],
+  imagery: 'Route maps, package tracking visualizations, warehouse floor plans.',
+},
+{
+  id: 'legal-tech', name: 'Legal Tech', category: 'Data & Specialized',
+  heading: 'Spectral', body: 'Source Sans 3', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Spectral\'s screen-first serif brings legal gravitas while Source Sans 3 handles clause annotations, metadata, and the dense UI of contract management systems.',
+  stylePrompt: 'Clausular precision, legal-weight authority, redline-ready. For contract management tools, e-signature platforms, or legal research systems where document fidelity is the product.',
+  layout: 'Document viewer full-width, comment thread sidebar, redline diff display, version history panel.',
+  sizes: { h1: '2rem / 32px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.75' },
+  colors: { primary: '#1a1a2e', accent: '#1d4ed8', bg: '#fafaf8', text: '#374151' },
+  similarTo: ['compliance', 'corporate'],
+  contrastWith: ['neon', 'gaming'],
+  imagery: 'Document thumbnails, signature field indicators, version diff visualizations.',
+},
+{
+  id: 'edtech-platform', name: 'EdTech Platform', category: 'Data & Specialized',
+  heading: 'Poppins', body: 'Nunito Sans', code: 'Source Code Pro', scale: 'minor-third',
+  description: 'Poppins\' geometric clarity and Nunito Sans\' warmth create a learning environment that signals both rigor and encouragement — the dual requirements of serious education platforms.',
+  stylePrompt: 'Student-outcome-focused, assessment-integrated, cohort-aware. For institutional e-learning platforms, coding bootcamps, or certification programs where progress tracking is central.',
+  layout: 'Learning path visualization, assignment submission flow, grade book tables, peer review interfaces.',
+  sizes: { h1: '2.5rem / 40px', body: '1rem / 16px', caption: '0.875rem / 14px', lineHeight: '1.7' },
+  colors: { primary: '#1e3a5f', accent: '#7c3aed', bg: '#ffffff', text: '#374151' },
+  similarTo: ['education', 'tutorial'],
+  contrastWith: ['brutalist', 'neon'],
+  imagery: 'Learning progress charts, skill badges, cohort activity visualizations.',
+},
+{
+  id: 'devops', name: 'DevOps & Platform', category: 'Data & Specialized',
+  heading: 'Urbanist', body: 'Inter', code: 'JetBrains Mono', scale: 'minor-second',
+  description: 'Urbanist\'s clean geometric forms read well over dark backgrounds and dense pipeline grids; Inter body handles log output, build IDs, and deployment metadata with neutral clarity.',
+  stylePrompt: 'Pipeline-first, deployment-status-aware, build-artifact-focused. For CI/CD platforms, container orchestration UIs, or cloud infrastructure dashboards where engineers live all day.',
+  layout: 'Pipeline visualization, log stream terminal, deployment timeline, environment comparison grid.',
+  sizes: { h1: '1.75rem / 28px', body: '0.875rem / 14px', caption: '0.75rem / 12px', lineHeight: '1.5' },
+  colors: { primary: '#f1f5f9', accent: '#38bdf8', bg: '#0c1017', text: '#8b949e' },
+  similarTo: ['analytics', 'developer'],
+  contrastWith: ['luxury', 'food'],
+  imagery: 'Pipeline flow diagrams, container topology maps, deployment frequency charts.',
+}
 ];
+
+// Categories for grouping
+const categories = [...new Set(presets.map(p => p.category))];
 
 const systemFonts = ['Segoe UI Variable', 'Adobe Clean', 'Georgia'];
 
@@ -28,18 +1245,22 @@ function toFontId(family: string): string {
 function isLinkable(family: string): boolean {
   return !systemFonts.includes(family);
 }
+
+function getPresetName(id: string): string {
+  return presets.find(p => p.id === id)?.name ?? id;
+}
 ---
 
 <BaseLayout
   title="Typography Presets"
   site="www"
   currentPath="/presets"
-  description="10 curated typography presets for design systems."
+  description="100 curated typography presets for design systems."
 >
   <SEOHead
     slot="head"
     title="Typography Presets — Fetchtype"
-    description="10 curated typography presets for design systems: Base, Editorial, Dashboard, E-commerce, Docs, Fluent, Material, Carbon, Spectrum, and Radix."
+    description="100 curated typography presets organized by use case: general purpose, editorial, application UI, e-commerce, documentation, design systems, and creative. Each preset includes font stacks, size scales, layout guidance, and color pairings."
     canonicalUrl="https://fetchtype.com/presets"
     ogType="website"
   />
@@ -61,102 +1282,245 @@ function isLinkable(family: string): boolean {
         Presets
       </h1>
 
-      <p class="font-body text-lg leading-relaxed text-ft-muted max-w-xl">
-        10 curated typography configurations for common design system patterns.
+      <p class="font-body text-lg leading-relaxed text-ft-muted max-w-xl mb-6">
+        {presets.length} curated typography configurations organized by use case. Each preset includes font stacks,
+        size relationships, layout guidance, color pairings, and style direction.
       </p>
+
+      <!-- Category quick nav -->
+      <div class="flex flex-wrap gap-2">
+        {categories.map(cat => (
+          <a
+            href={`#cat-${cat.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+            class="font-mono text-xs text-ft-muted border border-thin px-3 py-1.5 hover:text-ft-dark hover:border-ft-dark transition-colors uppercase tracking-wider"
+          >
+            {cat}
+          </a>
+        ))}
+      </div>
     </div>
   </section>
 
   <div class="border-t border-thin"></div>
 
-  <!-- Preset list -->
-  <section class="max-w-[1400px] mx-auto px-6 py-12">
-    {presets.map((preset, i) => (
-      <article id={preset.id} class="mb-16 last:mb-0">
-
-        <!-- Header row -->
-        <div class="flex items-baseline gap-4 mb-4">
-          <span class="font-mono text-sm text-ft-accent">
-            {String(i + 1).padStart(2, '0')}
-          </span>
-          <h2 class="font-display text-3xl md:text-4xl text-ft-dark tracking-tight">
-            {preset.name}
-          </h2>
+  <!-- Preset list by category -->
+  {categories.map(cat => {
+    const catPresets = presets.filter(p => p.category === cat);
+    const catSlug = cat.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return (
+      <section id={`cat-${catSlug}`} class="max-w-[1400px] mx-auto px-6 pt-12">
+        <div class="flex items-center gap-4 mb-8">
+          <h2 class="font-display text-2xl text-ft-dark tracking-tight">{cat}</h2>
+          <span class="font-mono text-xs text-ft-muted border border-thin px-2 py-0.5">{catPresets.length}</span>
         </div>
 
-        <p class="font-body text-base text-ft-muted leading-relaxed mb-6 max-w-2xl">
-          {preset.description}
-        </p>
+        {catPresets.map((preset, i) => (
+          <article id={preset.id} class="mb-16 last:mb-0">
 
-        <!-- Font stack + scale -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
-          <div>
-            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Heading</p>
-            {isLinkable(preset.heading) ? (
-              <a href={`/registry/${toFontId(preset.heading)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
-                {preset.heading}
-              </a>
-            ) : (
-              <p class="font-body text-sm text-ft-dark">{preset.heading}</p>
+            <!-- Header row -->
+            <div class="flex items-baseline gap-4 mb-2">
+              <span class="font-mono text-sm text-ft-accent">
+                {String(presets.indexOf(preset) + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-display text-3xl md:text-4xl text-ft-dark tracking-tight">
+                {preset.name}
+              </h3>
+            </div>
+
+            <p class="font-body text-base text-ft-muted leading-relaxed mb-4 max-w-2xl">
+              {preset.description}
+            </p>
+
+            <!-- Style prompt -->
+            <div class="bg-ft-surface border border-thin px-5 py-4 mb-6 max-w-3xl">
+              <p class="font-mono text-[10px] text-ft-accent uppercase tracking-wider mb-2">Style Direction</p>
+              <p class="font-body text-sm text-ft-dark leading-relaxed">{preset.stylePrompt}</p>
+            </div>
+
+            <!-- Three-column: Font stack, Sizes, Colors -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-px bg-ft-border mb-6">
+              <!-- Font stack -->
+              <div class="bg-ft-cream p-5">
+                <p class="font-mono text-[10px] text-ft-muted uppercase tracking-wider mb-3">Font Stack</p>
+                <div class="flex flex-col gap-2">
+                  <div>
+                    <span class="font-mono text-[10px] text-ft-muted">Heading</span>
+                    {isLinkable(preset.heading) ? (
+                      <a href={`https://registry.fetchtype.com/${toFontId(preset.heading)}`} class="block font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                        {preset.heading}
+                      </a>
+                    ) : (
+                      <p class="font-body text-sm text-ft-dark">{preset.heading}</p>
+                    )}
+                  </div>
+                  <div>
+                    <span class="font-mono text-[10px] text-ft-muted">Body</span>
+                    {isLinkable(preset.body) ? (
+                      <a href={`https://registry.fetchtype.com/${toFontId(preset.body)}`} class="block font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                        {preset.body}
+                      </a>
+                    ) : (
+                      <p class="font-body text-sm text-ft-dark">{preset.body}</p>
+                    )}
+                  </div>
+                  <div>
+                    <span class="font-mono text-[10px] text-ft-muted">Mono</span>
+                    {isLinkable(preset.code) ? (
+                      <a href={`https://registry.fetchtype.com/${toFontId(preset.code)}`} class="block font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
+                        {preset.code}
+                      </a>
+                    ) : (
+                      <p class="font-body text-sm text-ft-dark">{preset.code}</p>
+                    )}
+                  </div>
+                  <div>
+                    <span class="font-mono text-[10px] text-ft-muted">Scale</span>
+                    <p class="font-body text-sm text-ft-dark">{preset.scale}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Size relationships -->
+              <div class="bg-ft-cream p-5">
+                <p class="font-mono text-[10px] text-ft-muted uppercase tracking-wider mb-3">Size Relationships</p>
+                <div class="flex flex-col gap-2">
+                  <div class="flex justify-between">
+                    <span class="font-mono text-[10px] text-ft-muted">H1</span>
+                    <span class="font-mono text-sm text-ft-dark">{preset.sizes.h1}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-mono text-[10px] text-ft-muted">Body</span>
+                    <span class="font-mono text-sm text-ft-dark">{preset.sizes.body}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-mono text-[10px] text-ft-muted">Caption</span>
+                    <span class="font-mono text-sm text-ft-dark">{preset.sizes.caption}</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="font-mono text-[10px] text-ft-muted">Line Height</span>
+                    <span class="font-mono text-sm text-ft-dark">{preset.sizes.lineHeight}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Colors -->
+              <div class="bg-ft-cream p-5">
+                <p class="font-mono text-[10px] text-ft-muted uppercase tracking-wider mb-3">Color Direction</p>
+                <div class="flex flex-col gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 border border-thin flex-shrink-0" style={`background: ${preset.colors.bg};`}></span>
+                    <span class="font-mono text-[10px] text-ft-muted">Background</span>
+                    <span class="font-mono text-xs text-ft-dark ml-auto">{preset.colors.bg}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 border border-thin flex-shrink-0" style={`background: ${preset.colors.primary};`}></span>
+                    <span class="font-mono text-[10px] text-ft-muted">Primary</span>
+                    <span class="font-mono text-xs text-ft-dark ml-auto">{preset.colors.primary}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 border border-thin flex-shrink-0" style={`background: ${preset.colors.accent};`}></span>
+                    <span class="font-mono text-[10px] text-ft-muted">Accent</span>
+                    <span class="font-mono text-xs text-ft-dark ml-auto">{preset.colors.accent}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="w-4 h-4 border border-thin flex-shrink-0" style={`background: ${preset.colors.text};`}></span>
+                    <span class="font-mono text-[10px] text-ft-muted">Body text</span>
+                    <span class="font-mono text-xs text-ft-dark ml-auto">{preset.colors.text}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layout guidance -->
+            <div class="bg-ft-surface border border-thin px-5 py-4 mb-6 max-w-3xl">
+              <p class="font-mono text-[10px] text-ft-accent uppercase tracking-wider mb-2">Layout Guidance</p>
+              <p class="font-body text-sm text-ft-dark leading-relaxed">{preset.layout}</p>
+            </div>
+
+            <!-- Imagery guidance -->
+            <div class="bg-ft-surface border border-thin px-5 py-4 mb-6 max-w-3xl">
+              <p class="font-mono text-[10px] text-ft-accent uppercase tracking-wider mb-2">Image Pairing</p>
+              <p class="font-body text-sm text-ft-dark leading-relaxed">{preset.imagery}</p>
+            </div>
+
+            <!-- Similar / Contrast -->
+            <div class="flex flex-wrap gap-6 mb-6">
+              <div>
+                <p class="font-mono text-[10px] text-ft-muted uppercase tracking-wider mb-2">Similar presets</p>
+                <div class="flex gap-1.5">
+                  {preset.similarTo.map(id => (
+                    <a href={`#${id}`} class="font-mono text-xs text-ft-dark border border-thin px-2 py-1 hover:bg-ft-surface transition-colors">
+                      {getPresetName(id)}
+                    </a>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <p class="font-mono text-[10px] text-ft-muted uppercase tracking-wider mb-2">Contrast with</p>
+                <div class="flex gap-1.5">
+                  {preset.contrastWith.map(id => (
+                    <a href={`#${id}`} class="font-mono text-xs text-ft-muted border border-thin px-2 py-1 hover:bg-ft-surface transition-colors">
+                      {getPresetName(id)}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <!-- Type specimen -->
+            <div class="border border-thin mb-4 bg-white overflow-hidden" style={`background: ${preset.colors.bg};`}>
+              <div class="p-6 md:p-8">
+                <p
+                  class="tracking-tight mb-4"
+                  style={`font-family: '${preset.heading}', sans-serif; font-size: ${preset.sizes.h1.split(' / ')[0]}; color: ${preset.colors.primary}; line-height: 1.1;`}
+                >
+                  The quick brown fox
+                </p>
+                <p
+                  class="leading-relaxed mb-4 max-w-xl"
+                  style={`font-family: '${preset.body}', sans-serif; font-size: ${preset.sizes.body.split(' / ')[0]}; color: ${preset.colors.text}; line-height: ${preset.sizes.lineHeight};`}
+                >
+                  Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed. The arrangement of type involves selecting typefaces, point sizes, line lengths, line-spacing, and letter-spacing.
+                </p>
+                <code
+                  class="text-sm"
+                  style={`font-family: '${preset.code}', monospace; color: ${preset.colors.accent};`}
+                >
+                  fetchtype init --preset {preset.id}
+                </code>
+              </div>
+            </div>
+
+            <!-- Usage code block -->
+            <div class="bg-ft-code-bg px-5 py-4 font-mono text-sm text-white overflow-x-auto">
+              <span class="text-ft-muted">$</span> npx fetchtype init --preset {preset.id}
+            </div>
+
+            {i < catPresets.length - 1 && (
+              <div class="border-b border-thin mt-16"></div>
             )}
-          </div>
-          <div>
-            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Body</p>
-            {isLinkable(preset.body) ? (
-              <a href={`/registry/${toFontId(preset.body)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
-                {preset.body}
-              </a>
-            ) : (
-              <p class="font-body text-sm text-ft-dark">{preset.body}</p>
-            )}
-          </div>
-          <div>
-            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Mono</p>
-            {isLinkable(preset.code) ? (
-              <a href={`/registry/${toFontId(preset.code)}`} class="font-body text-sm text-ft-dark underline underline-offset-2 hover:text-ft-accent transition-colors">
-                {preset.code}
-              </a>
-            ) : (
-              <p class="font-body text-sm text-ft-dark">{preset.code}</p>
-            )}
-          </div>
-          <div>
-            <p class="font-mono text-xs text-ft-muted uppercase tracking-wider mb-1">Scale</p>
-            <p class="font-body text-sm text-ft-dark">{preset.scale}</p>
-          </div>
-        </div>
+          </article>
+        ))}
 
-        <!-- Type specimen -->
-        <div class="border border-thin p-6 md:p-8 mb-4 bg-white">
-          <p
-            class="text-4xl md:text-5xl text-ft-dark tracking-tight mb-4"
-            style={`font-family: '${preset.heading}', sans-serif;`}
-          >
-            The quick brown fox
-          </p>
-          <p
-            class="text-base text-ft-muted leading-relaxed mb-4 max-w-xl"
-            style={`font-family: '${preset.body}', sans-serif;`}
-          >
-            Typography is the art and technique of arranging type to make written language legible, readable, and appealing when displayed.
-          </p>
-          <code
-            class="text-sm text-ft-accent"
-            style={`font-family: '${preset.code}', monospace;`}
-          >
-            fetchtype init --preset {preset.id}
-          </code>
-        </div>
+        <div class="border-b border-thin mt-8 mb-0"></div>
+      </section>
+    );
+  })}
 
-        <!-- Usage code block -->
-        <div class="bg-ft-code-bg px-5 py-4 font-mono text-sm text-white overflow-x-auto">
-          <span class="text-ft-muted">$</span> npx fetchtype init --preset {preset.id}
-        </div>
-
-        {i < presets.length - 1 && (
-          <div class="border-b border-thin mt-16"></div>
-        )}
-      </article>
-    ))}
+  <!-- Footer CTA -->
+  <section class="max-w-[1400px] mx-auto px-6 py-16">
+    <div class="max-w-2xl">
+      <p class="font-mono text-xs text-ft-muted uppercase tracking-[0.15em] mb-4">Custom Presets</p>
+      <h2 class="font-display text-3xl text-ft-dark tracking-tight mb-4">
+        Build your own
+      </h2>
+      <p class="font-body text-base text-ft-muted leading-relaxed mb-6">
+        Presets are just token files. Create a <code class="font-mono text-sm">fetchtype.tokens.json</code> with your
+        own fonts, sizes, and colors — then share it with your team via <code class="font-mono text-sm">.fetchtype.json</code> config.
+      </p>
+      <div class="bg-ft-code-bg px-5 py-4 font-mono text-sm text-white overflow-x-auto">
+        <span class="text-ft-muted">$</span> npx fetchtype init --prompt "modern fintech dashboard with dark mode"
+      </div>
+    </div>
   </section>
 </BaseLayout>
