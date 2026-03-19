@@ -287,7 +287,7 @@ pnpm test
 
 ## AI agent integration
 
-fetchtype includes an MCP server with 12 tools so AI coding agents can validate, generate, and manage typography tokens directly. See [`agents.md`](agents.md) for the full machine-readable reference.
+fetchtype includes an MCP server with 12 tools so AI coding agents can validate, generate, and manage typography tokens directly. See [`llms.txt`](llms.txt) for the full machine-readable reference.
 
 ```bash
 fetchtype mcp
