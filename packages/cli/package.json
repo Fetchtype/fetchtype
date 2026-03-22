@@ -8,6 +8,9 @@
     "url": "https://github.com/fetchtype/fetchtype.git",
     "directory": "packages/cli"
   },
+  "bugs": {
+    "url": "https://github.com/fetchtype/fetchtype/issues"
+  },
   "homepage": "https://fetchtype.com",
   "keywords": [
     "typography",
@@ -19,7 +22,11 @@
     "shadcn",
     "css",
     "design-system",
-    "font"
+    "font",
+    "mcp",
+    "ai",
+    "font-pairing",
+    "w3c-design-tokens"
   ],
   "type": "module",
   "main": "dist/index.js",

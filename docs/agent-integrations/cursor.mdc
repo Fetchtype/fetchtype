@@ -1,0 +1,66 @@
+---
+description: Typography validation with fetchtype. Activate when working with design tokens, fonts, typography CSS, Tailwind theme, or shadcn/ui styling.
+globs: ["fetchtype.tokens.json", "**/*.tokens.json", "**/tailwind.config.*", "**/globals.css"]
+alwaysApply: false
+---
+
+# fetchtype — Typography Validation
+
+This project uses fetchtype for typography token validation and export.
+
+## Key files
+
+- `fetchtype.tokens.json` — typography, color, spacing, hierarchy tokens
+- `.fetchtype.json` — rule configuration (optional)
+
+## Workflow
+
+```bash
+# Validate tokens (run after any token change)
+fetchtype validate -i fetchtype.tokens.json
+
+# Export to framework
+fetchtype build -i fetchtype.tokens.json --format tailwind
+fetchtype build -i fetchtype.tokens.json --format shadcn
+fetchtype build -i fetchtype.tokens.json --format all
+```
+
+## Token schema
+
+The token file has sections: `typography` (12 contexts), `color` (light/dark), `hierarchy` (type scale, headings h1-h6), `spacing` (scale), `layout` (prose width, breakpoints).
+
+Typography contexts: heading, subheading, body, caption, button, label, input, code, blockquote, chart-label, chart-axis, chart-title.
+
+## Validation (20 rules)
+
+Checks: WCAG AA contrast (4.5:1), body line-height >= 1.5, min font sizes, prose width <= 75ch, heading hierarchy, spacing monotonicity, dark mode completeness, font fallbacks, payload budgets, variable font axes, font-display strategy.
+
+Run `fetchtype validate -i fetchtype.tokens.json` after modifying any token values.
+
+## Font tools
+
+```bash
+fetchtype suggest -c interface    # Font recommendations by context
+fetchtype pair "Inter"            # Pairing suggestions
+fetchtype search "geometric sans" --variable  # Search 1,929 fonts
+fetchtype resolve Inter           # Full font metadata
+```
+
+## MCP server
+
+Add to `.cursor/mcp.json` for direct tool access:
+
+```json
+{
+  "mcpServers": {
+    "fetchtype": {
+      "command": "npx",
+      "args": ["fetchtype", "mcp"]
+    }
+  }
+}
+```
+
+## Export formats
+
+CSS (`--format css`), Tailwind (`--format tailwind`), shadcn (`--format shadcn`), W3C Design Tokens (`--format w3c`), JSON (`--format json`), all (`--format all`).

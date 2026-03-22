@@ -138,6 +138,7 @@ fetchtype suggest -c editorial
 | [**docs/ci.md**](docs/ci.md) | GitHub Actions, SARIF, pre-commit hooks, lint-staged, drift detection |
 | [**docs/mcp.md**](docs/mcp.md) | MCP server setup, all 12 tools, response format, agent integration |
 | [**docs/export-formats.md**](docs/export-formats.md) | CSS, Tailwind, shadcn, W3C output details and customization |
+| [**docs/agent-integrations/**](docs/agent-integrations/) | Drop-in configs for Claude Code, Cursor, Copilot, Windsurf, Cline |
 
 ## Commands
 
