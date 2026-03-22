@@ -78,3 +78,17 @@ No multi-step workflow needed — describe the constraints, get back validated t
 6. Agent writes the config into the project
 
 Or skip steps 2–4 with `fetchtype_generate` for a single-call flow.
+
+## Agent integration configs
+
+Drop-in rule/skill files that teach AI coding agents the full fetchtype workflow:
+
+| Tool | Copy to |
+|------|---------|
+| Claude Code | `.claude/skills/fetchtype/SKILL.md` |
+| Cursor | `.cursor/rules/fetchtype.mdc` |
+| GitHub Copilot | `.github/copilot-instructions.md` (append) |
+| Windsurf | `.windsurf/rules/fetchtype.md` |
+| Cline | `.clinerules/fetchtype.md` |
+
+See [docs/agent-integrations/](./agent-integrations/) for ready-to-use files.

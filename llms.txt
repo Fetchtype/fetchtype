@@ -182,6 +182,18 @@ lint-staged:
 { "*.tokens.json": ["fetchtype check"] }
 ```
 
+## Agent integration
+
+Drop-in config files for AI coding tools live in `docs/agent-integrations/`:
+
+- Claude Code: copy `SKILL.md` → `.claude/skills/fetchtype/SKILL.md`
+- Cursor: copy `cursor.mdc` → `.cursor/rules/fetchtype.mdc`
+- GitHub Copilot: append `copilot-instructions.md` → `.github/copilot-instructions.md`
+- Windsurf: copy `windsurf.md` → `.windsurf/rules/fetchtype.md`
+- Cline: copy `cline.md` → `.clinerules/fetchtype.md`
+
+Each file teaches the agent the token schema, all 20 rules, CLI commands, and MCP server config.
+
 ## Links
 
 - Homepage: https://fetchtype.com
