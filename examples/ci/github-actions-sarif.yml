@@ -1,0 +1,30 @@
+# fetchtype — SARIF Upload for GitHub Code Scanning
+# Validates tokens and uploads results to the Security tab.
+# Requires GitHub Advanced Security (free for public repos).
+
+name: Typography Validation (SARIF)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  security-events: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate typography tokens
+        # --ci outputs SARIF format. Exit code 1 on failures,
+        # but we still want to upload the results.
+        run: npx fetchtype validate -i fetchtype.tokens.json --ci > fetchtype.sarif
+        continue-on-error: true
+
+      - name: Upload SARIF to Code Scanning
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: fetchtype.sarif

@@ -1,0 +1,24 @@
+# fetchtype — Using the Reusable Composite Action
+# Best for monorepos or when you want the full fetchtype CI experience
+# (install, validate, and build in one step).
+
+name: Typography Validation (Reusable Action)
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate typography tokens
+        uses: fetchtype/fetchtype/.github/actions/validate@main
+        with:
+          token-file: fetchtype.tokens.json
+
+      - name: Build token artifacts
+        run: npx fetchtype build -i fetchtype.tokens.json -o dist/ --format all

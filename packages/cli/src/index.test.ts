@@ -486,4 +486,46 @@ describe('runCli', () => {
     const hookContent = await readFile(hookPath, 'utf8');
     expect(hookContent).toContain('npx fetchtype check');
   });
+
+  it('loads config from .fetchtype.json', async () => {
+    const directory = await createTempDirectory();
+    const initIo = createCapturedIo();
+    await runCli(['init', 'tokens.json'], initIo.io, directory);
+
+    // Write a .fetchtype.json that overrides a rule severity
+    await writeFile(
+      join(directory, '.fetchtype.json'),
+      JSON.stringify({
+        extends: 'fetchtype:recommended',
+        rules: { 'contrast.ratio': { severity: 'warning' } },
+      }),
+      'utf8',
+    );
+
+    const validateIo = createCapturedIo();
+    const exitCode = await runCli(['validate', '--input', 'tokens.json'], validateIo.io, directory);
+
+    // Should succeed (config was loaded, no crash)
+    expect(exitCode).toBe(0);
+  });
+
+  it('shows next-steps guidance after init with correct filename', async () => {
+    const directory = await createTempDirectory();
+    const io = createCapturedIo();
+    await runCli(['init', 'my-tokens.json'], io.io, directory);
+
+    expect(io.getStderr()).toContain('Next steps:');
+    expect(io.getStderr()).toContain('my-tokens.json');
+    expect(io.getStderr()).not.toContain('fetchtype.tokens.json');
+  });
+
+  it('shows next-steps guidance with default filename', async () => {
+    const directory = await createTempDirectory();
+    const io = createCapturedIo();
+    await runCli(['init'], io.io, directory);
+
+    expect(io.getStderr()).toContain('Next steps:');
+    expect(io.getStderr()).toContain('fetchtype.tokens.json');
+    expect(io.getStderr()).toContain('https://fetchtype.dev');
+  });
 });

@@ -1,0 +1,19 @@
+# fetchtype — Basic Typography Validation
+# Validates your token file on every PR and push to main.
+# Produces GitHub annotations inline on changed files.
+
+name: Typography Validation
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate typography tokens
+        run: npx fetchtype validate -i fetchtype.tokens.json --github

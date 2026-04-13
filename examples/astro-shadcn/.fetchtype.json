@@ -1,0 +1,6 @@
+{
+  "extends": "fetchtype:strict",
+  "fonts": {
+    "allow": ["Source Serif 4", "Inter", "JetBrains Mono"]
+  }
+}

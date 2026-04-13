@@ -1,0 +1,9 @@
+{
+  "extends": "fetchtype:recommended",
+  "rules": {
+    "contrast.ratio": { "severity": "error" }
+  },
+  "fonts": {
+    "allow": ["Inter", "JetBrains Mono"]
+  }
+}

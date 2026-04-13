@@ -29,11 +29,14 @@ import {
   detectDrift,
   resolveConfig,
   generateTokenSet,
+  computeTypographyScore,
+  generateFluidType,
+  generateSnippet,
   type AuditResult,
   type PrepareManifest,
   type DriftReport,
 } from '@fetchtype/core';
-import { suggestFonts, type SuggestionContext, resolveFont, searchRegistry, registryStats, recommendPairings } from '@fetchtype/fonts';
+import { resolveFont, searchRegistry, registryStats, recommendPairings, suggestFromRegistry } from '@fetchtype/fonts';
 import { generateFallbackCSS } from '@fetchtype/core';
 import { startMcpServer } from './mcp.js';
 import { startPreviewServer } from './preview.js';
@@ -85,7 +88,7 @@ async function writeJsonFile(path: string, value: unknown): Promise<void> {
 
 async function loadConfig(cwd: string): Promise<FetchTypeConfig | undefined> {
   const explorer = lilconfig('fetchtype', {
-    searchPlaces: ['fetchtype.config.json', '.fetchtyperc.json', '.fetchtyperc'],
+    searchPlaces: ['.fetchtype.json', 'fetchtype.config.json', '.fetchtyperc.json', '.fetchtyperc'],
   });
   const result = await explorer.search(cwd);
   return result ? resolveConfig(result.config) : undefined;
@@ -322,6 +325,11 @@ async function handleInit(
 
   await writeJsonFile(target, tokenSet);
   logger.stdout(`${chalk.green('Created')} ${output}\n`);
+  logger.stderr(`\n${chalk.cyan('Next steps:')}\n`);
+  logger.stderr(`  ${chalk.white('1.')} Validate: ${chalk.dim(`npx fetchtype validate -i ${output}`)}\n`);
+  logger.stderr(`  ${chalk.white('2.')} Build:    ${chalk.dim(`npx fetchtype build -i ${output} --format tailwind`)}\n`);
+  logger.stderr(`  ${chalk.white('3.')} CI:       ${chalk.dim(`npx fetchtype validate -i ${output} --github`)}\n`);
+  logger.stderr(`\n${chalk.dim('Docs: https://fetchtype.dev')}\n`);
   return 0;
 }
 
@@ -519,21 +527,21 @@ async function handleBuild(
     builtPaths.push(jsonPath);
   }
 
-  if (format === 'tailwind') {
+  if (format === 'all' || format === 'tailwind') {
     const tailwindPath = resolve(outputDirectory, 'tailwind.config.ts');
     const tailwindConfig = generateTailwindConfig(artifacts.tokenSet, { prefix });
     await writeFile(tailwindPath, `${tailwindConfig}\n`, 'utf8');
     builtPaths.push(tailwindPath);
   }
 
-  if (format === 'shadcn') {
+  if (format === 'all' || format === 'shadcn') {
     const shadcnPath = resolve(outputDirectory, 'shadcn.css');
     const shadcnCss = generateShadcnCss(artifacts.tokenSet);
     await writeFile(shadcnPath, `${shadcnCss}\n`, 'utf8');
     builtPaths.push(shadcnPath);
   }
 
-  if (format === 'w3c') {
+  if (format === 'all' || format === 'w3c') {
     const w3cPath = resolve(outputDirectory, 'tokens.w3c.json');
     const w3cTokens = exportW3cTokens(artifacts.tokenSet);
     await writeFile(w3cPath, `${JSON.stringify(w3cTokens, null, 2)}\n`, 'utf8');
@@ -712,6 +720,7 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
   program
     .name('fetchtype')
     .description('Validate and export typography tokens.')
+    .version('0.2.0')
     .showHelpAfterError();
 
   program
@@ -745,7 +754,7 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
   program
     .command('validate')
     .description('Validate a token file.')
-    .requiredOption('-i, --input <path>', 'Path to the token JSON file')
+    .option('-i, --input <path>', 'Path to the token JSON file', 'fetchtype.tokens.json')
     .option(
       '--reference <id>',
       'Evaluate alignment against a typography system or archetype id (repeatable or comma-separated)',
@@ -911,7 +920,7 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
   program
     .command('suggest')
     .description('Suggest fonts for a given usage context.')
-    .requiredOption('-c, --context <type>', 'Usage context (display, interface, reading, mono)')
+    .requiredOption('-c, --context <type>', 'Usage context (display, interface, reading, mono, editorial, data)')
     .option('-l, --limit <number>', 'Maximum number of suggestions', '5')
     .option('--reference <id>', 'Bias suggestions toward a typography reference system or archetype')
     .option('--variable-only', 'Only suggest variable fonts')
@@ -924,7 +933,7 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
         variableOnly?: boolean;
         json?: boolean;
       }) => {
-        const validContexts = ['display', 'interface', 'reading', 'mono'];
+        const validContexts = ['display', 'interface', 'reading', 'mono', 'editorial', 'data'];
         if (!validContexts.includes(options.context)) {
           logger.stderr(
             chalk.red(
@@ -935,22 +944,24 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
           return;
         }
 
-        const suggestions = suggestFonts(options.context as SuggestionContext, {
+        const results = suggestFromRegistry({
+          context: options.context as any,
           limit: Number(options.limit),
-          variableOnly: Boolean(options.variableOnly),
+          variable: options.variableOnly ? true : undefined,
         });
 
         if (Boolean(options.json)) {
-          logger.stdout(`${JSON.stringify(suggestions, null, 2)}\n`);
+          logger.stdout(`${JSON.stringify(results, null, 2)}\n`);
         } else {
-          if (suggestions.length === 0) {
+          if (results.length === 0) {
             logger.stdout('No fonts found matching the criteria.\n');
           } else {
-            const header = `${'Family'.padEnd(24)} ${'Category'.padEnd(14)} ${'Variable'.padEnd(10)} ${'Size'.padEnd(8)} Reason`;
-            logger.stdout(`${header}\n${'─'.repeat(header.length)}\n`);
-            for (const suggestion of suggestions) {
+            const header = `${'Family'.padEnd(28)} ${'Category'.padEnd(14)} ${'Variable'.padEnd(10)} ${'Payload'.padEnd(10)} Contexts`;
+            logger.stdout(`${header}\n${'─'.repeat(90)}\n`);
+            for (const f of results) {
+              const payload = f.source === 'system' ? 'system' : `~${Math.round(f.performance.estimatedPayload / 1024)}KB`;
               logger.stdout(
-                `${suggestion.family.padEnd(24)} ${suggestion.category.padEnd(14)} ${(suggestion.variable ? 'yes' : 'no').padEnd(10)} ${`${suggestion.sizeKb}KB`.padEnd(8)} ${suggestion.reason}\n`,
+                `${f.family.padEnd(28)} ${f.category.padEnd(14)} ${(f.variable ? 'yes' : 'no').padEnd(10)} ${payload.padEnd(10)} ${f.contexts.join(', ')}\n`,
               );
             }
           }
@@ -1374,6 +1385,146 @@ export function createProgram(logger: Logger = defaultLogger, cwd = process.cwd(
         );
       },
     );
+
+  // ── Viral features ──
+
+  program
+    .command('score')
+    .description('Grade your typography quality (A-F) with actionable improvements.')
+    .option('-i, --input <path>', 'Path to the token JSON file', 'fetchtype.tokens.json')
+    .option('--json', 'Print machine-readable JSON output')
+    .action(async (options: { input: string; json?: boolean }) => {
+      const target = resolve(cwd, options.input);
+      const raw = await loadJsonFile(target);
+      const config = await loadConfig(cwd);
+      const validationConfig = config
+        ? { rules: config.rules ?? {}, fonts: config.fonts, performance: config.performance, requiredSubsets: config.requiredSubsets }
+        : undefined;
+      const report = validateDesignTokenSet(raw, {}, validationConfig);
+
+      let tokenSet;
+      try {
+        tokenSet = parseDesignTokenSet(raw);
+      } catch {
+        // If schema validation fails, show the validation errors instead
+        logger.stderr(formatReport(report));
+        program.setOptionValueWithSource('_result', 1, 'cli');
+        return;
+      }
+      const result = computeTypographyScore(tokenSet, report);
+
+      if (options.json) {
+        logger.stdout(`${JSON.stringify(result, null, 2)}\n`);
+      } else {
+        logger.stdout(`\n${result.badge}\n\n`);
+        for (const dim of result.dimensions) {
+          const bar = '█'.repeat(Math.floor(dim.score / 5)) + '░'.repeat(20 - Math.floor(dim.score / 5));
+          const scoreColor = dim.score >= 80 ? chalk.green : dim.score >= 60 ? chalk.yellow : chalk.red;
+          logger.stdout(`  ${dim.name.padEnd(20)} ${bar} ${scoreColor(String(dim.score).padStart(3))}\n`);
+        }
+        if (result.topIssues.length > 0) {
+          logger.stdout(`\n  ${chalk.yellow('Issues:')}\n`);
+          for (const issue of result.topIssues) {
+            logger.stdout(`    ${chalk.dim('•')} ${issue}\n`);
+          }
+        }
+        if (result.improvements.length > 0) {
+          logger.stdout(`\n  ${chalk.cyan('Quick wins:')}\n`);
+          for (const imp of result.improvements) {
+            logger.stdout(`    ${chalk.dim('→')} ${imp}\n`);
+          }
+        }
+        logger.stdout('\n');
+      }
+      program.setOptionValueWithSource('_result', 0, 'cli');
+    });
+
+  program
+    .command('fluid')
+    .description('Generate fluid clamp() type scale for responsive typography.')
+    .option('-i, --input <path>', 'Path to the token JSON file', 'fetchtype.tokens.json')
+    .option('--min-width <px>', 'Minimum viewport width in px', '320')
+    .option('--max-width <px>', 'Maximum viewport width in px', '1280')
+    .option('--min-scale <ratio>', 'Scale factor for mobile sizes (0-1)', '0.75')
+    .option('-o, --output <path>', 'Write CSS to file instead of stdout')
+    .option('--json', 'Print machine-readable JSON output')
+    .action(async (options: { input: string; minWidth: string; maxWidth: string; minScale: string; output?: string; json?: boolean }) => {
+      const target = resolve(cwd, options.input);
+      const raw = await loadJsonFile(target);
+      const tokenSet = parseDesignTokenSet(raw);
+      const result = generateFluidType(tokenSet, {
+        minWidth: Number(options.minWidth),
+        maxWidth: Number(options.maxWidth),
+        minScale: Number(options.minScale),
+      });
+
+      if (options.json) {
+        logger.stdout(`${JSON.stringify(result, null, 2)}\n`);
+      } else if (options.output) {
+        const outputPath = resolve(cwd, options.output);
+        await mkdir(dirname(outputPath), { recursive: true });
+        await writeFile(outputPath, `${result.css}\n`, 'utf8');
+        logger.stdout(`${chalk.green('Generated')} ${outputPath}\n`);
+        for (const line of result.explanation) {
+          logger.stdout(`  ${line}\n`);
+        }
+      } else {
+        logger.stdout(result.css);
+        logger.stdout('\n');
+      }
+      program.setOptionValueWithSource('_result', 0, 'cli');
+    });
+
+  program
+    .command('snippet')
+    .description('Generate copy-paste-ready CSS for a font combination. E.g. fetchtype snippet inter+crimson-pro')
+    .argument('<fonts>', 'Font combination: primary+heading or primary+heading+mono (e.g. inter+crimson-pro+jetbrains-mono)')
+    .option('--scale <name>', 'Type scale ratio (major-third, perfect-fourth, etc.)', 'major-third')
+    .option('--base-size <px>', 'Base font size in px', '16')
+    .option('--brand <hex>', 'Brand accent color hex')
+    .option('--no-dark', 'Omit dark mode')
+    .option('--no-fallbacks', 'Omit CLS fallback overrides')
+    .option('-o, --output <path>', 'Write CSS to file instead of stdout')
+    .action(async (fonts: string, options: { scale: string; baseSize: string; brand?: string; dark: boolean; fallbacks: boolean; output?: string }) => {
+      const parts = fonts.split('+').map(s => s.trim()).filter(Boolean);
+      if (parts.length === 0) {
+        logger.stderr(chalk.red('Error: Provide at least one font name.\n'));
+        program.setOptionValueWithSource('_result', 2, 'cli');
+        return;
+      }
+
+      const result = generateSnippet({
+        primary: parts[0]!,
+        heading: parts[1],
+        mono: parts[2],
+        scale: options.scale,
+        baseSizePx: Number(options.baseSize),
+        brandColor: options.brand,
+        darkMode: options.dark,
+        fallbacks: options.fallbacks,
+      });
+
+      if (options.output) {
+        const outputPath = resolve(cwd, options.output);
+        await mkdir(dirname(outputPath), { recursive: true });
+        await writeFile(outputPath, `${result.css}\n`, 'utf8');
+        logger.stdout(`${chalk.green('Generated')} ${outputPath}\n`);
+      } else {
+        logger.stdout(result.css);
+        logger.stdout('\n');
+      }
+
+      logger.stderr(`\n${chalk.cyan('Summary:')}\n`);
+      for (const line of result.summary) {
+        logger.stderr(`  ${line}\n`);
+      }
+      if (result.googleFontsLink) {
+        logger.stderr(`\n${chalk.dim('Google Fonts link:')}\n  ${result.googleFontsLink}\n`);
+      }
+      logger.stderr('\n');
+
+      program.setOptionValueWithSource('_result', 0, 'cli');
+    });
 
   program.exitOverride();
   return program;

@@ -38,6 +38,8 @@ runs:
 
     - name: Install packaged fetchtype CLI
       shell: bash
+      env:
+        PACKAGE_SPEC: ${{ inputs.package-spec }}
       run: |
         runner_dir="${RUNNER_TEMP}/fetchtype-cli-runner"
         rm -rf "${runner_dir}"
@@ -48,14 +50,17 @@ runs:
           "private": true
         }
         EOF
-        pnpm --dir "${runner_dir}" add "${{ inputs.package-spec }}"
+        pnpm --dir "${runner_dir}" add "$PACKAGE_SPEC"
 
     - name: Validate token file
       shell: bash
+      env:
+        TOKEN_FILE: ${{ inputs.token-file }}
+        GITHUB_ANNOTATIONS: ${{ inputs.github-annotations }}
       run: |
         runner_dir="${RUNNER_TEMP}/fetchtype-cli-runner"
         github_flag=""
-        if [ "${{ inputs.github-annotations }}" = "true" ]; then
+        if [ "$GITHUB_ANNOTATIONS" = "true" ]; then
           github_flag="--github"
         fi
-        pnpm --dir "${runner_dir}" exec fetchtype validate --input "${{ inputs.token-file }}" ${github_flag}
+        pnpm --dir "${runner_dir}" exec fetchtype validate --input "$TOKEN_FILE" ${github_flag}

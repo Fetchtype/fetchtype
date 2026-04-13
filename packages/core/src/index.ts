@@ -1520,3 +1520,6 @@ export { detectDrift, type DriftReport, type DriftChange, type DriftChangeKind }
 export { resolveConfig } from './config-resolver.js';
 export { resolveProfile, BUILT_IN_PROFILES } from './profiles.js';
 export { generateTokenSet, type GenerateOptions, type GenerateResult } from './generate.js';
+export { computeTypographyScore, type TypographyScore, type ScoreDimension } from './score.js';
+export { generateFluidType, type FluidConfig, type FluidTypeResult, type FluidValue } from './fluid.js';
+export { generateSnippet, type SnippetOptions, type SnippetResult } from './snippet.js';
