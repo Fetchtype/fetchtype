@@ -28,13 +28,23 @@ jobs:
       - name: Build workspace
         run: pnpm build
 
+      - name: Run tests
+        run: pnpm test
+
       - name: Pack CLI artifact
-        run: pnpm --filter fetchtype pack --pack-destination .fetchtype-dist
+        id: pack
+        shell: bash
+        run: |
+          pnpm --filter fetchtype pack --pack-destination .fetchtype-dist
+          TARBALL=$(ls .fetchtype-dist/*.tgz | head -1)
+          echo "tarball=$TARBALL" >> "$GITHUB_OUTPUT"
 
       - name: Validate fetchtype preset from tarball
         uses: ./.github/actions/validate
+        env:
+          PACK_TARBALL: ${{ steps.pack.outputs.tarball }}
         with:
-          package-spec: ./.fetchtype-dist/fetchtype-cli-0.1.0.tgz
+          package-spec: ${{ steps.pack.outputs.tarball }}
           token-file: packages/core/src/base.tokens.json
 
       - name: Build example bundle from tarball
