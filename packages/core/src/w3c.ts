@@ -351,6 +351,56 @@ export function exportW3cTokens(tokenSet: DesignTokenSet): Record<string, unknow
     },
   });
 
+  // -- Motion --
+  if (tokenSet.motion) {
+    if (tokenSet.motion.duration) {
+      for (const [name, value] of Object.entries(tokenSet.motion.duration)) {
+        setNestedValue(root, ['motion', 'duration', name], {
+          $type: 'duration',
+          $value: value,
+        });
+      }
+    }
+    if (tokenSet.motion.easing) {
+      for (const [name, value] of Object.entries(tokenSet.motion.easing)) {
+        setNestedValue(root, ['motion', 'easing', name], {
+          $type: 'cubicBezier',
+          $value: value,
+        });
+      }
+    }
+    if (tokenSet.motion.spring) {
+      for (const [name, config] of Object.entries(tokenSet.motion.spring)) {
+        setNestedValue(root, ['motion', 'spring', name], {
+          $type: 'object',
+          $value: config,
+        });
+      }
+    }
+  }
+
+  // -- Scenes (materials) --
+  if (tokenSet.scenes?.materials) {
+    for (const [name, mat] of Object.entries(tokenSet.scenes.materials)) {
+      setNestedValue(root, ['scenes', 'materials', name, 'color'], {
+        $type: 'color',
+        $value: mat.color,
+      });
+      if (mat.roughness !== undefined) {
+        setNestedValue(root, ['scenes', 'materials', name, 'roughness'], {
+          $type: 'number',
+          $value: mat.roughness,
+        });
+      }
+      if (mat.metalness !== undefined) {
+        setNestedValue(root, ['scenes', 'materials', name, 'metalness'], {
+          $type: 'number',
+          $value: mat.metalness,
+        });
+      }
+    }
+  }
+
   // -- Themes & modes in $extensions --
   const extensions: Record<string, unknown> = {};
   if (tokenSet.themes.length > 0) {

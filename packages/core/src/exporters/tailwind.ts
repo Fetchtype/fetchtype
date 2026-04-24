@@ -80,6 +80,25 @@ export function generateTailwindConfig(
   }
   lines.push(`${i2}},`);
 
+  // -- motion: transitionDuration, transitionTimingFunction --
+  if (tokenSet.motion) {
+    if (tokenSet.motion.duration) {
+      lines.push(`${i2}transitionDuration: {`);
+      for (const [name, value] of Object.entries(tokenSet.motion.duration)) {
+        lines.push(`${i3}${quote(name)}: ${quote(value)},`);
+      }
+      lines.push(`${i2}},`);
+    }
+
+    if (tokenSet.motion.easing) {
+      lines.push(`${i2}transitionTimingFunction: {`);
+      for (const [name, value] of Object.entries(tokenSet.motion.easing)) {
+        lines.push(`${i3}${quote(name)}: ${quote(value)},`);
+      }
+      lines.push(`${i2}},`);
+    }
+  }
+
   // close theme and default export
   lines.push(`${i1}},`);
   lines.push('};');

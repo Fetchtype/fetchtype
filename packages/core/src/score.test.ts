@@ -31,8 +31,8 @@ describe('computeTypographyScore', () => {
 
   it('penalizes bad readability', () => {
     const tokens = structuredClone(DEFAULT_TOKEN_SET) as DesignTokenSet;
-    tokens.typography.body.lineHeight = 1.0;
-    tokens.typography.body.fontSize = '10px';
+    tokens.typography.body!.lineHeight = 1.0;
+    tokens.typography.body!.fontSize = '10px';
     const result = computeTypographyScore(tokens);
     const readability = result.dimensions.find(d => d.name === 'Readability')!;
     expect(readability.score).toBeLessThan(60);
@@ -48,7 +48,7 @@ describe('computeTypographyScore', () => {
 
   it('gives improvements for low-scoring dimensions', () => {
     const tokens = structuredClone(DEFAULT_TOKEN_SET) as DesignTokenSet;
-    tokens.typography.body.lineHeight = 1.0;
+    tokens.typography.body!.lineHeight = 1.0;
     const result = computeTypographyScore(tokens);
     expect(result.improvements.length).toBeGreaterThan(0);
   });

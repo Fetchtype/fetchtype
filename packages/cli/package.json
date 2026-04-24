@@ -1,7 +1,7 @@
 {
   "name": "fetchtype",
-  "version": "0.2.1",
-  "description": "Typography validation for design systems. Catch readability bugs, enforce WCAG thresholds, export to CSS/Tailwind/shadcn/W3C.",
+  "version": "0.3.0",
+  "description": "Typography, motion, and 3D token system. Validate typography, spring physics, and scene materials. Export to CSS/Tailwind/shadcn/W3C.",
   "license": "MIT",
   "repository": {
     "type": "git",

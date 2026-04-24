@@ -700,6 +700,155 @@ function appendTokenDiagnostics(
       );
     }
   }
+
+  // ── Motion token validation ────────────────────────────────────────
+  if (tokenSet.motion) {
+    const m = tokenSet.motion;
+
+    // Duration scale should be monotonically increasing
+    if (m.duration) {
+      const durationEntries = Object.entries(m.duration);
+      const durationMs = durationEntries.map(([key, value]) => {
+        const match = value.match(/^(\d+(?:\.\d+)?)(ms|s)$/);
+        if (!match) return { key, ms: null };
+        const num = parseFloat(match[1]!);
+        return { key, ms: match[2] === 's' ? num * 1000 : num };
+      });
+      for (let i = 1; i < durationMs.length; i += 1) {
+        const prev = durationMs[i - 1];
+        const curr = durationMs[i];
+        if (prev?.ms !== null && curr?.ms !== null && prev !== undefined && curr !== undefined && prev.ms !== null && curr.ms !== null && curr.ms <= prev.ms) {
+          pushDiagnosticWithConfig(
+            diagnostics, config,
+            'motion.duration-scale-monotonic',
+            'warning',
+            `motion.duration.${curr.key}`,
+            `Motion duration scale should be monotonically increasing. "${curr.key}" (${curr.ms}ms) is not greater than "${prev.key}" (${prev.ms}ms).`,
+            `> ${prev.ms}ms`,
+            `${curr.ms}ms`,
+          );
+          break;
+        }
+      }
+
+      // Accessibility: warn on very fast durations
+      for (const { key, ms } of durationMs) {
+        if (ms !== null && ms < 100) {
+          pushDiagnosticWithConfig(
+            diagnostics, config,
+            'motion.duration-accessibility',
+            'info',
+            `motion.duration.${key}`,
+            `Motion duration "${key}" (${ms}ms) is below 100ms. Very fast animations may be imperceptible or cause discomfort for users with vestibular sensitivities.`,
+            '>= 100ms',
+            `${ms}ms`,
+          );
+        }
+      }
+    }
+
+    // Spring damping must be positive
+    if (m.spring) {
+      for (const [name, config_] of Object.entries(m.spring)) {
+        if (config_.damping <= 0) {
+          pushDiagnosticWithConfig(
+            diagnostics, config,
+            'motion.spring-damping-positive',
+            'error',
+            `motion.spring.${name}.damping`,
+            `Spring "${name}" damping must be positive. A zero or negative damping produces infinite oscillation.`,
+            '> 0',
+            `${config_.damping}`,
+          );
+        }
+        if (config_.stiffness <= 0) {
+          pushDiagnosticWithConfig(
+            diagnostics, config,
+            'motion.spring-stiffness-positive',
+            'error',
+            `motion.spring.${name}.stiffness`,
+            `Spring "${name}" stiffness must be positive.`,
+            '> 0',
+            `${config_.stiffness}`,
+          );
+        }
+      }
+    }
+
+    // Easing: validate cubic-bezier format
+    if (m.easing) {
+      for (const [name, value] of Object.entries(m.easing)) {
+        const bezierMatch = value.match(/^cubic-bezier\(\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^,]+)\s*,\s*([^)]+)\s*\)$/);
+        if (bezierMatch) {
+          const nums = [bezierMatch[1], bezierMatch[2], bezierMatch[3], bezierMatch[4]].map(v => parseFloat(v!.trim()));
+          if (nums.some(n => isNaN(n))) {
+            pushDiagnosticWithConfig(
+              diagnostics, config,
+              'motion.easing-valid-bezier',
+              'error',
+              `motion.easing.${name}`,
+              `Easing "${name}" has invalid cubic-bezier values. All four parameters must be numbers.`,
+            );
+          }
+        }
+      }
+    }
+  }
+
+  // ── Timeline validation ────────────────────────────────────────────
+  if (tokenSet.timeline) {
+    const fps = tokenSet.timeline.fps;
+    if (fps < 24 || fps > 120) {
+      pushDiagnosticWithConfig(
+        diagnostics, config,
+        'timeline.fps-reasonable',
+        'warning',
+        'timeline.fps',
+        `Timeline fps (${fps}) is outside the typical range of 24-120.`,
+        '24-120',
+        `${fps}`,
+      );
+    }
+  }
+
+  // ── Scene validation ───────────────────────────────────────────────
+  if (tokenSet.scenes?.materials) {
+    for (const [name, mat] of Object.entries(tokenSet.scenes.materials)) {
+      if (mat.roughness !== undefined && (mat.roughness < 0 || mat.roughness > 1)) {
+        pushDiagnosticWithConfig(
+          diagnostics, config,
+          'scene.material-roughness-range',
+          'error',
+          `scenes.materials.${name}.roughness`,
+          `Material "${name}" roughness must be between 0 and 1.`,
+          '0-1',
+          `${mat.roughness}`,
+        );
+      }
+      if (mat.metalness !== undefined && (mat.metalness < 0 || mat.metalness > 1)) {
+        pushDiagnosticWithConfig(
+          diagnostics, config,
+          'scene.material-metalness-range',
+          'error',
+          `scenes.materials.${name}.metalness`,
+          `Material "${name}" metalness must be between 0 and 1.`,
+          '0-1',
+          `${mat.metalness}`,
+        );
+      }
+      if (mat.transmission !== undefined && (mat.transmission < 0 || mat.transmission > 1)) {
+        pushDiagnosticWithConfig(
+          diagnostics, config,
+          'scene.material-transmission-range',
+          'error',
+          `scenes.materials.${name}.transmission`,
+          `Material "${name}" transmission must be between 0 and 1.`,
+          '0-1',
+          `${mat.transmission}`,
+        );
+      }
+    }
+  }
 }
 
 function appendReferenceDiagnostics(
@@ -1033,6 +1182,76 @@ export function validateDesignTokenSet(
   return createReport(diagnostics, references);
 }
 
+function pushMotionVariables(lines: string[], tokenSet: DesignTokenSet, prefix: string): void {
+  if (!tokenSet.motion) return;
+  const m = tokenSet.motion;
+
+  if (m.duration) {
+    for (const [name, value] of Object.entries(m.duration)) {
+      lines.push(`  ${cssVariable(prefix, ['motion', 'duration', name])}: ${value};`);
+    }
+  }
+
+  if (m.easing) {
+    for (const [name, value] of Object.entries(m.easing)) {
+      lines.push(`  ${cssVariable(prefix, ['motion', 'easing', name])}: ${value};`);
+    }
+  }
+
+  if (m.spring) {
+    for (const [name, config] of Object.entries(m.spring)) {
+      lines.push(`  ${cssVariable(prefix, ['motion', 'spring', name, 'stiffness'])}: ${config.stiffness};`);
+      lines.push(`  ${cssVariable(prefix, ['motion', 'spring', name, 'damping'])}: ${config.damping};`);
+      lines.push(`  ${cssVariable(prefix, ['motion', 'spring', name, 'mass'])}: ${config.mass};`);
+    }
+  }
+
+  if (m.preset) {
+    for (const [name, preset] of Object.entries(m.preset)) {
+      lines.push(`  ${cssVariable(prefix, ['motion', 'preset', name, 'property'])}: ${preset.property};`);
+      lines.push(`  ${cssVariable(prefix, ['motion', 'preset', name, 'from'])}: ${preset.from};`);
+      lines.push(`  ${cssVariable(prefix, ['motion', 'preset', name, 'to'])}: ${preset.to};`);
+      if (preset.duration) lines.push(`  ${cssVariable(prefix, ['motion', 'preset', name, 'duration'])}: ${preset.duration};`);
+      if (preset.easing) lines.push(`  ${cssVariable(prefix, ['motion', 'preset', name, 'easing'])}: ${preset.easing};`);
+    }
+  }
+}
+
+function pushSceneVariables(lines: string[], tokenSet: DesignTokenSet, prefix: string): void {
+  if (!tokenSet.scenes) return;
+  const s = tokenSet.scenes;
+
+  if (s.camera) {
+    for (const [name, cam] of Object.entries(s.camera)) {
+      lines.push(`  ${cssVariable(prefix, ['scene', 'camera', name, 'type'])}: ${cam.type};`);
+      if (cam.fov !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'camera', name, 'fov'])}: ${cam.fov};`);
+      if (cam.near !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'camera', name, 'near'])}: ${cam.near};`);
+      if (cam.far !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'camera', name, 'far'])}: ${cam.far};`);
+      if (cam.position) lines.push(`  ${cssVariable(prefix, ['scene', 'camera', name, 'position'])}: ${cam.position.join(', ')};`);
+    }
+  }
+
+  if (s.materials) {
+    for (const [name, mat] of Object.entries(s.materials)) {
+      lines.push(`  ${cssVariable(prefix, ['scene', 'material', name, 'color'])}: ${mat.color};`);
+      if (mat.roughness !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'material', name, 'roughness'])}: ${mat.roughness};`);
+      if (mat.metalness !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'material', name, 'metalness'])}: ${mat.metalness};`);
+      if (mat.transmission !== undefined) lines.push(`  ${cssVariable(prefix, ['scene', 'material', name, 'transmission'])}: ${mat.transmission};`);
+    }
+  }
+
+  if (s.environment) {
+    for (const [name, env] of Object.entries(s.environment)) {
+      lines.push(`  ${cssVariable(prefix, ['scene', 'environment', name, 'background'])}: ${env.background};`);
+      if (env.fog) {
+        lines.push(`  ${cssVariable(prefix, ['scene', 'environment', name, 'fog-color'])}: ${env.fog.color};`);
+        lines.push(`  ${cssVariable(prefix, ['scene', 'environment', name, 'fog-near'])}: ${env.fog.near};`);
+        lines.push(`  ${cssVariable(prefix, ['scene', 'environment', name, 'fog-far'])}: ${env.fog.far};`);
+      }
+    }
+  }
+}
+
 export function generateCssVariables(tokenSet: DesignTokenSet, options: BuildOptions = {}): string {
   const prefix = options.prefix ?? DEFAULT_OPTIONS.prefix;
   const resolvedBase = resolveDesignTokenSet(tokenSet);
@@ -1043,6 +1262,8 @@ export function generateCssVariables(tokenSet: DesignTokenSet, options: BuildOpt
   pushSpacingVariables(rootLines, resolvedBase, prefix);
   pushLayoutVariables(rootLines, resolvedBase, prefix);
   pushHierarchyVariables(rootLines, resolvedBase, prefix);
+  pushMotionVariables(rootLines, resolvedBase, prefix);
+  pushSceneVariables(rootLines, resolvedBase, prefix);
   rootLines.push('}');
 
   const darkLines = ['[data-theme="dark"] {'];
@@ -1060,6 +1281,8 @@ export function generateCssVariables(tokenSet: DesignTokenSet, options: BuildOpt
     pushSpacingVariables(lines, themedTokenSet, prefix);
     pushLayoutVariables(lines, themedTokenSet, prefix);
     pushHierarchyVariables(lines, themedTokenSet, prefix);
+    pushMotionVariables(lines, themedTokenSet, prefix);
+    pushSceneVariables(lines, themedTokenSet, prefix);
     lines.push('}');
     themeBlocks.push(...lines, '');
   }

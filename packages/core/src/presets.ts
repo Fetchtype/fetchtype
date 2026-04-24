@@ -10,6 +10,7 @@ import fluentTokenSet from './fluent.tokens.json' with { type: 'json' };
 import materialTokenSet from './material.tokens.json' with { type: 'json' };
 import radixTokenSet from './radix.tokens.json' with { type: 'json' };
 import spectrumTokenSet from './spectrum.tokens.json' with { type: 'json' };
+import interactiveTokenSet from './interactive.tokens.json' with { type: 'json' };
 
 export const DEFAULT_TOKEN_SET: DesignTokenSet = DesignTokenSetSchema.parse(baseTokenSet);
 
@@ -19,6 +20,7 @@ export const PRESETS: Record<string, DesignTokenSet> = {
   dashboard: DesignTokenSetSchema.parse(dashboardTokenSet),
   ecommerce: DesignTokenSetSchema.parse(ecommerceTokenSet),
   docs: DesignTokenSetSchema.parse(docsTokenSet),
+  interactive: DesignTokenSetSchema.parse(interactiveTokenSet),
   fluent: DesignTokenSetSchema.parse(fluentTokenSet),
   material: DesignTokenSetSchema.parse(materialTokenSet),
   carbon: DesignTokenSetSchema.parse(carbonTokenSet),
